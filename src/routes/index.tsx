@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { ArrowRight, Lock, MapPin, Check, ShieldCheck } from "lucide-react";
 import { StickyLandingCta } from "@/components/conversion/StickyLandingCta";
+import heroBg from "@/assets/hero-zim-highway.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -148,16 +149,28 @@ function LandingPage() {
 
       {/* ============ HERO — Kinetic Horizon ============ */}
       <section className="relative kinetic-gradient overflow-hidden">
-        {/* Subtle savannah image overlay */}
+        {/* Real Zimbabwean highway/savannah at sunset */}
+        <img
+          src={heroBg}
+          alt=""
+          aria-hidden
+          width={1920}
+          height={1080}
+          fetchPriority="high"
+          className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-70"
+        />
+        {/* Warm amber atmospheric glow */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 z-0 opacity-30 mix-blend-screen"
+          className="pointer-events-none absolute inset-0 z-[5] mix-blend-screen"
           style={{
             backgroundImage:
-              "radial-gradient(ellipse at 80% 30%, rgba(253,175,0,0.35), transparent 55%), radial-gradient(ellipse at 20% 80%, rgba(110,160,255,0.18), transparent 60%)",
+              "radial-gradient(ellipse at 80% 30%, rgba(253,175,0,0.25), transparent 55%), radial-gradient(ellipse at 20% 80%, rgba(110,160,255,0.15), transparent 60%)",
           }}
         />
-        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#000a1e] via-[#000a1e]/85 to-transparent" />
+        {/* Navy gradient overlay — darker on the left for headline legibility */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#000a1e] via-[#000a1e]/80 to-[#000a1e]/30" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#000a1e]/70 via-transparent to-[#000a1e]/40" />
 
         <div className="relative z-20 mx-auto grid max-w-7xl items-center gap-10 px-4 pb-20 pt-16 md:grid-cols-12 md:px-6 md:pb-32 md:pt-24">
           <div className="md:col-span-7 lg:col-span-7">
