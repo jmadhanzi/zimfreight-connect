@@ -224,3 +224,39 @@
   border-color: color-mix(in oklab, var(--destructive) 32%, transparent);
   color: var(--destructive);
 }
+
+/* Vertical amber transit-bar — left-edge accent for urgent table rows */
+.transit-bar-row > td:first-child {
+  position: relative;
+}
+.transit-bar-row > td:first-child::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: color-mix(in oklab, var(--secondary) 18%, transparent);
+  overflow: hidden;
+  border-radius: 999px;
+}
+.transit-bar-row > td:first-child::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 40%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in oklab, var(--secondary) 95%, transparent) 50%,
+    transparent 100%
+  );
+  animation: transit-sweep-y 2.4s ease-in-out infinite;
+  border-radius: 999px;
+}
+@keyframes transit-sweep-y {
+  0% { transform: translateY(-60%); }
+  100% { transform: translateY(260%); }
+}
