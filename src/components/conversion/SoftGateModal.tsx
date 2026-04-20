@@ -54,7 +54,7 @@ export function SoftGateModal({ onUpgrade }: { onUpgrade: () => void }) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={(o) => { if (!o) dismiss(); }}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="border-primary/40 bg-card sm:max-w-md">
         <div className="text-center">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
