@@ -10,9 +10,26 @@ import { toast } from "sonner";
 import { cn, formatUSD } from "@/lib/utils";
 import {
   ShieldCheck, Users, DollarSign, TrendingUp, Clock, Check, X,
-  ShieldAlert, Loader2, Activity, RefreshCw, Search, UserCog,
+  ShieldAlert, Loader2, Activity, RefreshCw, Search, UserCog, ScrollText,
 } from "lucide-react";
 import type { PlanTier } from "@/types";
+import { supabase } from "@/integrations/supabase/client";
+
+/* Best-effort audit logger — never blocks the action it records. */
+async function logAudit(action: string, targetUserId: string | null, details: Record<string, unknown> = {}) {
+  try {
+    const { data: { user: actor } } = await supabase.auth.getUser();
+    if (!actor?.id) return;
+    await db.from("admin_audit_log").insert({
+      actor_id: actor.id,
+      target_user_id: targetUserId,
+      action,
+      details,
+    });
+  } catch (e) {
+    console.warn("audit log failed", e);
+  }
+}
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
