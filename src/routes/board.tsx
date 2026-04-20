@@ -15,6 +15,7 @@ import { Lock } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { PricingModal } from "@/components/paywall/PricingModal";
+import { SoftGateModal } from "@/components/conversion/SoftGateModal";
 
 const searchSchema = z.object({
   q: fallback(z.string(), "").default(""),
@@ -185,6 +186,7 @@ function LoadBoardPage() {
       />
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
       <PricingModal open={pricingOpen} onOpenChange={setPricingOpen} />
+      <SoftGateModal onUpgrade={() => (user ? setPricingOpen(true) : setAuthOpen(true))} />
     </div>
   );
 }

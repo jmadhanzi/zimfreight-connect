@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { ArrowRight, Lock, MapPin, Check } from "lucide-react";
+import { StickyLandingCta } from "@/components/conversion/StickyLandingCta";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -143,6 +144,7 @@ function LandingPage() {
   return (
     <div ref={wrapRef}>
       <AnnouncementBar />
+      <StickyLandingCta />
 
       {/* ============ HERO ============ */}
       <section className="relative min-h-[calc(100vh-100px)] overflow-hidden bg-background">

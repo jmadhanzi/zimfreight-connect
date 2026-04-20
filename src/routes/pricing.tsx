@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Check, X } from "lucide-react";
+import { Check, X, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/pricing")({
@@ -99,6 +99,12 @@ function PricingPage() {
               <Button asChild className={cn("mt-6", p.highlight ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-secondary text-foreground hover:bg-secondary/80")}>
                 <Link to="/board">{p.cta}</Link>
               </Button>
+              {p.highlight && (
+                <div className="mt-3 flex items-center justify-center gap-1.5 rounded-md border border-primary/30 bg-primary/10 px-2 py-1.5 text-[11px] font-medium text-primary">
+                  <Flame className="h-3.5 w-3.5" />
+                  47 carriers signed up in the last 24 hours
+                </div>
+              )}
             </div>
           );
         })}
