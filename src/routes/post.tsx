@@ -284,7 +284,7 @@ function PostLoadPage() {
       const distance_km = intel?.distance ?? null;
       const rate_per_km = distance_km ? +(values.rate_usd / distance_km).toFixed(2) : null;
       const crossBorder = isCrossBorder(values.origin, values.destination);
-      const { data, error } = await db.from("loads").insert({
+      const payload = {
         poster_id: user.id,
         origin: values.origin,
         destination: values.destination,
@@ -304,8 +304,17 @@ function PostLoadPage() {
         zimra_required: crossBorder,
         is_urgent: values.is_urgent,
         commodity_value: values.commodity_value ?? null,
-        status: "available",
-      }).select("id").single();
+        status: "available" as const,
+      };
+      // Offline → queue and report success; OfflineBanner drains the queue on reconnect.
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        await enqueuePost(payload);
+        toast.success("You're offline — your load will post when you reconnect");
+        discardDraft();
+        setPostedId("queued");
+        return;
+      }
+      const { data, error } = await db.from("loads").insert(payload).select("id").single();
       if (error) throw error;
       discardDraft();
       setPostedId(data.id as string);
