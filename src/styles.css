@@ -161,30 +161,50 @@
   );
 }
 
-/* Kinetic Horizon — amber transit bar (route progress indicator) */
+/* Kinetic Horizon — amber transit bar (route progress indicator)
+   Width is set inline via --transit-progress (0–100%) representing
+   how far along the "transit" the load is, based on time since posted. */
 .transit-bar {
   position: relative;
   height: 2px;
-  background: color-mix(in oklab, var(--secondary) 14%, transparent);
+  background: color-mix(in oklab, var(--secondary) 12%, transparent);
   overflow: hidden;
   border-radius: 999px;
+}
+.transit-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--transit-progress, 0%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--secondary) 70%, transparent) 0%,
+    var(--secondary) 100%
+  );
+  border-radius: 999px;
+  transition: width 0.6s ease-out;
 }
 .transit-bar::after {
   content: "";
   position: absolute;
-  inset: 0;
-  width: 40%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--transit-progress, 0%);
   background: linear-gradient(
     90deg,
     transparent 0%,
-    color-mix(in oklab, var(--secondary) 90%, transparent) 50%,
+    color-mix(in oklab, #fff 60%, transparent) 50%,
     transparent 100%
   );
-  animation: transit-sweep 2.4s ease-in-out infinite;
+  background-size: 30% 100%;
+  background-repeat: no-repeat;
+  animation: transit-shimmer 2.4s ease-in-out infinite;
+  pointer-events: none;
 }
-@keyframes transit-sweep {
-  0% { transform: translateX(-60%); }
-  100% { transform: translateX(260%); }
+@keyframes transit-shimmer {
+  0% { background-position: -30% 0; }
+  100% { background-position: 130% 0; }
 }
 
 /* Glass chip — frosted status pill */
@@ -225,7 +245,8 @@
   color: var(--destructive);
 }
 
-/* Vertical amber transit-bar — left-edge accent for urgent table rows */
+/* Vertical amber transit-bar — left-edge accent for table rows.
+   Height of fill driven by --transit-progress (0–100%). */
 .transit-bar-row > td:first-child {
   position: relative;
 }
@@ -236,8 +257,7 @@
   top: 0;
   bottom: 0;
   width: 2px;
-  background: color-mix(in oklab, var(--secondary) 18%, transparent);
-  overflow: hidden;
+  background: color-mix(in oklab, var(--secondary) 14%, transparent);
   border-radius: 999px;
 }
 .transit-bar-row > td:first-child::after {
@@ -246,17 +266,12 @@
   left: 0;
   top: 0;
   width: 2px;
-  height: 40%;
+  height: var(--transit-progress, 0%);
   background: linear-gradient(
     180deg,
-    transparent 0%,
-    color-mix(in oklab, var(--secondary) 95%, transparent) 50%,
-    transparent 100%
+    color-mix(in oklab, var(--secondary) 70%, transparent) 0%,
+    var(--secondary) 100%
   );
-  animation: transit-sweep-y 2.4s ease-in-out infinite;
   border-radius: 999px;
-}
-@keyframes transit-sweep-y {
-  0% { transform: translateY(-60%); }
-  100% { transform: translateY(260%); }
+  transition: height 0.6s ease-out;
 }

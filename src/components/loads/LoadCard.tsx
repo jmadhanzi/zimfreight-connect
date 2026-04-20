@@ -1,11 +1,13 @@
 import { ArrowRight, MapPin, Calendar, Truck as TruckIcon, Flame, ShieldCheck } from "lucide-react";
-import { formatUSD, timeAgo, cn } from "@/lib/utils";
+import { formatUSD, timeAgo, transitProgress, cn } from "@/lib/utils";
 import type { Load } from "@/types";
 
 export function LoadCard({ load, onClick }: { load: Load; onClick?: () => void }) {
+  const progress = transitProgress(load.created_at);
   return (
     <button
       onClick={onClick}
+      style={{ ["--transit-progress" as string]: `${progress}%` }}
       className={cn(
         "group relative w-full overflow-hidden rounded-lg border border-border bg-card p-4 text-left transition-all",
         "hover:border-primary/40 hover:bg-card/80 hover:shadow-[0_0_0_1px_var(--primary)/20]",
