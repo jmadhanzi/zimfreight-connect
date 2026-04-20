@@ -31,22 +31,29 @@ function addHidden(id: string) {
   return next;
 }
 
+export const BOARD_DEFAULT_SEARCH = {
+  q: "", origin: "all", destination: "all", loadType: "all", equipment: "all",
+  pickup: "", minRate: 0, maxDistance: 2000, border: false, zimra: false,
+  urgent: false, minWeight: 0, maxWeight: 40, payment: "all",
+  sort: "newest" as const, load: undefined as string | undefined,
+};
+
 const searchSchema = z.object({
-  q: fallback(z.string().optional(), ""),
-  origin: fallback(z.string().optional(), "all"),
-  destination: fallback(z.string().optional(), "all"),
-  loadType: fallback(z.string().optional(), "all"),
-  equipment: fallback(z.string().optional(), "all"),
-  pickup: fallback(z.string().optional(), ""),
-  minRate: fallback(z.number().optional(), 0),
-  maxDistance: fallback(z.number().optional(), 2000),
-  border: fallback(z.boolean().optional(), false),
-  zimra: fallback(z.boolean().optional(), false),
-  urgent: fallback(z.boolean().optional(), false),
-  minWeight: fallback(z.number().optional(), 0),
-  maxWeight: fallback(z.number().optional(), 40),
-  payment: fallback(z.string().optional(), "all"),
-  sort: fallback(z.enum(["newest", "rate_high", "rate_low", "rate_per_km", "distance"]).optional(), "newest"),
+  q: fallback(z.string(), "").default(""),
+  origin: fallback(z.string(), "all").default("all"),
+  destination: fallback(z.string(), "all").default("all"),
+  loadType: fallback(z.string(), "all").default("all"),
+  equipment: fallback(z.string(), "all").default("all"),
+  pickup: fallback(z.string(), "").default(""),
+  minRate: fallback(z.number(), 0).default(0),
+  maxDistance: fallback(z.number(), 2000).default(2000),
+  border: fallback(z.boolean(), false).default(false),
+  zimra: fallback(z.boolean(), false).default(false),
+  urgent: fallback(z.boolean(), false).default(false),
+  minWeight: fallback(z.number(), 0).default(0),
+  maxWeight: fallback(z.number(), 40).default(40),
+  payment: fallback(z.string(), "all").default("all"),
+  sort: fallback(z.enum(["newest", "rate_high", "rate_low", "rate_per_km", "distance"]), "newest").default("newest"),
   load: fallback(z.string().optional(), undefined),
 });
 
