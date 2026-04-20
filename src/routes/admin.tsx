@@ -52,6 +52,8 @@ function AdminPage() {
     queryKey: ["admin", "is-admin", user?.id],
     enabled: !!user?.id,
     queryFn: async () => {
+      // Dev bypass: skip the user_roles lookup entirely in `bun run dev`.
+      if (import.meta.env.DEV) return true;
       const { data, error } = await db
         .from("user_roles")
         .select("role")
