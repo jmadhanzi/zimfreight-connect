@@ -27,9 +27,9 @@ function DashboardPage() {
   useEffect(() => {
     if (!user) return;
     db.from("loads").select("*").eq("poster_id", user.id).order("created_at", { ascending: false })
-      .then(({ data }) => setMyLoads((data ?? []) as Load[]));
+      .then((res: { data: Load[] | null }) => setMyLoads((res.data ?? []) as Load[]));
     db.from("route_rates").select("*").order("weekly_loads", { ascending: false }).limit(8)
-      .then(({ data }) => setRates((data ?? []) as RouteRate[]));
+      .then((res: { data: RouteRate[] | null }) => setRates((res.data ?? []) as RouteRate[]));
   }, [user]);
 
   if (loading) return <div className="mx-auto max-w-2xl px-4 py-20 text-center text-muted-foreground">Loading…</div>;
