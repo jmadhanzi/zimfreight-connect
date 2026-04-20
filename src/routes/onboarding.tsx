@@ -25,7 +25,7 @@ const schema = z.object({
   phone_whatsapp: z.string().min(7).max(20),
   city: z.string().min(1),
   role: z.enum(["carrier", "broker", "owner"]),
-  zimra_registered: z.boolean().default(false),
+  zimra_registered: z.boolean(),
 });
 type Values = z.infer<typeof schema>;
 

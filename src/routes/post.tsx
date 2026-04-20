@@ -45,13 +45,14 @@ const schema = z.object({
   is_urgent: z.boolean().default(false),
 }).refine((d) => d.origin !== d.destination, { message: "Origin and destination must differ", path: ["destination"] });
 
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.input<typeof schema>;
+type ParsedValues = z.output<typeof schema>;
 
 function PostLoadPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
-  const form = useForm<FormValues>({
+  const form = useForm<FormValues, unknown, ParsedValues>({
     resolver: zodResolver(schema),
     defaultValues: { num_loads: 1, is_border_crossing: false, zimra_required: false, is_urgent: false },
   });
@@ -73,7 +74,7 @@ function PostLoadPage() {
     );
   }
 
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (values: ParsedValues) => {
     setSubmitting(true);
     try {
       const rate_per_km = values.distance_km ? +(values.rate_usd / values.distance_km).toFixed(2) : null;
