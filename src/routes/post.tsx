@@ -215,6 +215,7 @@ function PostLoadPage() {
   function saveDraft(values: FormValues) {
     if (typeof window === "undefined") return;
     localStorage.setItem(DRAFT_KEY, JSON.stringify({ savedAt: Date.now(), values }));
+    void idbSaveDraft(values);
     lastSavedRef.current = Date.now();
   }
 
@@ -230,6 +231,7 @@ function PostLoadPage() {
   }
   function discardDraft() {
     localStorage.removeItem(DRAFT_KEY);
+    void idbClearDraft();
     setShowDraftPrompt(false);
   }
 
