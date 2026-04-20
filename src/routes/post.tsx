@@ -644,7 +644,7 @@ function StepRateDate({ form }: StepFormProps) {
 
 /* ----------------------------- Step 4 — Review ----------------------------- */
 
-function StepReview({ form }: StepFormProps) {
+function StepReview({ form, onEdit }: StepFormProps & { onEdit: (step: number) => void }) {
   const v = form.watch();
   const intel = useMemo(() => intelFor(v.origin, v.destination), [v.origin, v.destination]);
   const errs = form.formState.errors;
@@ -659,21 +659,21 @@ function StepReview({ form }: StepFormProps) {
             <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Tap a section to edit</span>
           </div>
           <div className="mt-3 space-y-2">
-            <ReviewRow label="Route" stepIndex={0} form={form}>
+            <ReviewRow label="Route" onEdit={() => onEdit(0)}>
               <span className="font-display text-base font-black">{v.origin || "—"} → {v.destination || "—"}</span>
               {intel?.distance && <span className="ml-2 font-mono-num text-xs text-muted-foreground">{intel.distance}km · {intel.highway}</span>}
             </ReviewRow>
-            <ReviewRow label="Cargo" stepIndex={1} form={form}>
+            <ReviewRow label="Cargo" onEdit={() => onEdit(1)}>
               <span>{v.load_type || "—"}</span>
               <span className="text-muted-foreground"> · {v.equipment_required || "—"}</span>
               <span className="text-muted-foreground"> · {v.weight_tonnes ? `${v.weight_tonnes}T × ${v.num_loads}` : "—"}</span>
             </ReviewRow>
-            <ReviewRow label="Rate" stepIndex={2} form={form}>
+            <ReviewRow label="Rate" onEdit={() => onEdit(2)}>
               <span className="font-display text-base font-black text-primary">{v.rate_usd ? formatUSD(Number(v.rate_usd)) : "—"}</span>
               <span className="text-muted-foreground"> · {v.payment_terms || "—"}</span>
               {v.is_urgent && <Badge className="ml-2 border-0 bg-destructive text-[10px] uppercase text-destructive-foreground">Urgent</Badge>}
             </ReviewRow>
-            <ReviewRow label="Pickup" stepIndex={2} form={form}>
+            <ReviewRow label="Pickup" onEdit={() => onEdit(2)}>
               <span>{v.pickup_date || "—"}</span>
               {v.delivery_deadline && <span className="text-muted-foreground"> → {v.delivery_deadline}</span>}
               {v.flexible_dates && <Badge variant="outline" className="ml-2 text-[10px]">Flex ±1d</Badge>}
