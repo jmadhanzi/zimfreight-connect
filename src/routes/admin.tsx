@@ -491,6 +491,98 @@ function ApprovalQueue() {
   );
 }
 
+/* --------------------------- Audit log tab --------------------------- */
+
+type AuditRow = {
+  id: string;
+  actor_id: string;
+  target_user_id: string | null;
+  action: string;
+  details: Record<string, unknown>;
+  created_at: string;
+};
+
+function AuditLogTab() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin", "audit-log"],
+    queryFn: async () => {
+      const { data: rows, error } = await db
+        .from("admin_audit_log")
+        .select("id,actor_id,target_user_id,action,details,created_at")
+        .order("created_at", { ascending: false })
+        .limit(200);
+      if (error) throw error;
+      const ids = Array.from(new Set(
+        (rows ?? []).flatMap((r: AuditRow) => [r.actor_id, r.target_user_id].filter(Boolean) as string[])
+      ));
+      const nameById = new Map<string, string>();
+      if (ids.length) {
+        const { data: profs } = await db.from("profiles").select("user_id,full_name").in("user_id", ids);
+        for (const p of (profs ?? []) as { user_id: string; full_name: string }[]) nameById.set(p.user_id, p.full_name || p.user_id.slice(0, 8));
+      }
+      return { rows: (rows ?? []) as AuditRow[], nameById };
+    },
+  });
+
+  const actionStyle = (action: string) => {
+    if (action.startsWith("subscription.approve")) return "bg-[color:var(--success)]/15 text-[color:var(--success)] border-[color:var(--success)]/30";
+    if (action.startsWith("subscription.reject")) return "bg-destructive/15 text-destructive border-destructive/30";
+    if (action === "role.grant") return "bg-primary/15 text-primary border-primary/30";
+    if (action === "role.revoke") return "bg-muted text-muted-foreground border-border";
+    return "bg-muted text-muted-foreground border-border";
+  };
+
+  const fmtTime = (iso: string) => {
+    const d = new Date(iso);
+    return d.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+  };
+
+  return (
+    <div className="mt-6 rounded-lg border border-border bg-card">
+      <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
+        <div>
+          <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Audit log</div>
+          <div className="font-display text-lg font-black uppercase tracking-tight">
+            Recent admin actions {data?.rows.length ? <span className="ml-2 font-mono text-xs text-muted-foreground">{data.rows.length}</span> : null}
+          </div>
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="space-y-2 p-5">
+          {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-12" />)}
+        </div>
+      ) : !data || data.rows.length === 0 ? (
+        <div className="px-5 py-12 text-center text-sm text-muted-foreground">
+          <ScrollText className="mx-auto mb-2 h-6 w-6" />
+          No admin actions logged yet.
+        </div>
+      ) : (
+        <ul className="divide-y divide-border">
+          {data.rows.map(r => {
+            const actor = data.nameById.get(r.actor_id) ?? r.actor_id.slice(0, 8);
+            const target = r.target_user_id ? (data.nameById.get(r.target_user_id) ?? r.target_user_id.slice(0, 8)) : null;
+            const detailStr = Object.keys(r.details ?? {}).length
+              ? Object.entries(r.details).map(([k, v]) => `${k}=${typeof v === "string" ? v : JSON.stringify(v)}`).join(" · ")
+              : "";
+            return (
+              <li key={r.id} className="flex flex-wrap items-center gap-3 px-5 py-3">
+                <span className="w-36 shrink-0 font-mono text-[11px] text-muted-foreground">{fmtTime(r.created_at)}</span>
+                <Badge variant="outline" className={cn("text-[10px] uppercase", actionStyle(r.action))}>{r.action}</Badge>
+                <span className="text-sm">
+                  <span className="font-medium">{actor}</span>
+                  {target && <> → <span className="font-medium">{target}</span></>}
+                </span>
+                {detailStr && <span className="ml-auto truncate font-mono text-[11px] text-muted-foreground">{detailStr}</span>}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 /* --------------------------- Users tab --------------------------- */
 
 type AppRole = "admin" | "moderator" | "user";
