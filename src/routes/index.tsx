@@ -2,10 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
-import {
-  ArrowRight, Truck, DollarSign, MessageCircle, ShieldCheck, WifiOff, BadgeCheck,
-  Lock, Phone, MapPin, Check,
-} from "lucide-react";
+import { ArrowRight, Lock, MapPin, Check } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
