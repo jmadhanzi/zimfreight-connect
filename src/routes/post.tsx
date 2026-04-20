@@ -277,7 +277,7 @@ function PostLoadPage() {
     const ok = await form.trigger(STEP_FIELDS[step] as never);
     if (!ok) { toast.error("Please fix the highlighted fields"); return; }
     saveDraft(form.getValues());
-    setStep(s => Math.min(2, s + 1));
+    setStep(s => Math.min(3, s + 1));
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const back = () => setStep(s => Math.max(0, s - 1));
