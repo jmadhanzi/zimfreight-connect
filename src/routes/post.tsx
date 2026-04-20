@@ -387,9 +387,9 @@ function PostLoadPage() {
 /* ----------------------------- Stepper ----------------------------- */
 
 function Stepper({ step }: { step: number }) {
-  const steps = ["Route & schedule", "Load & rate", "Contact & publish"];
+  const steps = ["Route", "Cargo", "Rate & Date", "Review"];
   return (
-    <div className="mt-6 grid grid-cols-3 gap-2">
+    <div className="mt-6 grid grid-cols-4 gap-2">
       {steps.map((s, i) => (
         <div key={s} className="flex flex-col gap-1.5">
           <div className={cn("h-1 rounded-full", i <= step ? "bg-primary" : "bg-border")} />
@@ -398,7 +398,7 @@ function Stepper({ step }: { step: number }) {
               i < step ? "bg-primary text-primary-foreground" : i === step ? "bg-primary text-primary-foreground" : "bg-border text-muted-foreground")}>
               {i < step ? <Check className="h-3 w-3" /> : i + 1}
             </span>
-            <span className={cn("font-mono text-[10px] uppercase tracking-widest", i === step ? "text-foreground" : "text-muted-foreground")}>{s}</span>
+            <span className={cn("font-mono text-[10px] uppercase tracking-widest truncate", i === step ? "text-foreground" : "text-muted-foreground")}>{s}</span>
           </div>
         </div>
       ))}
