@@ -425,6 +425,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -449,8 +470,16 @@ export type Database = {
           loads_booked: number
         }[]
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
+      app_role: "admin" | "moderator" | "user"
       load_status: "available" | "booked" | "completed" | "expired"
       plan_tier: "free" | "basic" | "pro" | "fleet"
       subscription_status: "active" | "pending" | "cancelled" | "expired"
@@ -582,6 +611,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "moderator", "user"],
       load_status: ["available", "booked", "completed", "expired"],
       plan_tier: ["free", "basic", "pro", "fleet"],
       subscription_status: ["active", "pending", "cancelled", "expired"],
