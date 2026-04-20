@@ -25,7 +25,7 @@ export function timeAgo(iso: string) {
  * based on hours since posted. Caps at 24h = 100%. Older posts look
  * further along the route.
  */
-export function transitProgress(iso: string, windowHours = 24) {
+export function transitProgress(iso: string, windowHours = 6) {
   // Avoid SSR/CSR hydration mismatch — render an empty bar on the server,
   // then progress fills in on client mount.
   if (typeof window === "undefined") return 0;
