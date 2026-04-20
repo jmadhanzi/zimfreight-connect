@@ -14,7 +14,266 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          carrier_id: string
+          created_at: string
+          id: string
+          load_id: string
+          message: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          carrier_id: string
+          created_at?: string
+          id?: string
+          load_id: string
+          message?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          carrier_id?: string
+          created_at?: string
+          id?: string
+          load_id?: string
+          message?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_load_id_fkey"
+            columns: ["load_id"]
+            isOneToOne: false
+            referencedRelation: "loads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      border_status: {
+        Row: {
+          border_name: string
+          country_from: string
+          country_to: string
+          id: string
+          status: string
+          updated_at: string
+          wait_hours: number
+        }
+        Insert: {
+          border_name: string
+          country_from: string
+          country_to: string
+          id?: string
+          status?: string
+          updated_at?: string
+          wait_hours?: number
+        }
+        Update: {
+          border_name?: string
+          country_from?: string
+          country_to?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          wait_hours?: number
+        }
+        Relationships: []
+      }
+      loads: {
+        Row: {
+          commodity_value: number | null
+          created_at: string
+          delivery_deadline: string | null
+          destination: string
+          distance_km: number | null
+          equipment_required: string | null
+          highway: string | null
+          id: string
+          is_border_crossing: boolean
+          is_urgent: boolean
+          load_type: string
+          notes: string | null
+          num_loads: number
+          origin: string
+          payment_terms: string | null
+          pickup_date: string | null
+          poster_id: string
+          rate_per_km: number | null
+          rate_usd: number
+          status: Database["public"]["Enums"]["load_status"]
+          updated_at: string
+          views: number
+          weight_tonnes: number | null
+          zimra_required: boolean
+        }
+        Insert: {
+          commodity_value?: number | null
+          created_at?: string
+          delivery_deadline?: string | null
+          destination: string
+          distance_km?: number | null
+          equipment_required?: string | null
+          highway?: string | null
+          id?: string
+          is_border_crossing?: boolean
+          is_urgent?: boolean
+          load_type: string
+          notes?: string | null
+          num_loads?: number
+          origin: string
+          payment_terms?: string | null
+          pickup_date?: string | null
+          poster_id: string
+          rate_per_km?: number | null
+          rate_usd: number
+          status?: Database["public"]["Enums"]["load_status"]
+          updated_at?: string
+          views?: number
+          weight_tonnes?: number | null
+          zimra_required?: boolean
+        }
+        Update: {
+          commodity_value?: number | null
+          created_at?: string
+          delivery_deadline?: string | null
+          destination?: string
+          distance_km?: number | null
+          equipment_required?: string | null
+          highway?: string | null
+          id?: string
+          is_border_crossing?: boolean
+          is_urgent?: boolean
+          load_type?: string
+          notes?: string | null
+          num_loads?: number
+          origin?: string
+          payment_terms?: string | null
+          pickup_date?: string | null
+          poster_id?: string
+          rate_per_km?: number | null
+          rate_usd?: number
+          status?: Database["public"]["Enums"]["load_status"]
+          updated_at?: string
+          views?: number
+          weight_tonnes?: number | null
+          zimra_required?: boolean
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          city: string | null
+          company_name: string | null
+          created_at: string
+          full_name: string
+          id: string
+          phone_whatsapp: string | null
+          rating: number
+          role: Database["public"]["Enums"]["user_role"]
+          total_loads: number
+          updated_at: string
+          user_id: string
+          verified: boolean
+          zimra_registered: boolean
+        }
+        Insert: {
+          city?: string | null
+          company_name?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          phone_whatsapp?: string | null
+          rating?: number
+          role?: Database["public"]["Enums"]["user_role"]
+          total_loads?: number
+          updated_at?: string
+          user_id: string
+          verified?: boolean
+          zimra_registered?: boolean
+        }
+        Update: {
+          city?: string | null
+          company_name?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          phone_whatsapp?: string | null
+          rating?: number
+          role?: Database["public"]["Enums"]["user_role"]
+          total_loads?: number
+          updated_at?: string
+          user_id?: string
+          verified?: boolean
+          zimra_registered?: boolean
+        }
+        Relationships: []
+      }
+      route_rates: {
+        Row: {
+          avg_rate_per_km: number
+          destination: string
+          id: string
+          last_updated: string
+          origin: string
+          weekly_loads: number
+        }
+        Insert: {
+          avg_rate_per_km: number
+          destination: string
+          id?: string
+          last_updated?: string
+          origin: string
+          weekly_loads?: number
+        }
+        Update: {
+          avg_rate_per_km?: number
+          destination?: string
+          id?: string
+          last_updated?: string
+          origin?: string
+          weekly_loads?: number
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          ecocash_ref: string | null
+          expires_at: string | null
+          id: string
+          plan: Database["public"]["Enums"]["plan_tier"]
+          status: Database["public"]["Enums"]["subscription_status"]
+          stripe_subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          ecocash_ref?: string | null
+          expires_at?: string | null
+          id?: string
+          plan?: Database["public"]["Enums"]["plan_tier"]
+          status?: Database["public"]["Enums"]["subscription_status"]
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          ecocash_ref?: string | null
+          expires_at?: string | null
+          id?: string
+          plan?: Database["public"]["Enums"]["plan_tier"]
+          status?: Database["public"]["Enums"]["subscription_status"]
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +282,10 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      load_status: "available" | "booked" | "completed" | "expired"
+      plan_tier: "free" | "basic" | "pro" | "fleet"
+      subscription_status: "active" | "pending" | "cancelled" | "expired"
+      user_role: "carrier" | "broker" | "owner"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +412,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      load_status: ["available", "booked", "completed", "expired"],
+      plan_tier: ["free", "basic", "pro", "fleet"],
+      subscription_status: ["active", "pending", "cancelled", "expired"],
+      user_role: ["carrier", "broker", "owner"],
+    },
   },
 } as const
