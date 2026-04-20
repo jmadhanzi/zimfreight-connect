@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthStore } from "@/stores/authStore";
+import { NotificationBell } from "@/components/dashboard/NotificationsPanel";
 
 export function Header({ onLogin }: { onLogin: () => void }) {
   const { user, profile } = useAuth();
@@ -63,6 +64,7 @@ export function Header({ onLogin }: { onLogin: () => void }) {
                 <span className="text-sm text-muted-foreground">
                   {profile?.full_name || user.email}
                 </span>
+                <NotificationBell />
                 <Button variant="outline" size="sm" onClick={signOut}>Sign out</Button>
               </>
             ) : (
