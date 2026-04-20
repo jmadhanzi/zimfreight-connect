@@ -13,6 +13,15 @@ import { recordLoadView } from "@/components/conversion/SoftGateModal";
 import { cacheRate, getCachedRate } from "@/lib/offlineDb";
 import { useNetworkStatus } from "@/hooks/useNetworkStatus";
 
+function humanCacheAge(ms: number) {
+  const m = Math.floor(ms / 60_000);
+  if (m < 1) return "just now";
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
+}
+
 interface Props {
   load: Load | null;
   onClose: () => void;
