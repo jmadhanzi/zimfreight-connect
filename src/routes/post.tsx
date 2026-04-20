@@ -326,7 +326,7 @@ function PostLoadPage() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-10">
+    <div className="mx-auto max-w-6xl px-4 py-6 md:px-6 md:py-10 md:pb-10 pb-28">
       {/* Header */}
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
@@ -359,7 +359,7 @@ function PostLoadPage() {
         {step === 2 && <Step3 form={form} />}
 
         {/* Nav */}
-        <div className="mt-6 flex items-center justify-between gap-3">
+        <div className="mt-6 flex items-center justify-between gap-3 md:static fixed inset-x-0 bottom-16 z-30 border-t border-border bg-background/95 px-4 py-3 backdrop-blur md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
           {step > 0 ? (
             <Button type="button" variant="outline" onClick={back}><ArrowLeft className="mr-1.5 h-4 w-4" /> Back</Button>
           ) : <span />}
