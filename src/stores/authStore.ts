@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { Session, User } from "@supabase/supabase-js";
-import type { Profile, Subscription } from "@/types";
+import type { PlanTier, Profile, Subscription } from "@/types";
+import { PLAN_LEVEL } from "@/types";
 
 interface AuthState {
   session: Session | null;
@@ -13,6 +14,8 @@ interface AuthState {
   setSubscription: (s: Subscription | null) => void;
   setLoading: (l: boolean) => void;
   reset: () => void;
+  hasPlan: (min: PlanTier) => boolean;
+  currentPlan: () => PlanTier;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -26,4 +29,13 @@ export const useAuthStore = create<AuthState>((set) => ({
   setSubscription: (subscription) => set({ subscription }),
   setLoading: (loading) => set({ loading }),
   reset: () => set({ session: null, user: null, profile: null, subscription: null }),
+  currentPlan: () => {
+    const sub = (useAuthStore.getState?.() as AuthState | undefined)?.subscription;
+    return (sub?.plan as PlanTier) ?? "free";
+  },
+  hasPlan: (min: PlanTier) => {
+    const sub = (useAuthStore.getState?.() as AuthState | undefined)?.subscription;
+    const plan = (sub?.plan as PlanTier) ?? "free";
+    return PLAN_LEVEL[plan] >= PLAN_LEVEL[min];
+  },
 }));
