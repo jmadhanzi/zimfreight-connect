@@ -385,10 +385,12 @@ function ApprovalQueue() {
   const approve = useMutation({
     mutationFn: async ({ id, plan }: { id: string; plan: PlanTier }) => {
       const expires = new Date(Date.now() + 30 * 86400_000).toISOString();
+      const { data: row } = await db.from("subscriptions").select("user_id,ecocash_ref").eq("id", id).maybeSingle();
       const { error } = await db.from("subscriptions").update({
         status: "active", expires_at: expires, plan,
       }).eq("id", id);
       if (error) throw error;
+      await logAudit("subscription.approve", row?.user_id ?? null, { subscription_id: id, plan, ecocash_ref: row?.ecocash_ref ?? null });
     },
     onMutate: ({ id }) => setBusyId(id),
     onSettled: () => setBusyId(null),
@@ -401,8 +403,10 @@ function ApprovalQueue() {
 
   const reject = useMutation({
     mutationFn: async ({ id }: { id: string }) => {
+      const { data: row } = await db.from("subscriptions").select("user_id,plan,ecocash_ref").eq("id", id).maybeSingle();
       const { error } = await db.from("subscriptions").update({ status: "expired" }).eq("id", id);
       if (error) throw error;
+      await logAudit("subscription.reject", row?.user_id ?? null, { subscription_id: id, plan: row?.plan ?? null, ecocash_ref: row?.ecocash_ref ?? null });
     },
     onMutate: ({ id }) => setBusyId(id),
     onSettled: () => setBusyId(null),
