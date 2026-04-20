@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLoads } from "@/hooks/useLoads";
 import { LoadFilters, DEFAULT_FILTERS, type Filters } from "@/components/loads/LoadFilters";
 import { LoadTable, getSaved, toggleSaved } from "@/components/loads/LoadTable";
+import { SwipeableLoadCard } from "@/components/loads/SwipeableLoadCard";
 import { LoadDetailSheet } from "@/components/loads/LoadDetailSheet";
 import { StatsBar } from "@/components/loads/StatsBar";
 import { BoardSidebar } from "@/components/loads/Sidebar";
@@ -16,6 +17,19 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { PricingModal } from "@/components/paywall/PricingModal";
 import { SoftGateModal } from "@/components/conversion/SoftGateModal";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { toast } from "sonner";
+
+const HIDDEN_KEY = "zf:hidden_loads";
+function getHidden(): string[] {
+  if (typeof window === "undefined") return [];
+  try { const v = JSON.parse(localStorage.getItem(HIDDEN_KEY) ?? "[]"); return Array.isArray(v) ? v : []; } catch { return []; }
+}
+function addHidden(id: string) {
+  const next = Array.from(new Set([...getHidden(), id]));
+  localStorage.setItem(HIDDEN_KEY, JSON.stringify(next));
+  return next;
+}
 
 const searchSchema = z.object({
   q: fallback(z.string(), "").default(""),
@@ -74,14 +88,27 @@ function LoadBoardPage() {
   const [authOpen, setAuthOpen] = useState(false);
   const [pricingOpen, setPricingOpen] = useState(false);
   const [savedIds, setSavedIds] = useState<string[]>([]);
+  const [hiddenIds, setHiddenIds] = useState<string[]>([]);
+  const isMobile = useIsMobile();
 
-  useEffect(() => { setSavedIds(getSaved()); }, []);
+  useEffect(() => { setSavedIds(getSaved()); setHiddenIds(getHidden()); }, []);
 
   const onToggleSave = (id: string) => setSavedIds(toggleSaved(id));
+  const onHide = (id: string) => {
+    setHiddenIds(addHidden(id));
+    toast("Hidden from your feed", {
+      action: { label: "Undo", onClick: () => {
+        const next = getHidden().filter(x => x !== id);
+        localStorage.setItem(HIDDEN_KEY, JSON.stringify(next));
+        setHiddenIds(next);
+      }},
+    });
+  };
 
   const filtered = useMemo(() => {
     const f = filters;
     let arr = loads.filter(l => {
+      if (hiddenIds.includes(l.id)) return false;
       if (f.origin !== "all" && l.origin !== f.origin) return false;
       if (f.destination !== "all" && l.destination !== f.destination) return false;
       if (f.loadType !== "all" && l.load_type !== f.loadType) return false;
@@ -113,7 +140,7 @@ function LoadBoardPage() {
       }
     });
     return arr;
-  }, [loads, filters, search.sort]);
+  }, [loads, filters, search.sort, hiddenIds]);
 
   const visible = isFree ? filtered.slice(0, FREE_LOAD_LIMIT) : filtered;
   const hiddenCount = isFree ? Math.max(0, filtered.length - FREE_LOAD_LIMIT) : 0;
@@ -148,16 +175,34 @@ function LoadBoardPage() {
               </div>
             ) : (
               <>
-                <LoadTable
-                  loads={visible}
-                  onSelect={(l) => setSelected(l)}
-                  canSeeContacts={canSeeContacts}
-                  onUpgrade={() => (user ? setPricingOpen(true) : setAuthOpen(true))}
-                  sort={search.sort}
-                  onSort={setSort}
-                  savedIds={savedIds}
-                  onToggleSave={onToggleSave}
-                />
+                {isMobile ? (
+                  <div className="space-y-2.5">
+                    <p className="px-1 text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                      Swipe right to save · left to hide
+                    </p>
+                    {visible.map((l) => (
+                      <SwipeableLoadCard
+                        key={l.id}
+                        load={l}
+                        saved={savedIds.includes(l.id)}
+                        onClick={() => setSelected(l)}
+                        onSave={() => onToggleSave(l.id)}
+                        onHide={() => onHide(l.id)}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <LoadTable
+                    loads={visible}
+                    onSelect={(l) => setSelected(l)}
+                    canSeeContacts={canSeeContacts}
+                    onUpgrade={() => (user ? setPricingOpen(true) : setAuthOpen(true))}
+                    sort={search.sort}
+                    onSort={setSort}
+                    savedIds={savedIds}
+                    onToggleSave={onToggleSave}
+                  />
+                )}
                 {hiddenCount > 0 && (
                   <div className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/10 to-card p-8 text-center">
                     <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-primary">
