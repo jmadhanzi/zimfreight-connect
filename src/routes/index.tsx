@@ -229,7 +229,7 @@ function LandingPage() {
                   <h3 className="font-display text-xl font-extrabold tracking-tight text-foreground">Live Load Board</h3>
                   <p className="text-xs text-muted-foreground">Real-time opportunities updating every 30 seconds</p>
                 </div>
-                <Link to="/board" className="text-xs font-bold text-secondary hover:underline">View All</Link>
+                <Link to="/board" search={{}} className="text-xs font-bold text-secondary hover:underline">View All</Link>
               </div>
               <div className="mt-5 space-y-3">
                 {FLOAT_LOADS.slice(0, 3).map((l, i) => (

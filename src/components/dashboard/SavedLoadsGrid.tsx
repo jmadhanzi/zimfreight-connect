@@ -7,14 +7,14 @@ export function SavedLoadsGrid({ items }: { items: Load[] }) {
     return (
       <div className="rounded-md border border-dashed border-border bg-card/50 p-6 text-center text-xs text-muted-foreground">
         <Bookmark className="mx-auto mb-1 h-4 w-4 opacity-50" />
-        No saved loads. Bookmark loads from the <Link to="/board" className="text-primary hover:underline">Load Board</Link>.
+        No saved loads. Bookmark loads from the <Link to="/board" search={{}} className="text-primary hover:underline">Load Board</Link>.
       </div>
     );
   }
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((l) => (
-        <Link key={l.id} to="/board" className="group rounded-md border border-border bg-card p-3 transition-colors hover:border-primary">
+        <Link key={l.id} to="/board" search={{}} className="group rounded-md border border-border bg-card p-3 transition-colors hover:border-primary">
           <div className="font-display text-sm font-bold uppercase tracking-tight text-foreground">{l.origin} → {l.destination}</div>
           <div className="mt-1 text-[11px] text-muted-foreground">{l.load_type}{l.pickup_date ? ` · ${l.pickup_date}` : ""}</div>
           <div className="mt-2 flex items-center justify-between">
