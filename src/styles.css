@@ -106,6 +106,33 @@
 @utility font-display { font-family: var(--font-display); }
 @utility font-mono-num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee { animation: marquee 40s linear infinite; }
+
+/* Floating cards in hero */
+@keyframes float-up {
+  0% { transform: translateY(20px); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-340px); opacity: 0; }
+}
+.animate-float-up { animation: float-up 8s linear infinite; }
+
+/* Stagger fade-in */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up { animation: fade-up 0.6s ease-out both; }
+
+/* Slide up on view (used by IntersectionObserver toggling .in-view) */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+
 /* Zimbabwe flag accent strip */
 .zim-flag-strip {
   height: 3px;
