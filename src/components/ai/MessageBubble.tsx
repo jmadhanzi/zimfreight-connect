@@ -1,12 +1,13 @@
+import type { ReactNode } from "react";
 import { Check, CheckCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 function renderMarkdown(text: string) {
   // tiny markdown: **bold**, *italic*, line breaks, bullets
-  const parts: (string | JSX.Element)[] = [];
+  const parts: ReactNode[] = [];
   const lines = text.split("\n");
   lines.forEach((line, i) => {
-    let rendered: (string | JSX.Element)[] = [];
+    const rendered: ReactNode[] = [];
     const tokens = line.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
     tokens.forEach((tok, j) => {
       if (tok.startsWith("**") && tok.endsWith("**")) rendered.push(<strong key={`${i}-${j}`}>{tok.slice(2, -2)}</strong>);
