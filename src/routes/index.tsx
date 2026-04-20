@@ -310,7 +310,7 @@ function LandingPage() {
           <div className="reveal flex flex-col items-center gap-2 text-center">
             <span className="font-mono text-xs uppercase tracking-widest text-primary">Trusted across SADC</span>
             <h2 className="font-display text-2xl font-black uppercase tracking-tight md:text-3xl">
-              Trusted by <span className="text-secondary">2,400+</span> carriers &amp; partners
+              Trusted by <span className="text-secondary"><CountUp to={2400} suffix="+" /></span> carriers &amp; partners
             </h2>
             <p className="max-w-xl text-sm text-muted-foreground">
               From owner-operators to national fleets and SADC freight forwarders.
