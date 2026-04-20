@@ -1,5 +1,6 @@
 import { ArrowRight, Bookmark, BookmarkCheck, MessageCircle, Lock, Flame, ShieldCheck, ChevronUp, ChevronDown, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { formatUSD, timeAgo, transitProgress, cn } from "@/lib/utils";
 import type { Load, SortKey } from "@/types";
 
