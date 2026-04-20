@@ -5,6 +5,12 @@ import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { ArrowRight, Lock, MapPin, Check, ShieldCheck } from "lucide-react";
 import { StickyLandingCta } from "@/components/conversion/StickyLandingCta";
 import heroBg from "@/assets/hero-zim-highway.jpg";
+import logoMoyo from "@/assets/partners/moyo.svg?url";
+import logoKhumalo from "@/assets/partners/khumalo.svg?url";
+import logoSable from "@/assets/partners/sable.svg?url";
+import logoZambezi from "@/assets/partners/zambezi.svg?url";
+import logoKopje from "@/assets/partners/kopje.svg?url";
+import logoLimpopo from "@/assets/partners/limpopo.svg?url";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -313,21 +319,26 @@ function LandingPage() {
 
           <div className="reveal mt-10 grid grid-cols-2 items-center gap-x-8 gap-y-8 sm:grid-cols-3 md:grid-cols-6">
             {[
-              "Moyo Logistics",
-              "Khumalo Transport",
-              "Sable Freight",
-              "Zambezi Cargo",
-              "Kopje Haulage",
-              "Limpopo Lines",
-            ].map((name) => (
+              { name: "Moyo Logistics", src: logoMoyo },
+              { name: "Khumalo Transport", src: logoKhumalo },
+              { name: "Sable Freight", src: logoSable },
+              { name: "Zambezi Cargo", src: logoZambezi },
+              { name: "Kopje Haulage", src: logoKopje },
+              { name: "Limpopo Lines", src: logoLimpopo },
+            ].map((p) => (
               <div
-                key={name}
+                key={p.name}
                 className="group flex h-16 items-center justify-center rounded-lg border border-border bg-background px-4 transition-all hover:border-primary/40 hover:shadow-[0_0_30px_-12px_var(--primary)]"
-                title={name}
+                title={p.name}
               >
-                <span className="font-display text-base font-black uppercase tracking-tight text-muted-foreground transition-colors group-hover:text-primary md:text-lg">
-                  {name}
-                </span>
+                <img
+                  src={p.src}
+                  alt={p.name}
+                  loading="lazy"
+                  width={140}
+                  height={36}
+                  className="h-9 w-auto opacity-60 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0"
+                />
               </div>
             ))}
           </div>
