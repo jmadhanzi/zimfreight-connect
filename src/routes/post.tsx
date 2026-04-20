@@ -40,9 +40,9 @@ const schema = z.object({
   pickup_date: z.string().optional(),
   delivery_deadline: z.string().optional(),
   notes: z.string().max(500).optional(),
-  is_border_crossing: z.boolean().default(false),
-  zimra_required: z.boolean().default(false),
-  is_urgent: z.boolean().default(false),
+  is_border_crossing: z.boolean(),
+  zimra_required: z.boolean(),
+  is_urgent: z.boolean(),
 }).refine((d) => d.origin !== d.destination, { message: "Origin and destination must differ", path: ["destination"] });
 
 type FormValues = z.input<typeof schema>;
