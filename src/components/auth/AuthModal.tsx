@@ -10,26 +10,29 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Truck, Loader2 } from "lucide-react";
 
-const signInSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-});
-const signUpSchema = signInSchema.extend({
-  full_name: z.string().min(2).max(80),
-});
-
 type Mode = "signin" | "signup";
+
+const schema = z.object({
+  email: z.string().email("Enter a valid email"),
+  password: z.string().min(6, "Min 6 characters"),
+  full_name: z.string().max(80).optional(),
+});
+type FormValues = z.infer<typeof schema>;
 
 export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange: (b: boolean) => void }) {
   const [mode, setMode] = useState<Mode>("signin");
   const [loading, setLoading] = useState(false);
 
-  const form = useForm({
-    resolver: zodResolver(mode === "signin" ? signInSchema : signUpSchema),
+  const form = useForm<FormValues>({
+    resolver: zodResolver(schema),
     defaultValues: { email: "", password: "", full_name: "" },
   });
 
-  const onSubmit = async (values: { email: string; password: string; full_name?: string }) => {
+  const onSubmit = async (values: FormValues) => {
+    if (mode === "signup" && (!values.full_name || values.full_name.length < 2)) {
+      form.setError("full_name", { message: "Full name required" });
+      return;
+    }
     setLoading(true);
     try {
       if (mode === "signup") {
@@ -53,8 +56,7 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
       onOpenChange(false);
       form.reset();
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Something went wrong";
-      toast.error(msg);
+      toast.error(e instanceof Error ? e.message : "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -82,7 +84,7 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
             <div className="space-y-1.5">
               <Label htmlFor="full_name">Full name</Label>
               <Input id="full_name" {...form.register("full_name")} placeholder="Tendai Moyo" />
-              {form.formState.errors.full_name && <p className="text-xs text-destructive">{form.formState.errors.full_name.message as string}</p>}
+              {form.formState.errors.full_name && <p className="text-xs text-destructive">{form.formState.errors.full_name.message}</p>}
             </div>
           )}
           <div className="space-y-1.5">
