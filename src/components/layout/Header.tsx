@@ -116,6 +116,11 @@ export function Header({ onLogin }: { onLogin: () => void }) {
                   {l.label}
                 </Link>
               ))}
+              {isAdmin && (
+                <Link to="/admin" className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-sm font-semibold text-primary" onClick={() => setOpen(false)}>
+                  <ShieldCheck className="h-3.5 w-3.5" /> Admin
+                </Link>
+              )}
               <div className="mt-2 border-t border-border pt-2">
                 {user ? (
                   <Button variant="outline" size="sm" className="w-full" onClick={signOut}>Sign out</Button>
