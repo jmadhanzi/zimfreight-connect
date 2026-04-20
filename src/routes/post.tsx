@@ -150,8 +150,13 @@ type ParsedValues = z.output<typeof schema>;
 
 const DRAFT_KEY = "zf:post_draft_v1";
 const STEP_FIELDS: (keyof FormValues)[][] = [
-  ["origin", "destination", "pickup_date", "delivery_deadline", "pickup_address", "flexible_dates"],
-  ["load_type", "equipment_required", "weight_tonnes", "num_loads", "commodity_value", "rate_usd", "payment_terms", "is_urgent", "notes"],
+  // Step 0 — Route
+  ["origin", "destination", "pickup_address"],
+  // Step 1 — Cargo
+  ["load_type", "equipment_required", "weight_tonnes", "num_loads", "commodity_value"],
+  // Step 2 — Rate & Date
+  ["rate_usd", "payment_terms", "pickup_date", "delivery_deadline", "flexible_dates", "is_urgent", "notes"],
+  // Step 3 — Review (contact + distribution)
   ["company_name", "contact_person", "whatsapp", "alt_contact", "company_address", "share_to_zf", "share_harare", "share_bulawayo", "share_zha", "share_email_network", "is_private"],
 ];
 
