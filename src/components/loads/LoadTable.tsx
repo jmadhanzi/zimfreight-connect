@@ -1,5 +1,4 @@
-import { ArrowRight, Bookmark, BookmarkCheck, MessageCircle, Lock, Flame, ShieldCheck, ChevronUp, ChevronDown } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { ArrowRight, Bookmark, BookmarkCheck, MessageCircle, Lock, Flame, ShieldCheck, ChevronUp, ChevronDown, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatUSD, timeAgo, cn } from "@/lib/utils";
 import type { Load, SortKey } from "@/types";
@@ -87,7 +86,11 @@ function Row({ load, onSelect, canSeeContacts, onUpgrade, saved, onToggleSave }:
       <td className="px-3 py-3">
         <div className="flex items-center gap-2 font-display text-base font-bold leading-none">
           {load.origin}<ArrowRight className="h-3.5 w-3.5 text-primary" />{load.destination}
-          {load.is_border_crossing && <Badge className="ml-1 border-0 bg-[color-mix(in_oklab,var(--info)_20%,transparent)] text-[10px] font-bold uppercase text-[color:var(--info)]">Border</Badge>}
+          {load.is_border_crossing && (
+            <span className="glass-chip glass-chip-info ml-1 uppercase">
+              <MapPin className="h-2.5 w-2.5" /> Border
+            </span>
+          )}
         </div>
         <div className="mt-1 flex items-center gap-2 font-mono text-[10px] text-muted-foreground">
           {load.highway && <span className="rounded bg-background/60 px-1.5 py-0.5 text-foreground/80">{load.highway}</span>}
@@ -113,7 +116,11 @@ function Row({ load, onSelect, canSeeContacts, onUpgrade, saved, onToggleSave }:
             <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
               <span className="text-[color:var(--zim-yellow)]">★ 4.8</span>
               <span>· 14d pay</span>
-              {load.zimra_required && <span className="inline-flex items-center gap-0.5 text-primary"><ShieldCheck className="h-2.5 w-2.5" /> ZIMRA</span>}
+              {load.zimra_required && (
+                <span className="glass-chip glass-chip-amber uppercase">
+                  <ShieldCheck className="h-2.5 w-2.5" /> ZIMRA
+                </span>
+              )}
             </div>
           </div>
         ) : (
@@ -128,13 +135,15 @@ function Row({ load, onSelect, canSeeContacts, onUpgrade, saved, onToggleSave }:
       </td>
       <td className="px-3 py-3">
         {load.is_urgent ? (
-          <Badge className="border-0 bg-destructive text-[10px] font-bold uppercase text-destructive-foreground"><Flame className="mr-1 h-3 w-3" /> Urgent</Badge>
+          <span className="glass-chip glass-chip-danger uppercase">
+            <Flame className="h-3 w-3" /> Urgent
+          </span>
         ) : load.status === "available" ? (
-          <Badge className="border-0 bg-[color-mix(in_oklab,var(--success)_20%,transparent)] text-[10px] font-bold uppercase text-[color:var(--success)]">Available</Badge>
+          <span className="glass-chip glass-chip-success uppercase">Available</span>
         ) : load.status === "booked" ? (
-          <Badge className="border-0 bg-destructive/20 text-[10px] font-bold uppercase text-destructive">Booked</Badge>
+          <span className="glass-chip glass-chip-danger uppercase">Booked</span>
         ) : (
-          <Badge variant="outline" className="text-[10px] font-bold uppercase">{load.status}</Badge>
+          <span className="glass-chip uppercase">{load.status}</span>
         )}
       </td>
       <td className="px-3 py-3">
