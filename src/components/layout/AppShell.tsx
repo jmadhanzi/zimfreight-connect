@@ -19,6 +19,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <OfflineBanner />
+      {import.meta.env.DEV && (
+        <div className="bg-primary/15 px-3 py-1 text-center font-mono text-[10px] uppercase tracking-widest text-primary">
+          ⚡ Dev bypass active · Fleet tier forced · all paywalls open
+        </div>
+      )}
       <Header onLogin={() => setAuthOpen(true)} />
       <main className="flex-1 pb-16 md:pb-0">{children}</main>
       <div className="hidden md:block"><Footer /></div>
