@@ -457,22 +457,24 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* ============ FINAL CTA ============ */}
-      <section className="bg-background py-24 md:py-32">
-        <div className="reveal mx-auto max-w-3xl px-4 text-center md:px-6">
-          <h2 className="font-display text-5xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl">
-            Your next load <br className="md:hidden" />
-            <span className="text-primary">is waiting.</span>
+      {/* ============ FINAL CTA — Kinetic panel ============ */}
+      <section className="bg-background px-4 py-16 md:px-6 md:py-24">
+        <div className="reveal mx-auto max-w-5xl overflow-hidden rounded-3xl kinetic-gradient p-10 text-center md:p-16">
+          <h2 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tighter text-white md:text-5xl">
+            Ready to modernize <br /> your logistics?
           </h2>
-          <p className="mt-5 text-base text-muted-foreground md:text-lg">
-            Join 2,400+ Zimbabwean carriers and brokers already on ZimFreight.
+          <p className="mx-auto mt-5 max-w-xl text-base text-white/70 md:text-lg">
+            Join the network of professional truckers and shippers streamlining
+            Zimbabwe's supply chain.
           </p>
-          <Button asChild size="lg" className="mt-8 h-14 bg-primary px-8 text-primary-foreground hover:bg-primary/90 font-display text-lg font-black uppercase tracking-wide">
-            <Link to="/board">Get Started Free — No Credit Card</Link>
-          </Button>
-          <p className="mt-5 text-xs text-muted-foreground">
-            🔒 Secure · HTTPS · Your data stays in Zimbabwe
-          </p>
+          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Button asChild size="lg" className="rounded-full bg-secondary px-8 py-6 font-extrabold text-secondary-foreground shadow-xl shadow-secondary/20 hover:bg-secondary/90">
+              <Link to="/board">Create Carrier Account</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="rounded-full border-white/20 bg-transparent px-8 py-6 font-extrabold text-white hover:bg-white/10 hover:text-white">
+              <Link to="/post">Register as Shipper</Link>
+            </Button>
+          </div>
         </div>
       </section>
     </div>
