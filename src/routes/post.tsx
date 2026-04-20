@@ -502,7 +502,7 @@ function Step2({ form }: StepFormProps) {
           <Field label="Weight (tonnes)" error={errs.weight_tonnes?.message}>
             <Controller control={form.control} name="weight_tonnes" render={({ field }) => (
               <div className="space-y-2">
-                <Input type="number" step="0.5" min={0.5} max={60} value={field.value ?? ""} onChange={(e) => field.onChange(e.target.value === "" ? "" : Number(e.target.value))} />
+                <Input type="number" step="0.5" min={0.5} max={60} value={(field.value as number | string | undefined) ?? ""} onChange={(e) => field.onChange(e.target.value === "" ? "" : Number(e.target.value))} />
                 <Slider min={0.5} max={60} step={0.5} value={[Number(field.value) || 0.5]} onValueChange={([v]) => field.onChange(v)} />
               </div>
             )} />
