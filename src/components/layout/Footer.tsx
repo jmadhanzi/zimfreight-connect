@@ -7,10 +7,8 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-4 md:px-6">
         <div>
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Truck className="h-4 w-4" strokeWidth={2.5} />
-            </div>
-            <span className="font-display text-xl font-black">ZIM<span className="text-primary">FREIGHT</span></span>
+            <Truck className="h-6 w-6 text-secondary" strokeWidth={2.5} />
+            <span className="font-display text-xl font-extrabold tracking-tighter text-foreground">ZimFreight</span>
           </div>
           <p className="mt-3 max-w-xs text-sm text-muted-foreground">
             Zimbabwe's smartest load board. Built by truckers, for truckers.

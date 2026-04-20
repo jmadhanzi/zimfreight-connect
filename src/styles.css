@@ -48,63 +48,76 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --font-display: "Barlow Condensed", system-ui, sans-serif;
-  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-display: "Manrope", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 :root {
   --radius: 0.5rem;
-  /* ZimFreight dark palette (only mode) */
-  --background: oklch(0.18 0.012 260);          /* #0C0F14 */
-  --bg-secondary: oklch(0.22 0.014 260);        /* #131821 */
-  --foreground: oklch(0.94 0.012 80);           /* #F0EBE0 */
-  --card: oklch(0.25 0.018 260);                /* #1A2130 */
-  --card-foreground: oklch(0.94 0.012 80);
-  --popover: oklch(0.22 0.014 260);
-  --popover-foreground: oklch(0.94 0.012 80);
-  --primary: oklch(0.78 0.16 75);               /* #F4A621 gold */
-  --primary-foreground: oklch(0.18 0.012 260);
-  --secondary: oklch(0.28 0.018 260);
-  --secondary-foreground: oklch(0.94 0.012 80);
-  --muted: oklch(0.28 0.014 260);
-  --muted-foreground: oklch(0.68 0.018 230);    /* #9BA8B5 */
-  --accent: oklch(0.78 0.16 75);
-  --accent-foreground: oklch(0.18 0.012 260);
-  --destructive: oklch(0.58 0.22 28);           /* #CF2B1A */
-  --destructive-foreground: oklch(0.96 0.01 80);
-  --success: oklch(0.7 0.18 145);               /* #1DB954 */
-  --info: oklch(0.7 0.13 235);                  /* #2D9CDB */
-  --gold: oklch(0.78 0.16 75);
+  /* Kinetic Horizon — editorial light theme */
+  --background: oklch(0.985 0.004 230);          /* #f7fafc */
+  --bg-secondary: oklch(0.965 0.004 230);        /* #f1f4f6 surface-container-low */
+  --foreground: oklch(0.22 0.02 250);            /* #181c1e on-surface */
+  --card: oklch(1 0 0);                          /* pure white surface-container-lowest */
+  --card-foreground: oklch(0.22 0.02 250);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.02 250);
+  /* primary = deep navy (Kinetic primary #000a1e -> container #002147) */
+  --primary: oklch(0.16 0.04 265);
+  --primary-foreground: oklch(1 0 0);
+  /* secondary = amber action color #fdaf00 */
+  --secondary: oklch(0.79 0.16 78);
+  --secondary-foreground: oklch(0.18 0.04 60);   /* dark amber text on light amber */
+  --muted: oklch(0.94 0.005 230);
+  --muted-foreground: oklch(0.42 0.018 250);     /* #44474e on-surface-variant */
+  --accent: oklch(0.79 0.16 78);                 /* amber accent */
+  --accent-foreground: oklch(0.18 0.04 60);
+  --destructive: oklch(0.58 0.22 28);
+  --destructive-foreground: oklch(0.985 0.004 230);
+  --success: oklch(0.62 0.16 155);
+  --info: oklch(0.55 0.13 235);
+  --gold: oklch(0.79 0.16 78);
   --zim-green: oklch(0.55 0.18 145);
   --zim-yellow: oklch(0.85 0.17 90);
   --zim-red: oklch(0.58 0.22 28);
-  --border: oklch(0.94 0.012 80 / 8%);
-  --input: oklch(0.94 0.012 80 / 12%);
-  --ring: oklch(0.78 0.16 75);
-  --chart-1: oklch(0.78 0.16 75);
-  --chart-2: oklch(0.7 0.13 235);
-  --chart-3: oklch(0.7 0.18 145);
+  /* "Ghost border" — outline-variant at low opacity (no-line rule) */
+  --border: oklch(0.22 0.02 250 / 10%);
+  --input: oklch(0.22 0.02 250 / 12%);
+  --ring: oklch(0.16 0.04 265);
+  --chart-1: oklch(0.16 0.04 265);
+  --chart-2: oklch(0.79 0.16 78);
+  --chart-3: oklch(0.62 0.16 155);
   --chart-4: oklch(0.58 0.22 28);
-  --chart-5: oklch(0.85 0.17 90);
-  --sidebar: oklch(0.22 0.014 260);
-  --sidebar-foreground: oklch(0.94 0.012 80);
-  --sidebar-primary: oklch(0.78 0.16 75);
-  --sidebar-primary-foreground: oklch(0.18 0.012 260);
-  --sidebar-accent: oklch(0.28 0.018 260);
-  --sidebar-accent-foreground: oklch(0.94 0.012 80);
-  --sidebar-border: oklch(0.94 0.012 80 / 8%);
-  --sidebar-ring: oklch(0.78 0.16 75);
+  --chart-5: oklch(0.55 0.13 235);
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.22 0.02 250);
+  --sidebar-primary: oklch(0.16 0.04 265);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.965 0.004 230);
+  --sidebar-accent-foreground: oklch(0.22 0.02 250);
+  --sidebar-border: oklch(0.22 0.02 250 / 8%);
+  --sidebar-ring: oklch(0.16 0.04 265);
 }
 
 @layer base {
   * { border-color: var(--color-border); }
   html, body { background-color: var(--color-background); color: var(--color-foreground); font-family: var(--font-sans); }
-  h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); letter-spacing: -0.01em; }
+  h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); letter-spacing: -0.02em; font-weight: 800; }
 }
 
 @utility font-display { font-family: var(--font-display); }
 @utility font-mono-num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* Kinetic Horizon — hero gradient */
+.kinetic-gradient {
+  background: linear-gradient(135deg, #000a1e 0%, #002147 100%);
+}
+.glass-panel {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
 
 /* Marquee */
 @keyframes marquee {

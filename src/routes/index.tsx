@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
-import { ArrowRight, Lock, MapPin, Check } from "lucide-react";
+import { ArrowRight, Lock, MapPin, Check, ShieldCheck } from "lucide-react";
 import { StickyLandingCta } from "@/components/conversion/StickyLandingCta";
 
 export const Route = createFileRoute("/")({
@@ -146,58 +146,101 @@ function LandingPage() {
       <AnnouncementBar />
       <StickyLandingCta />
 
-      {/* ============ HERO ============ */}
-      <section className="relative min-h-[calc(100vh-100px)] overflow-hidden bg-background">
-        {/* Faint map watermark */}
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.04]">
-          <div className="h-[700px] w-[700px]"><ZimMap /></div>
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-secondary)]/40 via-background to-background" />
+      {/* ============ HERO — Kinetic Horizon ============ */}
+      <section className="relative kinetic-gradient overflow-hidden">
+        {/* Subtle savannah image overlay */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-0 opacity-30 mix-blend-screen"
+          style={{
+            backgroundImage:
+              "radial-gradient(ellipse at 80% 30%, rgba(253,175,0,0.35), transparent 55%), radial-gradient(ellipse at 20% 80%, rgba(110,160,255,0.18), transparent 60%)",
+          }}
+        />
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#000a1e] via-[#000a1e]/85 to-transparent" />
 
-        <div className="relative mx-auto grid max-w-7xl gap-12 px-4 pb-16 pt-12 md:grid-cols-2 md:px-6 md:pb-24 md:pt-20">
-          <div className="relative z-10">
-            <h1 className="font-display font-black uppercase leading-[0.92] tracking-tight text-[52px] md:text-[80px]">
-              <span className="block animate-fade-up text-primary" style={{ animationDelay: "0ms" }}>Find Freight.</span>
-              <span className="block animate-fade-up text-foreground" style={{ animationDelay: "100ms" }}>Fill Your Truck.</span>
-              <span className="block animate-fade-up text-destructive" style={{ animationDelay: "200ms" }}>Get Paid.</span>
+        <div className="relative z-20 mx-auto grid max-w-7xl items-center gap-10 px-4 pb-20 pt-16 md:grid-cols-12 md:px-6 md:pb-32 md:pt-24">
+          <div className="md:col-span-7 lg:col-span-7">
+            <div className="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-3 py-1 text-secondary backdrop-blur">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.2em]">Zimbabwe's #1 Digital Logistics Hub</span>
+            </div>
+
+            <h1 className="mt-6 font-display text-5xl font-extrabold leading-[1.05] tracking-tighter text-white md:text-7xl lg:text-[80px]">
+              Zimbabwe's #1 <br />
+              <span className="text-secondary">Load Board</span>
             </h1>
 
-            <p className="mt-6 max-w-xl animate-fade-up text-base text-muted-foreground md:text-lg" style={{ animationDelay: "400ms" }}>
-              The smartest load board built for Zimbabwe. 800+ daily loads, real-time rates,
-              WhatsApp AI dispatch. From Harare to Beitbridge and beyond.
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/70 md:text-xl">
+              Connecting verified carriers with premium cargo across the SADC region.
+              Move more, earn more, and scale your fleet with real-time intelligence.
             </p>
 
-            <div className="mt-8 flex animate-fade-up flex-col gap-3 sm:flex-row" style={{ animationDelay: "500ms" }}>
-              <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-display text-base font-bold uppercase tracking-wide">
-                <Link to="/board">Find Loads Now <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+              <Button asChild size="lg" className="rounded-full bg-secondary px-10 py-6 text-base font-extrabold text-secondary-foreground shadow-2xl shadow-secondary/30 hover:bg-secondary/90">
+                <Link to="/board">Find Loads <ArrowRight className="ml-2 h-5 w-5" /></Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="font-display text-base font-bold uppercase tracking-wide">
-                <Link to="/post">Post a Load Free</Link>
+              <Button asChild size="lg" variant="outline" className="rounded-full border-white/20 bg-transparent px-10 py-6 text-base font-extrabold text-white hover:bg-white/10 hover:text-white">
+                <Link to="/post">Post Load</Link>
               </Button>
             </div>
 
-            <div className="mt-6 flex animate-fade-up flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground" style={{ animationDelay: "600ms" }}>
-              {["No setup fee", "Cancel anytime", "EcoCash accepted", "Works offline"].map((t) => (
-                <span key={t} className="inline-flex items-center gap-1.5">
-                  <Check className="h-3.5 w-3.5 text-success" /> {t}
-                </span>
-              ))}
+            {/* Inline stat duo */}
+            <div className="mt-12 grid max-w-md grid-cols-2 gap-8">
+              <div>
+                <div className="font-display text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+                  <CountUp to={2400} />+
+                </div>
+                <div className="mt-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/50">Active Carriers</div>
+              </div>
+              <div>
+                <div className="font-display text-4xl font-extrabold tracking-tight text-secondary md:text-5xl">
+                  $<CountUp to={2.4} decimals={1} />M+
+                </div>
+                <div className="mt-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/50">Monthly Payouts</div>
+              </div>
             </div>
           </div>
 
-          {/* Floating cards visual */}
-          <div className="relative hidden h-[400px] md:block">
-            <FloatingCards />
-          </div>
-        </div>
-
-        {/* Live stats bar */}
-        <div className="relative z-10 border-t border-border bg-[var(--bg-secondary)]/70 backdrop-blur">
-          <div className="mx-auto grid max-w-7xl grid-cols-2 gap-2 px-4 py-4 md:grid-cols-4 md:px-6">
-            <Stat value={<CountUp to={847} />} label="Active Loads" />
-            <Stat value={<CountUp to={312} />} label="Carriers Online" pulse />
-            <Stat value={<CountUp to={2.84} decimals={2} prefix="$" suffix="/km" />} label="Avg Rate" />
-            <Stat value={<CountUp to={4} />} label="Border Crossings" />
+          {/* Right rail — live load board glass card */}
+          <div className="relative md:col-span-5 lg:col-span-5">
+            <div className="relative z-10 rounded-2xl bg-white/95 p-5 shadow-2xl backdrop-blur md:p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-display text-xl font-extrabold tracking-tight text-foreground">Live Load Board</h3>
+                  <p className="text-xs text-muted-foreground">Real-time opportunities updating every 30 seconds</p>
+                </div>
+                <Link to="/board" className="text-xs font-bold text-secondary hover:underline">View All</Link>
+              </div>
+              <div className="mt-5 space-y-3">
+                {FLOAT_LOADS.slice(0, 3).map((l, i) => (
+                  <div key={i} className="relative overflow-hidden rounded-xl bg-[var(--bg-secondary)] p-4">
+                    {i === 0 && <span className="absolute left-0 top-0 h-full w-1 bg-secondary" />}
+                    <div className="flex items-center justify-between">
+                      <div className="ml-2">
+                        <div className="flex items-center gap-1.5 font-display text-sm font-bold text-foreground">
+                          {l.o} <ArrowRight className="h-3 w-3 text-secondary" /> {l.d}
+                        </div>
+                        <div className="mt-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                          {i === 0 ? "Urgent · in 2h" : l.t}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-display text-lg font-extrabold tracking-tight text-foreground">
+                          ${l.r.toLocaleString()}
+                        </div>
+                        <div className="text-[10px] font-medium text-muted-foreground">distance · {Math.round(l.r / 2.8)} km</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Button asChild className="mt-5 w-full rounded-full bg-primary py-5 font-bold text-primary-foreground hover:bg-primary/90">
+                <Link to="/board">Place Bid <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              </Button>
+            </div>
+            {/* glow */}
+            <div className="pointer-events-none absolute -inset-4 -z-10 rounded-3xl bg-secondary/20 blur-3xl" />
           </div>
         </div>
       </section>
@@ -414,22 +457,24 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* ============ FINAL CTA ============ */}
-      <section className="bg-background py-24 md:py-32">
-        <div className="reveal mx-auto max-w-3xl px-4 text-center md:px-6">
-          <h2 className="font-display text-5xl font-black uppercase leading-[0.95] tracking-tight md:text-6xl">
-            Your next load <br className="md:hidden" />
-            <span className="text-primary">is waiting.</span>
+      {/* ============ FINAL CTA — Kinetic panel ============ */}
+      <section className="bg-background px-4 py-16 md:px-6 md:py-24">
+        <div className="reveal mx-auto max-w-5xl overflow-hidden rounded-3xl kinetic-gradient p-10 text-center md:p-16">
+          <h2 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tighter text-white md:text-5xl">
+            Ready to modernize <br /> your logistics?
           </h2>
-          <p className="mt-5 text-base text-muted-foreground md:text-lg">
-            Join 2,400+ Zimbabwean carriers and brokers already on ZimFreight.
+          <p className="mx-auto mt-5 max-w-xl text-base text-white/70 md:text-lg">
+            Join the network of professional truckers and shippers streamlining
+            Zimbabwe's supply chain.
           </p>
-          <Button asChild size="lg" className="mt-8 h-14 bg-primary px-8 text-primary-foreground hover:bg-primary/90 font-display text-lg font-black uppercase tracking-wide">
-            <Link to="/board">Get Started Free — No Credit Card</Link>
-          </Button>
-          <p className="mt-5 text-xs text-muted-foreground">
-            🔒 Secure · HTTPS · Your data stays in Zimbabwe
-          </p>
+          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Button asChild size="lg" className="rounded-full bg-secondary px-8 py-6 font-extrabold text-secondary-foreground shadow-xl shadow-secondary/20 hover:bg-secondary/90">
+              <Link to="/board">Create Carrier Account</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="rounded-full border-white/20 bg-transparent px-8 py-6 font-extrabold text-white hover:bg-white/10 hover:text-white">
+              <Link to="/post">Register as Shipper</Link>
+            </Button>
+          </div>
         </div>
       </section>
     </div>

@@ -23,7 +23,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main className="flex-1 pb-16 md:pb-0">{children}</main>
       <div className="hidden md:block"><Footer /></div>
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
-      <Toaster theme="dark" richColors position="top-right" />
+      <Toaster theme="light" richColors position="top-right" />
       <InstallBanner />
       <ExitIntentPopup />
       <SocialProofToasts />

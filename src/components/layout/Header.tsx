@@ -38,30 +38,22 @@ export function Header({ onLogin }: { onLogin: () => void }) {
 
   return (
     <>
-      <div className="zim-flag-strip" />
-      <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
+      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl shadow-[0_1px_0_0_rgba(0,0,0,0.04)]">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
           <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Truck className="h-5 w-5" strokeWidth={2.5} />
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className="font-display text-2xl font-black tracking-tight text-foreground">
-                ZIM<span className="text-primary">FREIGHT</span>
-              </span>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                Load Board · Zimbabwe
-              </span>
-            </div>
+            <Truck className="h-7 w-7 text-secondary" strokeWidth={2.5} />
+            <span className="font-display text-2xl font-extrabold tracking-tighter text-foreground">
+              ZimFreight
+            </span>
           </Link>
 
-          <nav className="hidden items-center gap-1 md:flex">
+          <nav className="hidden items-center gap-8 md:flex">
             {navLinks.map((l) => (
               <Link
                 key={l.to}
                 to={l.to}
-                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                activeProps={{ className: "rounded-md px-3 py-2 text-sm font-semibold text-primary bg-secondary" }}
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-secondary"
+                activeProps={{ className: "text-sm font-bold text-secondary border-b-2 border-secondary pb-1" }}
               >
                 {l.label}
               </Link>
@@ -69,28 +61,28 @@ export function Header({ onLogin }: { onLogin: () => void }) {
             {isAdmin && (
               <Link
                 to="/admin"
-                className="ml-1 inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
-                activeProps={{ className: "ml-1 inline-flex items-center gap-1 rounded-md border border-primary bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground" }}
+                className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-secondary"
+                activeProps={{ className: "inline-flex items-center gap-1 text-sm font-bold text-secondary border-b-2 border-secondary pb-1" }}
               >
                 <ShieldCheck className="h-3.5 w-3.5" /> Admin
               </Link>
             )}
           </nav>
 
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="hidden items-center gap-3 md:flex">
             {user ? (
               <>
                 <span className="text-sm text-muted-foreground">
                   {profile?.full_name || user.email}
                 </span>
                 <NotificationBell />
-                <Button variant="outline" size="sm" onClick={signOut}>Sign out</Button>
+                <Button variant="outline" size="sm" onClick={signOut} className="rounded-full">Sign out</Button>
               </>
             ) : (
               <>
-                <Button variant="ghost" size="sm" onClick={onLogin}>Sign in</Button>
-                <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90" onClick={onLogin}>
-                  Get started
+                <Button variant="ghost" size="sm" onClick={onLogin} className="rounded-full">Sign in</Button>
+                <Button size="sm" onClick={onLogin} className="rounded-full bg-secondary px-6 font-bold text-secondary-foreground hover:bg-secondary/90">
+                  Get Started
                 </Button>
               </>
             )}
@@ -102,23 +94,23 @@ export function Header({ onLogin }: { onLogin: () => void }) {
         </div>
 
         {open && (
-          <div className="border-t border-border md:hidden">
+          <div className="border-t border-border bg-background md:hidden">
             <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3">
               {navLinks.map((l) => (
-                <Link key={l.to} to={l.to} className="rounded-md px-3 py-2 text-sm text-foreground hover:bg-secondary" onClick={() => setOpen(false)}>
+                <Link key={l.to} to={l.to} className="rounded-md px-3 py-2 text-sm text-foreground hover:bg-muted" onClick={() => setOpen(false)}>
                   {l.label}
                 </Link>
               ))}
               {isAdmin && (
-                <Link to="/admin" className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-sm font-semibold text-primary" onClick={() => setOpen(false)}>
+                <Link to="/admin" className="inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-semibold text-primary" onClick={() => setOpen(false)}>
                   <ShieldCheck className="h-3.5 w-3.5" /> Admin
                 </Link>
               )}
               <div className="mt-2 border-t border-border pt-2">
                 {user ? (
-                  <Button variant="outline" size="sm" className="w-full" onClick={signOut}>Sign out</Button>
+                  <Button variant="outline" size="sm" className="w-full rounded-full" onClick={signOut}>Sign out</Button>
                 ) : (
-                  <Button size="sm" className="w-full bg-primary text-primary-foreground" onClick={() => { setOpen(false); onLogin(); }}>
+                  <Button size="sm" className="w-full rounded-full bg-secondary font-bold text-secondary-foreground" onClick={() => { setOpen(false); onLogin(); }}>
                     Sign in / Sign up
                   </Button>
                 )}
