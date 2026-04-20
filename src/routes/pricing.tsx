@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Check, X, Flame } from "lucide-react";
+import { Check, X, Flame, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/pricing")({
@@ -184,12 +184,18 @@ function PricingPage() {
       </div>
 
       {/* Final CTA */}
-      <div className="mt-20 rounded-2xl border border-primary/30 bg-gradient-to-b from-primary/10 to-card p-10 text-center">
-        <h2 className="font-display text-3xl font-black uppercase tracking-tight md:text-4xl">Try free for 14 days — no credit card</h2>
-        <p className="mt-2 text-muted-foreground">Join 2,400+ Zimbabwean carriers and brokers already on ZimFreight.</p>
-        <Button asChild size="lg" className="mt-6 bg-primary text-primary-foreground hover:bg-primary/90">
-          <Link to="/board" search={{ q: "", origin: "all", destination: "all", loadType: "all", equipment: "all", pickup: "", minRate: 0, maxDistance: 2000, border: false, zimra: false, urgent: false, minWeight: 0, maxWeight: 40, payment: "all", sort: "newest", load: undefined }}>Get started free →</Link>
-        </Button>
+      <div className="relative mt-20 overflow-hidden rounded-xl border border-primary/30 bg-gradient-to-b from-primary/15 via-primary/5 to-card p-10 text-center">
+        <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
+        <div className="relative">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-primary">
+            <Lock className="h-6 w-6" />
+          </div>
+          <h2 className="mt-3 font-display text-3xl font-black uppercase tracking-tight md:text-4xl">Try free for 14 days — no credit card</h2>
+          <p className="mt-2 text-sm text-muted-foreground">Join 2,400+ Zimbabwean carriers and brokers already on ZimFreight.</p>
+          <Button asChild size="lg" className="mt-6 bg-primary text-primary-foreground hover:bg-primary/90">
+            <Link to="/board" search={{ q: "", origin: "all", destination: "all", loadType: "all", equipment: "all", pickup: "", minRate: 0, maxDistance: 2000, border: false, zimra: false, urgent: false, minWeight: 0, maxWeight: 40, payment: "all", sort: "newest", load: undefined }}>Get started free →</Link>
+          </Button>
+        </div>
       </div>
     </div>
   );
