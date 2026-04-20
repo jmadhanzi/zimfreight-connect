@@ -362,7 +362,7 @@ function PostLoadPage() {
         {step === 0 && <StepRoute form={form} />}
         {step === 1 && <StepCargo form={form} />}
         {step === 2 && <StepRateDate form={form} />}
-        {step === 3 && <StepReview form={form} />}
+        {step === 3 && <StepReview form={form} onEdit={setStep} />}
 
         {/* Nav */}
         <div className="mt-6 flex items-center justify-between gap-3 md:static fixed inset-x-0 bottom-16 z-30 border-t border-border bg-background/95 px-4 py-3 backdrop-blur md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
