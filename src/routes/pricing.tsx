@@ -1,78 +1,165 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
       { title: "Pricing — ZimFreight" },
-      { name: "description", content: "Simple USD pricing for Zimbabwean carriers and brokers. Free to browse." },
+      { name: "description", content: "Simple USD pricing for Zimbabwean carriers and brokers. EcoCash, InnBucks, and Visa accepted." },
       { property: "og:title", content: "Pricing — ZimFreight" },
-      { property: "og:description", content: "Plans for carriers, brokers and fleets. EcoCash, InnBucks and USD cards accepted." },
+      { property: "og:description", content: "Plans for carriers, brokers and fleets. Pay with EcoCash, InnBucks or Visa." },
     ],
   }),
   component: PricingPage,
 });
 
-const plans = [
-  { tier: "Free", price: 0, sub: "Browse the board", features: ["Browse all loads", "View route averages", "Post 1 load / month"], cta: "Sign up free", highlight: false },
-  { tier: "Basic", price: 15, sub: "For solo carriers", features: ["Unlock contact details", "Post unlimited loads", "WhatsApp notifications", "Border wait alerts"], cta: "Start Basic", highlight: false },
-  { tier: "Pro", price: 49, sub: "For active brokers", features: ["Everything in Basic", "AI load matching", "Priority load placement", "Rate analytics dashboard", "WhatsApp AI agent"], cta: "Start Pro", highlight: true },
-  { tier: "Fleet", price: 149, sub: "For fleet operators", features: ["Everything in Pro", "Up to 25 driver seats", "Bulk load posting", "API access", "Dedicated support"], cta: "Talk to us", highlight: false },
+const PLANS = [
+  { tier: "free", name: "Free", monthly: 0, sub: "Try the board", features: ["5 loads visible per day", "Browse only", "1 post per month"], cta: "Start free", highlight: false },
+  { tier: "basic", name: "Basic", monthly: 19, sub: "For solo carriers", features: ["50 loads per day", "All broker contacts", "Post 10 loads/mo", "WhatsApp alerts", "Rate analytics", "ZIMRA checklist"], cta: "Start Basic", highlight: true },
+  { tier: "pro", name: "Pro", monthly: 49, sub: "For active brokers", features: ["Unlimited loads", "WhatsApp AI agent", "Priority listing", "Rate forecasting", "Post 50 loads/mo"], cta: "Start Pro", highlight: false },
+  { tier: "fleet", name: "Fleet", monthly: 99, sub: "For fleet operators", features: ["Everything in Pro", "25 driver seats", "Bulk posting", "API access", "Dedicated support"], cta: "Talk to us", highlight: false },
+];
+
+const COMPARE_ROWS: Array<{ label: string; values: (string | boolean)[] }> = [
+  { label: "Loads visible / day", values: ["5", "50", "Unlimited", "Unlimited"] },
+  { label: "Broker contacts unlocked", values: [false, true, true, true] },
+  { label: "Post loads / month", values: ["1", "10", "50", "Unlimited"] },
+  { label: "WhatsApp load alerts", values: [false, true, true, true] },
+  { label: "Rate analytics", values: [false, true, true, true] },
+  { label: "WhatsApp AI agent", values: [false, false, true, true] },
+  { label: "Priority listing", values: [false, false, true, true] },
+  { label: "Driver seats", values: ["1", "1", "5", "25"] },
+  { label: "API access", values: [false, false, false, true] },
+];
+
+const FAQS = [
+  { q: "Can I pay with EcoCash?", a: "Yes. Choose your plan, then dial *151*4*ZimFreight*[plan]# and enter the reference code in your account. We activate within 1 hour. InnBucks, ZIPIT and bank transfers also work." },
+  { q: "Is there a contract?", a: "No — every plan is month-to-month. Cancel anytime from your dashboard." },
+  { q: "Does it work offline?", a: "Yes. The app caches recent loads, route rates, and border status so rural drivers can keep working when signal drops." },
+  { q: "What is the WhatsApp AI agent?", a: "Our Pro AI dispatcher (Claude-powered) finds loads, checks border wait times, drafts quotes, and replies to brokers — all inside WhatsApp. You stay in control." },
+  { q: "Can I switch plans?", a: "Anytime. Upgrades take effect immediately and are prorated. Downgrades apply at the next billing cycle." },
+  { q: "Is my data secure?", a: "Yes. Data is stored in African data centers with encryption in transit and at rest. We never share broker contacts with third parties." },
 ];
 
 function PricingPage() {
+  const [annual, setAnnual] = useState(false);
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-16 md:px-6">
       <div className="mx-auto max-w-2xl text-center">
         <span className="font-mono text-xs uppercase tracking-widest text-primary">Pricing</span>
         <h1 className="mt-2 font-display text-5xl font-black uppercase tracking-tight md:text-6xl">
-          Simple <span className="text-primary">USD pricing</span>
+          Simple pricing for <span className="text-primary">Zimbabwe's trucking industry</span>
         </h1>
         <p className="mt-4 text-muted-foreground">
-          Pay monthly with a USD card, EcoCash or InnBucks. Cancel anytime — no setup fees, no commitments.
+          Pay monthly with USD card, EcoCash, InnBucks, or bank transfer. Cancel anytime.
         </p>
       </div>
 
-      <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {plans.map((p) => (
-          <div
-            key={p.tier}
-            className={cn(
-              "relative flex flex-col rounded-2xl border p-6",
-              p.highlight ? "border-primary bg-gradient-to-b from-primary/15 to-card shadow-[0_0_0_1px_var(--primary)]" : "border-border bg-card"
-            )}
-          >
-            {p.highlight && (
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary-foreground">
-                Most popular
-              </span>
-            )}
-            <h3 className="font-display text-2xl font-black uppercase tracking-tight">{p.tier}</h3>
-            <p className="text-sm text-muted-foreground">{p.sub}</p>
-            <div className="mt-5 flex items-baseline gap-1">
-              <span className="font-display text-5xl font-black text-foreground">${p.price}</span>
-              <span className="text-sm text-muted-foreground">/mo</span>
-            </div>
-            <ul className="mt-6 flex-1 space-y-2 text-sm">
-              {p.features.map(f => (
-                <li key={f} className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  <span>{f}</span>
-                </li>
-              ))}
-            </ul>
-            <Button asChild className={cn("mt-6", p.highlight ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-secondary text-foreground hover:bg-secondary/80")}>
-              <Link to="/board">{p.cta}</Link>
-            </Button>
-          </div>
-        ))}
+      {/* Annual toggle */}
+      <div className="mt-8 flex items-center justify-center gap-3 text-sm">
+        <span className={cn(!annual && "text-foreground", annual && "text-muted-foreground")}>Monthly</span>
+        <Switch checked={annual} onCheckedChange={setAnnual} />
+        <span className={cn(annual && "text-foreground", !annual && "text-muted-foreground")}>
+          Annual <span className="ml-1 rounded bg-primary/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary">Save 20%</span>
+        </span>
       </div>
 
-      <p className="mt-10 text-center text-xs text-muted-foreground">
-        Stripe (USD cards) · EcoCash · InnBucks · ZimSwitch coming soon. Prices in USD.
+      <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {PLANS.map((p) => {
+          const price = annual ? Math.round(p.monthly * 12 * 0.8) : p.monthly;
+          const suffix = p.monthly === 0 ? "" : annual ? "/yr" : "/mo";
+          return (
+            <div key={p.tier} className={cn(
+              "relative flex flex-col rounded-2xl border p-6",
+              p.highlight ? "border-primary bg-gradient-to-b from-primary/15 to-card shadow-[0_0_0_1px_var(--primary)]" : "border-border bg-card"
+            )}>
+              {p.highlight && (
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary-foreground">Most popular</span>
+              )}
+              <h3 className="font-display text-2xl font-black uppercase tracking-tight">{p.name}</h3>
+              <p className="text-sm text-muted-foreground">{p.sub}</p>
+              <div className="mt-5 flex items-baseline gap-1">
+                <span className="font-display text-5xl font-black text-foreground">${price}</span>
+                <span className="text-sm text-muted-foreground">{suffix}</span>
+              </div>
+              <ul className="mt-6 flex-1 space-y-2 text-sm">
+                {p.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <Button asChild className={cn("mt-6", p.highlight ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-secondary text-foreground hover:bg-secondary/80")}>
+                <Link to="/board">{p.cta}</Link>
+              </Button>
+            </div>
+          );
+        })}
+      </div>
+
+      <p className="mt-6 text-center text-xs text-muted-foreground">
+        💳 Pay with EcoCash · InnBucks · Visa · Bank Transfer · ZIPIT
       </p>
+
+      {/* Comparison */}
+      <div className="mt-20">
+        <h2 className="font-display text-3xl font-black uppercase tracking-tight">Compare plans</h2>
+        <div className="mt-6 overflow-x-auto rounded-xl border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-secondary/40">
+              <tr>
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Feature</th>
+                {PLANS.map((p) => (
+                  <th key={p.tier} className={cn("px-4 py-3 text-left font-display text-base font-black uppercase", p.highlight && "text-primary")}>{p.name}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {COMPARE_ROWS.map((row) => (
+                <tr key={row.label} className="border-t border-border">
+                  <td className="px-4 py-3 text-muted-foreground">{row.label}</td>
+                  {row.values.map((v, i) => (
+                    <td key={i} className="px-4 py-3">
+                      {typeof v === "boolean"
+                        ? v ? <Check className="h-4 w-4 text-primary" /> : <X className="h-4 w-4 text-muted-foreground/40" />
+                        : <span className="font-mono text-foreground">{v}</span>}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* FAQ */}
+      <div className="mt-20 max-w-3xl">
+        <h2 className="font-display text-3xl font-black uppercase tracking-tight">Frequently asked questions</h2>
+        <Accordion type="single" collapsible className="mt-6">
+          {FAQS.map((f) => (
+            <AccordionItem key={f.q} value={f.q} className="border-border">
+              <AccordionTrigger className="text-left font-medium">{f.q}</AccordionTrigger>
+              <AccordionContent className="text-sm text-muted-foreground">{f.a}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+
+      {/* Final CTA */}
+      <div className="mt-20 rounded-2xl border border-primary/30 bg-gradient-to-b from-primary/10 to-card p-10 text-center">
+        <h2 className="font-display text-3xl font-black uppercase tracking-tight md:text-4xl">Try free for 14 days — no credit card</h2>
+        <p className="mt-2 text-muted-foreground">Join 2,400+ Zimbabwean carriers and brokers already on ZimFreight.</p>
+        <Button asChild size="lg" className="mt-6 bg-primary text-primary-foreground hover:bg-primary/90">
+          <Link to="/board">Get started free →</Link>
+        </Button>
+      </div>
     </div>
   );
 }
