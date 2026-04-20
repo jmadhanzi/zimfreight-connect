@@ -42,27 +42,39 @@ export type Database = {
         Row: {
           carrier_id: string
           created_at: string
+          delivered_at: string | null
+          distance_km: number | null
           id: string
           load_id: string
           message: string | null
+          paid_at: string | null
+          rate_usd: number | null
           status: string
           updated_at: string
         }
         Insert: {
           carrier_id: string
           created_at?: string
+          delivered_at?: string | null
+          distance_km?: number | null
           id?: string
           load_id: string
           message?: string | null
+          paid_at?: string | null
+          rate_usd?: number | null
           status?: string
           updated_at?: string
         }
         Update: {
           carrier_id?: string
           created_at?: string
+          delivered_at?: string | null
+          distance_km?: number | null
           id?: string
           load_id?: string
           message?: string | null
+          paid_at?: string | null
+          rate_usd?: number | null
           status?: string
           updated_at?: string
         }
@@ -105,6 +117,35 @@ export type Database = {
           wait_hours?: number
         }
         Relationships: []
+      }
+      load_views: {
+        Row: {
+          created_at: string
+          id: string
+          load_id: string
+          viewer_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          load_id: string
+          viewer_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          load_id?: string
+          viewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "load_views_load_id_fkey"
+            columns: ["load_id"]
+            isOneToOne: false
+            referencedRelation: "loads"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       loads: {
         Row: {
@@ -187,6 +228,39 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          link: string | null
+          read_at: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read_at?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read_at?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           city: string | null
@@ -262,6 +336,59 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_loads: {
+        Row: {
+          created_at: string
+          id: string
+          load_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          load_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          load_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_loads_load_id_fkey"
+            columns: ["load_id"]
+            isOneToOne: false
+            referencedRelation: "loads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      saved_routes: {
+        Row: {
+          created_at: string
+          destination: string
+          id: string
+          origin: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          destination: string
+          id?: string
+          origin: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          destination?: string
+          id?: string
+          origin?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           created_at: string
@@ -303,7 +430,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      broker_dashboard_stats: {
+        Args: { _user_id: string }
+        Returns: {
+          active_loads: number
+          avg_hours_to_fill: number
+          bids_received: number
+          fill_rate: number
+          loads_filled: number
+        }[]
+      }
+      carrier_dashboard_stats: {
+        Args: { _user_id: string }
+        Returns: {
+          avg_rate_per_km: number
+          est_revenue: number
+          km_driven: number
+          loads_booked: number
+        }[]
+      }
     }
     Enums: {
       load_status: "available" | "booked" | "completed" | "expired"
