@@ -195,15 +195,27 @@ function PostLoadPage() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const raw = localStorage.getItem(DRAFT_KEY);
-    if (!raw) return;
-    try {
+    if (raw) {
+      try {
       const parsed = JSON.parse(raw) as { savedAt: number };
       const ageMs = Date.now() - parsed.savedAt;
       if (ageMs < 1000 * 60 * 60 * 24 * 14) {
         setDraftAge(humanAge(ageMs));
         setShowDraftPrompt(true);
+          return;
       }
-    } catch { /* ignore */ }
+      } catch { /* ignore */ }
+    }
+    // Fallback: check IndexedDB (e.g., if localStorage was cleared but IDB persists)
+    void (async () => {
+      const idb = await idbLoadDraft();
+      if (!idb) return;
+      const ageMs = Date.now() - idb.savedAt;
+      if (ageMs < 1000 * 60 * 60 * 24 * 14) {
+        setDraftAge(humanAge(ageMs));
+        setShowDraftPrompt(true);
+      }
+    })();
   }, []);
 
   // Autosave every 30s
