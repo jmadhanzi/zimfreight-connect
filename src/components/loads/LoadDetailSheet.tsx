@@ -96,7 +96,10 @@ export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved
             {ratePos && marketRate && (
               <div className="mt-3 rounded-md border border-border bg-background/40 p-3">
                 <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest">
-                  <span className="text-muted-foreground">Market avg ${marketRate.toFixed(2)}</span>
+                  <span className={cn("text-muted-foreground", rateCachedAt && "text-orange-400")}>
+                    Market avg ${marketRate.toFixed(2)}
+                    {rateCachedAt && <span className="ml-1.5 normal-case tracking-normal">· cached {humanCacheAge(Date.now() - rateCachedAt)}</span>}
+                  </span>
                   <span className={cn(
                     ratePos.tone === "success" && "text-[color:var(--success)]",
                     ratePos.tone === "destructive" && "text-destructive",
