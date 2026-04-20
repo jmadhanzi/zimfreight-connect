@@ -26,6 +26,9 @@ export function timeAgo(iso: string) {
  * further along the route.
  */
 export function transitProgress(iso: string, windowHours = 24) {
+  // Avoid SSR/CSR hydration mismatch — render an empty bar on the server,
+  // then progress fills in on client mount.
+  if (typeof window === "undefined") return 0;
   const hours = (Date.now() - new Date(iso).getTime()) / 3_600_000;
   if (!Number.isFinite(hours) || hours <= 0) return 4; // tiny visible nub
   const pct = Math.min(100, (hours / windowHours) * 100);
