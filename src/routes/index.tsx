@@ -197,7 +197,7 @@ function LandingPage() {
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Button asChild size="lg" className="rounded-full bg-secondary px-10 py-6 text-base font-extrabold text-secondary-foreground shadow-2xl shadow-secondary/30 hover:bg-secondary/90">
-                <Link to="/board">Find Loads <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                <Link to="/board" search={{}}>Find Loads <ArrowRight className="ml-2 h-5 w-5" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="rounded-full border-white/20 bg-transparent px-10 py-6 text-base font-extrabold text-white hover:bg-white/10 hover:text-white">
                 <Link to="/post">Post Load</Link>
@@ -255,7 +255,7 @@ function LandingPage() {
                 ))}
               </div>
               <Button asChild className="mt-5 w-full rounded-full bg-primary py-5 font-bold text-primary-foreground hover:bg-primary/90">
-                <Link to="/board">Place Bid <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                <Link to="/board" search={{}}>Place Bid <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
             </div>
             {/* glow */}
@@ -433,7 +433,7 @@ function LandingPage() {
                 <p className="mt-2 font-display text-lg font-bold uppercase tracking-tight">Sign up free to unlock</p>
                 <p className="mt-1 text-xs text-muted-foreground">847 live loads · broker WhatsApp · rate analytics</p>
                 <Button asChild size="lg" className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90 font-display font-bold uppercase">
-                  <Link to="/board">View 847 Live Loads <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                  <Link to="/board" search={{}}>View 847 Live Loads <ArrowRight className="ml-2 h-4 w-4" /></Link>
                 </Button>
               </div>
             </div>
@@ -513,7 +513,7 @@ function LandingPage() {
               ))}
             </div>
             <Button asChild size="lg" className="mt-7 bg-primary text-primary-foreground hover:bg-primary/90 font-display font-bold uppercase">
-              <Link to="/board">Start Finding Loads <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              <Link to="/board" search={{}}>Start Finding Loads <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
           </div>
           <div className="reveal">
@@ -536,7 +536,7 @@ function LandingPage() {
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button asChild size="lg" className="rounded-full bg-secondary px-8 py-6 font-extrabold text-secondary-foreground shadow-xl shadow-secondary/20 hover:bg-secondary/90">
-              <Link to="/board">Create Carrier Account</Link>
+              <Link to="/board" search={{}}>Create Carrier Account</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-full border-white/20 bg-transparent px-8 py-6 font-extrabold text-white hover:bg-white/10 hover:text-white">
               <Link to="/post">Register as Shipper</Link>
