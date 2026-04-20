@@ -576,14 +576,6 @@ const PREVIEW_LOADS = [
   { o: "Bulawayo", d: "Vic Falls", km: 440, t: "Cement · 30t", r: 1180 },
 ];
 
-const PARTNERS: { name: string }[] = [
-  { name: "Moyo Logistics" },
-  { name: "Khumalo Transport" },
-  { name: "Sable Freight" },
-  { name: "Zambezi Cargo" },
-  { name: "Kopje Haulage" },
-  { name: "Limpopo Lines" },
-];
 
 const PLANS = [
   { name: "Free", price: 0, featured: false, features: ["Read-only access", "5 loads/day", "Basic search"] },
