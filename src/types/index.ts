@@ -52,6 +52,15 @@ export interface Subscription {
   created_at: string;
 }
 
+export const PLAN_LEVEL: Record<PlanTier, number> = {
+  free: 0,
+  basic: 1,
+  pro: 2,
+  fleet: 3,
+};
+
+export const FREE_LOAD_LIMIT = 5;
+
 export interface RouteRate {
   id: string;
   origin: string;
