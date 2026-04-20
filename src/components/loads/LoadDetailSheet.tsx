@@ -10,6 +10,8 @@ import { db } from "@/lib/db";
 import type { BorderStatus, RouteRate } from "@/types";
 import { toast } from "sonner";
 import { recordLoadView } from "@/components/conversion/SoftGateModal";
+import { cacheRate, getCachedRate } from "@/lib/offlineDb";
+import { useNetworkStatus } from "@/hooks/useNetworkStatus";
 
 interface Props {
   load: Load | null;
@@ -26,18 +28,27 @@ export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved
   const canSeeContacts = !!user && (plan === "basic" || plan === "pro" || plan === "fleet");
   const isPro = !!user && (plan === "pro" || plan === "fleet");
   const [marketRate, setMarketRate] = useState<number | null>(null);
+  const [rateCachedAt, setRateCachedAt] = useState<number | null>(null);
   const [beit, setBeit] = useState<BorderStatus | null>(null);
+  const online = useNetworkStatus();
 
   useEffect(() => {
     if (!load) return;
     recordLoadView(load.id);
-    db.from("route_rates").select("*").eq("origin", load.origin).eq("destination", load.destination).maybeSingle()
-      .then(({ data }: { data: RouteRate | null }) => setMarketRate(data ? Number(data.avg_rate_per_km) : null));
+    (async () => {
+      const cached = await getCachedRate(load.origin, load.destination);
+      if (cached) { setMarketRate(Number(cached.rate.avg_rate_per_km)); setRateCachedAt(cached.cachedAt); }
+      if (typeof navigator !== "undefined" && !navigator.onLine) return;
+      const { data } = await db.from("route_rates").select("*").eq("origin", load.origin).eq("destination", load.destination).maybeSingle();
+      const rate = data as RouteRate | null;
+      if (rate) { setMarketRate(Number(rate.avg_rate_per_km)); setRateCachedAt(null); void cacheRate(load.origin, load.destination, rate); }
+    })();
     if (load.is_border_crossing) {
+      if (typeof navigator !== "undefined" && !navigator.onLine) return;
       db.from("border_status").select("*").eq("border_name", "Beitbridge").maybeSingle()
         .then(({ data }: { data: BorderStatus | null }) => setBeit(data));
     }
-  }, [load]);
+  }, [load, online]);
 
   if (!load) return <Sheet open={false} onOpenChange={(o) => !o && onClose()}><SheetContent /></Sheet>;
 
