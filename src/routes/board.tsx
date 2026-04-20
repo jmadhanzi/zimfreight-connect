@@ -6,7 +6,11 @@ import { LoadFilters, type Filters } from "@/components/loads/LoadFilters";
 import { LoadDetailDialog } from "@/components/loads/LoadDetailDialog";
 import { AuthModal } from "@/components/auth/AuthModal";
 import type { Load } from "@/types";
-import { Truck } from "lucide-react";
+import { FREE_LOAD_LIMIT, PLAN_LEVEL, type PlanTier } from "@/types";
+import { Truck, Lock } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { PricingModal } from "@/components/paywall/PricingModal";
 
 export const Route = createFileRoute("/board")({
   head: () => ({
@@ -22,9 +26,13 @@ export const Route = createFileRoute("/board")({
 
 function LoadBoardPage() {
   const { loads, loading } = useLoads();
+  const { user, subscription } = useAuth();
+  const plan: PlanTier = (subscription?.plan as PlanTier) ?? "free";
+  const isFree = !user || PLAN_LEVEL[plan] < PLAN_LEVEL.basic;
   const [filters, setFilters] = useState<Filters>({ q: "", origin: "all", destination: "all", loadType: "all" });
   const [selected, setSelected] = useState<Load | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
+  const [pricingOpen, setPricingOpen] = useState(false);
 
   const filtered = useMemo(() => {
     return loads.filter(l => {
@@ -38,6 +46,9 @@ function LoadBoardPage() {
       return true;
     });
   }, [loads, filters]);
+
+  const visible = isFree ? filtered.slice(0, FREE_LOAD_LIMIT) : filtered;
+  const hiddenCount = isFree ? Math.max(0, filtered.length - FREE_LOAD_LIMIT) : 0;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 md:px-6">
@@ -63,16 +74,31 @@ function LoadBoardPage() {
             </p>
           </div>
         ) : (
-          <div className="grid gap-3 md:grid-cols-2">
-            {filtered.map(l => (
-              <LoadCard key={l.id} load={l} onClick={() => setSelected(l)} />
-            ))}
-          </div>
+          <>
+            <div className="grid gap-3 md:grid-cols-2">
+              {visible.map(l => (
+                <LoadCard key={l.id} load={l} onClick={() => setSelected(l)} />
+              ))}
+            </div>
+            {hiddenCount > 0 && (
+              <div className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/10 to-card p-8 text-center">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-primary">
+                  <Lock className="h-6 w-6" />
+                </div>
+                <h3 className="mt-3 font-display text-2xl font-black uppercase tracking-tight">You've seen today's free loads</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{hiddenCount} more loads waiting — upgrade to see all of them and unlock broker contacts.</p>
+                <Button onClick={() => (user ? setPricingOpen(true) : setAuthOpen(true))} className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90">
+                  Upgrade to Basic — $19/mo →
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
 
       <LoadDetailDialog load={selected} onClose={() => setSelected(null)} onRequestAuth={() => setAuthOpen(true)} />
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
+      <PricingModal open={pricingOpen} onOpenChange={setPricingOpen} />
     </div>
   );
 }
