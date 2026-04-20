@@ -45,6 +45,7 @@ export function LoadTable({ loads, onSelect, canSeeContacts, onUpgrade, sort, on
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
       <div className="overflow-x-auto">
+        <TooltipProvider delayDuration={150}>
         <table className="w-full text-sm">
           <thead className="sticky top-[44px] z-20 bg-[color:var(--bg-secondary)] font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
             <tr className="border-b border-border">
@@ -65,6 +66,7 @@ export function LoadTable({ loads, onSelect, canSeeContacts, onUpgrade, sort, on
             ))}
           </tbody>
         </table>
+        </TooltipProvider>
       </div>
     </div>
   );
