@@ -323,20 +323,20 @@ function ApprovalQueue() {
         .order("created_at", { ascending: false })
         .limit(50);
       if (error) throw error;
-      const ids = (subs ?? []).map(s => s.user_id);
+      const ids = (subs ?? []).map((s: { user_id: string }) => s.user_id);
       let profilesById = new Map<string, PendingRow["profile"]>();
       if (ids.length) {
         const { data: profs } = await db
           .from("profiles")
           .select("user_id,full_name,company_name,phone_whatsapp")
           .in("user_id", ids);
-        profilesById = new Map((profs ?? []).map(p => [p.user_id as string, {
+        profilesById = new Map((profs ?? []).map((p: { user_id: string; full_name: string; company_name: string | null; phone_whatsapp: string | null }) => [p.user_id, {
           full_name: p.full_name as string,
           company_name: (p.company_name as string | null) ?? null,
           phone_whatsapp: (p.phone_whatsapp as string | null) ?? null,
         }]));
       }
-      return (subs ?? []).map(s => ({ ...s, profile: profilesById.get(s.user_id) ?? null })) as PendingRow[];
+      return (subs ?? []).map((s: { id: string; user_id: string; plan: string; ecocash_ref: string | null; created_at: string }) => ({ ...s, profile: profilesById.get(s.user_id) ?? null })) as PendingRow[];
     },
   });
 
