@@ -66,9 +66,9 @@ function LoadBoardPage() {
   }), [search]);
 
   const setFilters = (f: Filters) => {
-    navigate({ search: (prev) => ({ ...prev, ...f }) as never, replace: true });
+    navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, ...f }) as never, replace: true });
   };
-  const setSort = (s: SortKey) => navigate({ search: (prev) => ({ ...prev, sort: s }) as never, replace: true });
+  const setSort = (s: SortKey) => navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, sort: s }) as never, replace: true });
 
   const [authOpen, setAuthOpen] = useState(false);
   const [pricingOpen, setPricingOpen] = useState(false);
@@ -118,7 +118,7 @@ function LoadBoardPage() {
   const hiddenCount = isFree ? Math.max(0, filtered.length - FREE_LOAD_LIMIT) : 0;
 
   const selected = useMemo(() => loads.find(l => l.id === search.load) ?? null, [loads, search.load]);
-  const setSelected = (l: Load | null) => navigate({ search: (prev) => ({ ...prev, load: l?.id }) as never, replace: true });
+  const setSelected = (l: Load | null) => navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, load: l?.id }) as never, replace: true });
 
   return (
     <div>
