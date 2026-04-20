@@ -1,3 +1,4 @@
+/// <reference types="vite-plugin-pwa/client" />
 // Service worker registration with strict iframe + preview-host guards.
 // The SW must NEVER register inside the Lovable preview iframe — it causes
 // stale builds and broken navigation.
