@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Truck, Menu, X, ShieldCheck } from "lucide-react";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,21 +12,15 @@ export function Header({ onLogin }: { onLogin: () => void }) {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const { data: isAdmin } = useQuery({
-    queryKey: ["is-admin", user?.id],
-    enabled: !!user?.id,
-    staleTime: 5 * 60_000,
-    queryFn: async () => {
-      const { data } = await db
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", user!.id)
-        .eq("role", "admin")
-        .maybeSingle();
-      return !!data;
-    },
-  });
+  useEffect(() => {
+    let cancelled = false;
+    if (!user?.id) { setIsAdmin(false); return; }
+    db.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle()
+      .then(({ data }: { data: unknown }) => { if (!cancelled) setIsAdmin(!!data); });
+    return () => { cancelled = true; };
+  }, [user?.id]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
