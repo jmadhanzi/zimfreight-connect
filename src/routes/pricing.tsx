@@ -138,32 +138,35 @@ function PricingPage() {
 
       {/* Comparison */}
       <div className="mt-20">
-        <h2 className="font-display text-3xl font-black uppercase tracking-tight">Compare plans</h2>
-        <div className="mt-6 overflow-x-auto rounded-xl border border-border">
-          <table className="w-full text-sm">
-            <thead className="bg-secondary/40">
-              <tr>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Feature</th>
-                {PLANS.map((p) => (
-                  <th key={p.tier} className={cn("px-4 py-3 text-left font-display text-base font-black uppercase", p.highlight && "text-primary")}>{p.name}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {COMPARE_ROWS.map((row) => (
-                <tr key={row.label} className="border-t border-border">
-                  <td className="px-4 py-3 text-muted-foreground">{row.label}</td>
-                  {row.values.map((v, i) => (
-                    <td key={i} className="px-4 py-3">
-                      {typeof v === "boolean"
-                        ? v ? <Check className="h-4 w-4 text-primary" /> : <X className="h-4 w-4 text-muted-foreground/40" />
-                        : <span className="font-mono text-foreground">{v}</span>}
-                    </td>
+        <span className="font-mono text-xs uppercase tracking-widest text-primary">Comparison</span>
+        <h2 className="mt-1 font-display text-3xl font-black uppercase tracking-tight">Compare plans</h2>
+        <div className="mt-6 overflow-hidden rounded-lg border border-border bg-card">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="sticky top-0 z-20 bg-[color:var(--bg-secondary)] font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                <tr className="border-b border-border">
+                  <th className="px-3 py-2 text-left">Feature</th>
+                  {PLANS.map((p) => (
+                    <th key={p.tier} className={cn("px-3 py-2 text-left", p.highlight && "text-primary")}>{p.name}</th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {COMPARE_ROWS.map((row) => (
+                  <tr key={row.label} className="border-b border-border/60 transition-colors hover:bg-background/40">
+                    <td className="px-3 py-3 text-foreground">{row.label}</td>
+                    {row.values.map((v, i) => (
+                      <td key={i} className={cn("px-3 py-3", PLANS[i]?.highlight && "bg-primary/[0.04]")}>
+                        {typeof v === "boolean"
+                          ? v ? <Check className="h-4 w-4 text-primary" /> : <X className="h-4 w-4 text-muted-foreground/40" />
+                          : <span className="font-mono-num font-bold text-foreground">{v}</span>}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
