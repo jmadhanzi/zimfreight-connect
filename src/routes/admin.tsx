@@ -559,9 +559,11 @@ function UsersTab() {
       if (hasRole) {
         const { error } = await db.from("user_roles").delete().eq("user_id", userId).eq("role", role);
         if (error) throw error;
+        await logAudit("role.revoke", userId, { role });
       } else {
         const { error } = await db.from("user_roles").insert({ user_id: userId, role });
         if (error) throw error;
+        await logAudit("role.grant", userId, { role });
       }
     },
     onMutate: ({ userId, role }) => setBusy(`${userId}:${role}`),
