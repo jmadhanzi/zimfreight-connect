@@ -1,24 +1,20 @@
 import { useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/lib/db";
 import { useAuthStore } from "@/stores/authStore";
 import type { Profile, Subscription } from "@/types";
+import type { Session } from "@supabase/supabase-js";
 
 export function useAuthBootstrap() {
   const { setAuth, setProfile, setSubscription, setLoading, reset } = useAuthStore();
 
   useEffect(() => {
-    // Set up listener FIRST
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((_event: string, session: Session | null) => {
       setAuth(session, session?.user ?? null);
-      if (session?.user) {
-        // defer to avoid deadlock
-        setTimeout(() => loadProfile(session.user.id), 0);
-      } else {
-        reset();
-      }
+      if (session?.user) setTimeout(() => loadProfile(session.user.id), 0);
+      else reset();
     });
 
-    // Then check existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setAuth(session, session?.user ?? null);
       if (session?.user) loadProfile(session.user.id);

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { db } from "@/lib/db";
 import type { Load } from "@/types";
 
@@ -9,23 +10,15 @@ export function useLoads() {
   useEffect(() => {
     let mounted = true;
     (async () => {
-      const { data } = await supabase
-        .from("loads")
-        .select("*")
-        .eq("status", "available")
-        .order("created_at", { ascending: false })
-        .limit(100);
-      if (mounted) {
-        setLoads((data ?? []) as Load[]);
-        setLoading(false);
-      }
+      const { data } = await db.from("loads").select("*").eq("status", "available").order("created_at", { ascending: false }).limit(100);
+      if (mounted) { setLoads((data ?? []) as Load[]); setLoading(false); }
     })();
 
     const channel = supabase
       .channel("loads-feed")
-      .on("postgres_changes", { event: "*", schema: "public", table: "loads" }, () => {
+      .on("postgres_changes" as never, { event: "*", schema: "public", table: "loads" }, () => {
         db.from("loads").select("*").eq("status", "available").order("created_at", { ascending: false }).limit(100)
-          .then(({ data }) => mounted && setLoads((data ?? []) as Load[]));
+          .then(({ data }: { data: Load[] | null }) => mounted && setLoads((data ?? []) as Load[]));
       })
       .subscribe();
 
