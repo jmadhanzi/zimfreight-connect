@@ -298,6 +298,42 @@ function LandingPage() {
         </div>
       </section>
 
+      {/* ============ TRUST STRIP ============ */}
+      <section className="border-b border-border bg-card py-14 md:py-16">
+        <div className="mx-auto max-w-7xl px-4 md:px-6">
+          <div className="reveal flex flex-col items-center gap-2 text-center">
+            <span className="font-mono text-xs uppercase tracking-widest text-primary">Trusted across SADC</span>
+            <h2 className="font-display text-2xl font-black uppercase tracking-tight md:text-3xl">
+              Trusted by <span className="text-secondary">2,400+</span> carriers &amp; partners
+            </h2>
+            <p className="max-w-xl text-sm text-muted-foreground">
+              From owner-operators to national fleets and SADC freight forwarders.
+            </p>
+          </div>
+
+          <div className="reveal mt-10 grid grid-cols-2 items-center gap-x-8 gap-y-8 sm:grid-cols-3 md:grid-cols-6">
+            {PARTNERS.map((p) => (
+              <div
+                key={p.name}
+                className="group flex h-16 items-center justify-center rounded-lg border border-border bg-background px-4 transition-all hover:border-primary/40 hover:shadow-[0_0_30px_-12px_var(--primary)]"
+                title={p.name}
+              >
+                <span className="font-display text-base font-black uppercase tracking-tight text-muted-foreground transition-colors group-hover:text-primary md:text-lg">
+                  {p.name}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div className="reveal mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs font-medium text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-success" /> ZIMRA-registered brokers</span>
+            <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-success" /> EcoCash &amp; USD payouts</span>
+            <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-success" /> 99.2% on-time delivery</span>
+            <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-success" /> SADC cross-border ready</span>
+          </div>
+        </div>
+      </section>
+
       {/* ============ HOW IT WORKS ============ */}
       <section className="border-b border-border bg-[var(--bg-secondary)] py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
