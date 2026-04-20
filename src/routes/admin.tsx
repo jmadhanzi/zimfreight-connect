@@ -137,8 +137,8 @@ function KpiRow() {
         db.from("subscriptions").select("*", { count: "exact", head: true }).eq("status", "pending"),
       ]);
       if (e1 || e2 || e3 || e4) throw e1 ?? e2 ?? e3 ?? e4;
-      const mrr = (subs ?? []).reduce((sum, s) => sum + (PLAN_PRICE[s.plan as PlanTier] ?? 0), 0);
-      const paying = (subs ?? []).filter(s => (PLAN_PRICE[s.plan as PlanTier] ?? 0) > 0).length;
+      const mrr = (subs ?? []).reduce((sum: number, s: { plan: string }) => sum + (PLAN_PRICE[s.plan as PlanTier] ?? 0), 0);
+      const paying = (subs ?? []).filter((s: { plan: string }) => (PLAN_PRICE[s.plan as PlanTier] ?? 0) > 0).length;
       return { mrr, paying, totalUsers: usersCount ?? 0, loads30d: loadsCount ?? 0, pending: pending ?? 0 };
     },
   });
