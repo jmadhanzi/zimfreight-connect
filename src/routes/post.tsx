@@ -150,8 +150,13 @@ type ParsedValues = z.output<typeof schema>;
 
 const DRAFT_KEY = "zf:post_draft_v1";
 const STEP_FIELDS: (keyof FormValues)[][] = [
-  ["origin", "destination", "pickup_date", "delivery_deadline", "pickup_address", "flexible_dates"],
-  ["load_type", "equipment_required", "weight_tonnes", "num_loads", "commodity_value", "rate_usd", "payment_terms", "is_urgent", "notes"],
+  // Step 0 — Route
+  ["origin", "destination", "pickup_address"],
+  // Step 1 — Cargo
+  ["load_type", "equipment_required", "weight_tonnes", "num_loads", "commodity_value"],
+  // Step 2 — Rate & Date
+  ["rate_usd", "payment_terms", "pickup_date", "delivery_deadline", "flexible_dates", "is_urgent", "notes"],
+  // Step 3 — Review (contact + distribution)
   ["company_name", "contact_person", "whatsapp", "alt_contact", "company_address", "share_to_zf", "share_harare", "share_bulawayo", "share_zha", "share_email_network", "is_private"],
 ];
 
@@ -272,7 +277,7 @@ function PostLoadPage() {
     const ok = await form.trigger(STEP_FIELDS[step] as never);
     if (!ok) { toast.error("Please fix the highlighted fields"); return; }
     saveDraft(form.getValues());
-    setStep(s => Math.min(2, s + 1));
+    setStep(s => Math.min(3, s + 1));
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const back = () => setStep(s => Math.max(0, s - 1));
@@ -354,16 +359,17 @@ function PostLoadPage() {
       )}
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6">
-        {step === 0 && <Step1 form={form} />}
-        {step === 1 && <Step2 form={form} />}
-        {step === 2 && <Step3 form={form} />}
+        {step === 0 && <StepRoute form={form} />}
+        {step === 1 && <StepCargo form={form} />}
+        {step === 2 && <StepRateDate form={form} />}
+        {step === 3 && <StepReview form={form} onEdit={setStep} />}
 
         {/* Nav */}
         <div className="mt-6 flex items-center justify-between gap-3 md:static fixed inset-x-0 bottom-16 z-30 border-t border-border bg-background/95 px-4 py-3 backdrop-blur md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
           {step > 0 ? (
             <Button type="button" variant="outline" onClick={back}><ArrowLeft className="mr-1.5 h-4 w-4" /> Back</Button>
           ) : <span />}
-          {step < 2 ? (
+          {step < 3 ? (
             <Button type="button" onClick={next} className="bg-primary text-primary-foreground hover:bg-primary/90">Continue <ArrowRight className="ml-1.5 h-4 w-4" /></Button>
           ) : (
             <Button type="submit" disabled={submitting} className="bg-primary px-6 text-base font-bold text-primary-foreground hover:bg-primary/90">
@@ -372,7 +378,7 @@ function PostLoadPage() {
             </Button>
           )}
         </div>
-        {step === 2 && <p className="mt-2 text-right text-xs text-muted-foreground">Your load will be live within 60 seconds.</p>}
+        {step === 3 && <p className="mt-2 text-right text-xs text-muted-foreground">Your load will be live within 60 seconds.</p>}
       </form>
     </div>
   );
@@ -381,9 +387,9 @@ function PostLoadPage() {
 /* ----------------------------- Stepper ----------------------------- */
 
 function Stepper({ step }: { step: number }) {
-  const steps = ["Route & schedule", "Load & rate", "Contact & publish"];
+  const steps = ["Route", "Cargo", "Rate & Date", "Review"];
   return (
-    <div className="mt-6 grid grid-cols-3 gap-2">
+    <div className="mt-6 grid grid-cols-4 gap-2">
       {steps.map((s, i) => (
         <div key={s} className="flex flex-col gap-1.5">
           <div className={cn("h-1 rounded-full", i <= step ? "bg-primary" : "bg-border")} />
@@ -392,7 +398,7 @@ function Stepper({ step }: { step: number }) {
               i < step ? "bg-primary text-primary-foreground" : i === step ? "bg-primary text-primary-foreground" : "bg-border text-muted-foreground")}>
               {i < step ? <Check className="h-3 w-3" /> : i + 1}
             </span>
-            <span className={cn("font-mono text-[10px] uppercase tracking-widest", i === step ? "text-foreground" : "text-muted-foreground")}>{s}</span>
+            <span className={cn("font-mono text-[10px] uppercase tracking-widest truncate", i === step ? "text-foreground" : "text-muted-foreground")}>{s}</span>
           </div>
         </div>
       ))}
@@ -400,14 +406,13 @@ function Stepper({ step }: { step: number }) {
   );
 }
 
-/* ----------------------------- Step 1 ----------------------------- */
+/* ----------------------------- Step 1 — Route ----------------------------- */
 
 type StepFormProps = { form: ReturnType<typeof useForm<FormValues, unknown, ParsedValues>> };
 
-function Step1({ form }: StepFormProps) {
+function StepRoute({ form }: StepFormProps) {
   const origin = form.watch("origin");
   const destination = form.watch("destination");
-  const pickup = form.watch("pickup_date");
   const intel = useMemo(() => intelFor(origin, destination), [origin, destination]);
   const cross = useMemo(() => isCrossBorder(origin, destination), [origin, destination]);
   const errs = form.formState.errors;
@@ -426,23 +431,7 @@ function Step1({ form }: StepFormProps) {
           <Field label="Pickup address (optional)" className="md:col-span-2">
             <Input maxLength={200} placeholder="e.g. Workington Industrial, Stand 24" {...form.register("pickup_address")} />
           </Field>
-          <Field label="Pickup date" error={errs.pickup_date?.message}>
-            <Controller control={form.control} name="pickup_date" render={({ field }) => (
-              <DateField value={field.value} onChange={field.onChange} minDate={new Date()} />
-            )} />
-          </Field>
-          <Field label="Delivery deadline" error={errs.delivery_deadline?.message}>
-            <Controller control={form.control} name="delivery_deadline" render={({ field }) => (
-              <DateField value={field.value} onChange={field.onChange} minDate={pickup ? new Date(pickup) : new Date()} />
-            )} />
-          </Field>
         </div>
-        <label className="flex items-center justify-between rounded-md border border-border bg-background/40 px-3 py-2.5">
-          <span className="text-sm">Flexible dates <span className="text-muted-foreground">(±1 day)</span></span>
-          <Controller control={form.control} name="flexible_dates" render={({ field }) => (
-            <Switch checked={!!field.value} onCheckedChange={field.onChange} />
-          )} />
-        </label>
       </div>
 
       {/* RIGHT — Live preview */}
@@ -494,23 +483,12 @@ function Step1({ form }: StepFormProps) {
   );
 }
 
-/* ----------------------------- Step 2 ----------------------------- */
+/* ----------------------------- Step 2 — Cargo ----------------------------- */
 
-function Step2({ form }: StepFormProps) {
-  const origin = form.watch("origin");
-  const destination = form.watch("destination");
-  const intel = useMemo(() => intelFor(origin, destination), [origin, destination]);
-  const rate = Number(form.watch("rate_usd")) || 0;
+function StepCargo({ form }: StepFormProps) {
   const errs = form.formState.errors;
-
-  const zone: "low" | "mid" | "high" =
-    !intel || !rate ? "mid" :
-    rate < intel.low ? "low" :
-    rate > intel.high ? "high" : "mid";
-
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
-      {/* LEFT */}
+    <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
       <div className="space-y-5 rounded-lg border border-border bg-card p-5">
         <div>
           <Label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Load type</Label>
@@ -541,8 +519,87 @@ function Step2({ form }: StepFormProps) {
           </Field>
         </div>
       </div>
+      <aside className="space-y-3 rounded-lg border border-primary/20 bg-gradient-to-b from-primary/5 to-card p-5">
+        <div className="font-mono text-[10px] uppercase tracking-widest text-primary">Cargo tips</div>
+        <ul className="space-y-2 text-xs text-muted-foreground">
+          <li>• Pick the closest match — carriers filter by load type and equipment.</li>
+          <li>• Multi-load postings (2+) get a "fleet" badge and reach owner-operators with multiple trucks.</li>
+          <li>• Commodity value is private. Used only for insurance estimates.</li>
+        </ul>
+      </aside>
+    </div>
+  );
+}
 
-      {/* RIGHT — Rate intelligence */}
+/* ----------------------------- Step 3 — Rate & Date ----------------------------- */
+
+function StepRateDate({ form }: StepFormProps) {
+  const origin = form.watch("origin");
+  const destination = form.watch("destination");
+  const pickup = form.watch("pickup_date");
+  const intel = useMemo(() => intelFor(origin, destination), [origin, destination]);
+  const rate = Number(form.watch("rate_usd")) || 0;
+  const errs = form.formState.errors;
+
+  const zone: "low" | "mid" | "high" =
+    !intel || !rate ? "mid" :
+    rate < intel.low ? "low" :
+    rate > intel.high ? "high" : "mid";
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
+      <div className="space-y-5 rounded-lg border border-border bg-card p-5">
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field label="Pickup date" error={errs.pickup_date?.message}>
+            <Controller control={form.control} name="pickup_date" render={({ field }) => (
+              <DateField value={field.value} onChange={field.onChange} minDate={new Date()} />
+            )} />
+          </Field>
+          <Field label="Delivery deadline" error={errs.delivery_deadline?.message}>
+            <Controller control={form.control} name="delivery_deadline" render={({ field }) => (
+              <DateField value={field.value} onChange={field.onChange} minDate={pickup ? new Date(pickup) : new Date()} />
+            )} />
+          </Field>
+        </div>
+        <label className="flex items-center justify-between rounded-md border border-border bg-background/40 px-3 py-2.5">
+          <span className="text-sm">Flexible dates <span className="text-muted-foreground">(±1 day)</span></span>
+          <Controller control={form.control} name="flexible_dates" render={({ field }) => (
+            <Switch checked={!!field.value} onCheckedChange={field.onChange} />
+          )} />
+        </label>
+
+        <div>
+          <Label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Payment terms</Label>
+          <div className="mt-2 grid grid-cols-2 gap-1.5">
+            {PAYMENT_OPTIONS.map(p => {
+              const active = form.watch("payment_terms") === p.value;
+              return (
+                <button key={p.value} type="button" onClick={() => form.setValue("payment_terms", p.value, { shouldValidate: true })}
+                  className={cn("flex items-center gap-1.5 rounded-md border px-2.5 py-2 text-left text-xs transition",
+                    active ? "border-primary bg-primary/10 text-foreground" : "border-border bg-background/40 hover:border-primary/40")}>
+                  <span>{p.icon}</span><span className="leading-tight">{p.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          {errs.payment_terms && <p className="mt-1 text-xs text-destructive">{errs.payment_terms.message}</p>}
+        </div>
+
+        <label className="flex cursor-pointer items-start justify-between gap-3 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2.5">
+          <span className="text-sm">
+            <span className="flex items-center gap-1.5 font-bold text-destructive"><Flame className="h-3.5 w-3.5" /> Mark as URGENT</span>
+            <span className="text-xs text-muted-foreground">Boost visibility — $5 extra · pinned to top</span>
+          </span>
+          <Controller control={form.control} name="is_urgent" render={({ field }) => (
+            <Switch checked={!!field.value} onCheckedChange={field.onChange} />
+          )} />
+        </label>
+
+        <Field label="Special notes">
+          <Textarea rows={3} maxLength={500} placeholder="Any handling instructions, paperwork, or contact preferences" {...form.register("notes")} />
+        </Field>
+      </div>
+
       <aside className="space-y-4 rounded-lg border border-primary/20 bg-gradient-to-b from-primary/5 to-card p-5">
         <div>
           <div className="font-mono text-[10px] uppercase tracking-widest text-primary">Set your rate</div>
@@ -580,52 +637,53 @@ function Step2({ form }: StepFormProps) {
             </div>
           </>
         )}
-
-        <div>
-          <Label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Payment terms</Label>
-          <div className="mt-2 grid grid-cols-2 gap-1.5">
-            {PAYMENT_OPTIONS.map(p => {
-              const active = form.watch("payment_terms") === p.value;
-              return (
-                <button key={p.value} type="button" onClick={() => form.setValue("payment_terms", p.value, { shouldValidate: true })}
-                  className={cn("flex items-center gap-1.5 rounded-md border px-2.5 py-2 text-left text-xs transition",
-                    active ? "border-primary bg-primary/10 text-foreground" : "border-border bg-background/40 hover:border-primary/40")}>
-                  <span>{p.icon}</span><span className="leading-tight">{p.label}</span>
-                </button>
-              );
-            })}
-          </div>
-          {errs.payment_terms && <p className="mt-1 text-xs text-destructive">{errs.payment_terms.message}</p>}
-        </div>
-
-        <label className="flex cursor-pointer items-start justify-between gap-3 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2.5">
-          <span className="text-sm">
-            <span className="flex items-center gap-1.5 font-bold text-destructive"><Flame className="h-3.5 w-3.5" /> Mark as URGENT</span>
-            <span className="text-xs text-muted-foreground">Boost visibility — $5 extra · pinned to top</span>
-          </span>
-          <Controller control={form.control} name="is_urgent" render={({ field }) => (
-            <Switch checked={!!field.value} onCheckedChange={field.onChange} />
-          )} />
-        </label>
-
-        <Field label="Special notes">
-          <Textarea rows={3} maxLength={500} placeholder="Any handling instructions, paperwork, or contact preferences" {...form.register("notes")} />
-        </Field>
       </aside>
     </div>
   );
 }
 
-/* ----------------------------- Step 3 ----------------------------- */
+/* ----------------------------- Step 4 — Review ----------------------------- */
 
-function Step3({ form }: StepFormProps) {
+function StepReview({ form, onEdit }: StepFormProps & { onEdit: (step: number) => void }) {
   const v = form.watch();
   const intel = useMemo(() => intelFor(v.origin, v.destination), [v.origin, v.destination]);
   const errs = form.formState.errors;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
-      <div className="space-y-5 rounded-lg border border-border bg-card p-5">
+      <div className="space-y-5">
+        {/* Review summary */}
+        <div className="rounded-lg border border-primary/30 bg-primary/5 p-5">
+          <div className="flex items-center justify-between gap-3">
+            <div className="font-mono text-[10px] uppercase tracking-widest text-primary">Review your load</div>
+            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Tap a section to edit</span>
+          </div>
+          <div className="mt-3 space-y-2">
+            <ReviewRow label="Route" onEdit={() => onEdit(0)}>
+              <span className="font-display text-base font-black">{v.origin || "—"} → {v.destination || "—"}</span>
+              {intel?.distance && <span className="ml-2 font-mono-num text-xs text-muted-foreground">{intel.distance}km · {intel.highway}</span>}
+            </ReviewRow>
+            <ReviewRow label="Cargo" onEdit={() => onEdit(1)}>
+              <span>{v.load_type || "—"}</span>
+              <span className="text-muted-foreground"> · {v.equipment_required || "—"}</span>
+              <span className="text-muted-foreground"> · {v.weight_tonnes ? `${v.weight_tonnes}T × ${v.num_loads}` : "—"}</span>
+            </ReviewRow>
+            <ReviewRow label="Rate" onEdit={() => onEdit(2)}>
+              <span className="font-display text-base font-black text-primary">{v.rate_usd ? formatUSD(Number(v.rate_usd)) : "—"}</span>
+              <span className="text-muted-foreground"> · {v.payment_terms || "—"}</span>
+              {v.is_urgent && <Badge className="ml-2 border-0 bg-destructive text-[10px] uppercase text-destructive-foreground">Urgent</Badge>}
+            </ReviewRow>
+            <ReviewRow label="Pickup" onEdit={() => onEdit(2)}>
+              <span>{v.pickup_date || "—"}</span>
+              {v.delivery_deadline && <span className="text-muted-foreground"> → {v.delivery_deadline}</span>}
+              {v.flexible_dates && <Badge variant="outline" className="ml-2 text-[10px]">Flex ±1d</Badge>}
+            </ReviewRow>
+          </div>
+        </div>
+
+        {/* Contact + distribution */}
+        <div className="space-y-5 rounded-lg border border-border bg-card p-5">
+          <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Contact details</div>
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Company name" error={errs.company_name?.message}>
             <Input maxLength={120} {...form.register("company_name")} />
@@ -652,6 +710,7 @@ function Step3({ form }: StepFormProps) {
           <ShareRow form={form} name="share_zha" label="Zimbabwe Hauliers Association" sub="520 members" />
           <ShareRow form={form} name="share_email_network" label="Email my saved carrier network" />
           <ShareRow form={form} name="is_private" label="Private — only carriers I invite" sub="Hidden from public board" />
+        </div>
         </div>
       </div>
 
@@ -893,4 +952,17 @@ function humanAge(ms: number) {
   if (h < 24) return `${h} hour${h === 1 ? "" : "s"} ago`;
   const d = Math.floor(h / 24);
   return `${d} day${d === 1 ? "" : "s"} ago`;
+}
+
+function ReviewRow({ label, children, onEdit }: { label: string; children: React.ReactNode; onEdit: () => void }) {
+  return (
+    <button type="button" onClick={onEdit}
+      className="group flex w-full items-center justify-between gap-3 rounded-md border border-border bg-background/40 px-3 py-2.5 text-left transition hover:border-primary/40 hover:bg-background/60">
+      <div className="min-w-0 flex-1">
+        <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</div>
+        <div className="mt-0.5 text-sm">{children}</div>
+      </div>
+      <span className="font-mono text-[10px] uppercase tracking-widest text-primary opacity-0 transition group-hover:opacity-100">Edit</span>
+    </button>
+  );
 }
