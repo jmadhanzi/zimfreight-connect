@@ -6,6 +6,8 @@ import { useAuthBootstrap } from "@/hooks/useAuth";
 import { Toaster } from "@/components/ui/sonner";
 import { InstallBanner } from "@/components/pwa/InstallBanner";
 import { registerPwa } from "@/lib/pwa";
+import { ExitIntentPopup } from "@/components/conversion/ExitIntentPopup";
+import { SocialProofToasts } from "@/components/conversion/SocialProofToasts";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   useAuthBootstrap();
@@ -20,6 +22,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
       <Toaster theme="dark" richColors position="top-right" />
       <InstallBanner />
+      <ExitIntentPopup />
+      <SocialProofToasts />
     </div>
   );
 }

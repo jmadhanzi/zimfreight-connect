@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { db } from "@/lib/db";
 import type { BorderStatus, RouteRate } from "@/types";
 import { toast } from "sonner";
+import { recordLoadView } from "@/components/conversion/SoftGateModal";
 
 interface Props {
   load: Load | null;
@@ -29,6 +30,7 @@ export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved
 
   useEffect(() => {
     if (!load) return;
+    recordLoadView(load.id);
     db.from("route_rates").select("*").eq("origin", load.origin).eq("destination", load.destination).maybeSingle()
       .then(({ data }: { data: RouteRate | null }) => setMarketRate(data ? Number(data.avg_rate_per_km) : null));
     if (load.is_border_crossing) {
