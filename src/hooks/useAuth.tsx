@@ -5,6 +5,11 @@ import { useAuthStore } from "@/stores/authStore";
 import type { Profile, Subscription } from "@/types";
 import type { Session } from "@supabase/supabase-js";
 
+// Dev-only bypass: in `bun run dev`, treat every signed-in user as a Fleet
+// subscriber so paywalls/upgrade gates don't block exploration. Has zero
+// effect in production builds (import.meta.env.DEV is false).
+const DEV_BYPASS = import.meta.env.DEV;
+
 export function useAuthBootstrap() {
   const { setAuth, setProfile, setSubscription, setLoading, reset } = useAuthStore();
 
@@ -27,7 +32,26 @@ export function useAuthBootstrap() {
         db.from("subscriptions").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(1).maybeSingle(),
       ]);
       setProfile(profile as Profile | null);
-      setSubscription(subscription as Subscription | null);
+      const sub = subscription as Subscription | null;
+      if (DEV_BYPASS) {
+        // Force Fleet tier in dev so every paywall passes.
+        setSubscription({
+          ...(sub ?? {
+            id: "dev-bypass",
+            user_id: userId,
+            status: "active",
+            ecocash_ref: null,
+            stripe_subscription_id: null,
+            expires_at: null,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          }),
+          plan: "fleet",
+          status: "active",
+        } as Subscription);
+      } else {
+        setSubscription(sub);
+      }
       setLoading(false);
     }
 
