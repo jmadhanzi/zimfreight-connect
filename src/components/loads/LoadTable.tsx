@@ -94,7 +94,7 @@ function Row({ load, onSelect, canSeeContacts, onUpgrade, saved, onToggleSave }:
             <span
               aria-label={postedLabel}
               onClick={stop}
-              className="absolute left-0 top-0 z-10 h-full w-2 cursor-help"
+              className="absolute left-0 top-0 z-10 h-full w-12 cursor-help"
             />
           </TooltipTrigger>
           <TooltipContent side="right" className="font-mono text-[10px] uppercase tracking-widest">
