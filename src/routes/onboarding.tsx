@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/lib/db";
 import { ZIM_CITIES } from "@/types";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -57,7 +57,7 @@ function OnboardingPage() {
   const onSubmit = async (v: Values) => {
     setSaving(true);
     try {
-      const { error } = await supabase.from("profiles").update({
+      const { error } = await db.from("profiles").update({
         full_name: v.full_name,
         company_name: v.company_name || null,
         phone_whatsapp: v.phone_whatsapp,

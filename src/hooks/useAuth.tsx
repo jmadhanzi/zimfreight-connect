@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/lib/db";
 import { useAuthStore } from "@/stores/authStore";
 import type { Profile, Subscription } from "@/types";
 
@@ -27,8 +27,8 @@ export function useAuthBootstrap() {
 
     async function loadProfile(userId: string) {
       const [{ data: profile }, { data: subscription }] = await Promise.all([
-        supabase.from("profiles").select("*").eq("user_id", userId).maybeSingle(),
-        supabase.from("subscriptions").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(1).maybeSingle(),
+        db.from("profiles").select("*").eq("user_id", userId).maybeSingle(),
+        db.from("subscriptions").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(1).maybeSingle(),
       ]);
       setProfile(profile as Profile | null);
       setSubscription(subscription as Subscription | null);

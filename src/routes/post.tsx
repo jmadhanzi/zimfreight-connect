@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/lib/db";
 import { useAuth } from "@/hooks/useAuth";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -78,7 +78,7 @@ function PostLoadPage() {
     setSubmitting(true);
     try {
       const rate_per_km = values.distance_km ? +(values.rate_usd / values.distance_km).toFixed(2) : null;
-      const { error } = await supabase.from("loads").insert({
+      const { error } = await db.from("loads").insert({
         poster_id: user.id,
         origin: values.origin,
         destination: values.destination,

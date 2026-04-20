@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/lib/db";
 import { StatsCard } from "@/components/dashboard/StatsCard";
 import { LoadCard } from "@/components/loads/LoadCard";
 import { Button } from "@/components/ui/button";
@@ -26,9 +26,9 @@ function DashboardPage() {
 
   useEffect(() => {
     if (!user) return;
-    supabase.from("loads").select("*").eq("poster_id", user.id).order("created_at", { ascending: false })
+    db.from("loads").select("*").eq("poster_id", user.id).order("created_at", { ascending: false })
       .then(({ data }) => setMyLoads((data ?? []) as Load[]));
-    supabase.from("route_rates").select("*").order("weekly_loads", { ascending: false }).limit(8)
+    db.from("route_rates").select("*").order("weekly_loads", { ascending: false }).limit(8)
       .then(({ data }) => setRates((data ?? []) as RouteRate[]));
   }, [user]);
 
