@@ -76,19 +76,41 @@ function PricingPage() {
           const suffix = p.monthly === 0 ? "" : annual ? "/yr" : "/mo";
           return (
             <div key={p.tier} className={cn(
-              "relative flex flex-col rounded-2xl border p-6",
-              p.highlight ? "border-primary bg-gradient-to-b from-primary/15 to-card shadow-[0_0_0_1px_var(--primary)]" : "border-border bg-card"
+              "relative flex flex-col overflow-hidden rounded-lg border p-6 transition-colors",
+              p.highlight
+                ? "border-primary/60 bg-card shadow-[0_0_0_1px_var(--primary)]"
+                : "border-border bg-card hover:border-border/80"
             )}>
               {p.highlight && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary-foreground">Most popular</span>
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent"
+                />
               )}
-              <h3 className="font-display text-2xl font-black uppercase tracking-tight">{p.name}</h3>
-              <p className="text-sm text-muted-foreground">{p.sub}</p>
-              <div className="mt-5 flex items-baseline gap-1">
-                <span className="font-display text-5xl font-black text-foreground">${price}</span>
-                <span className="text-sm text-muted-foreground">{suffix}</span>
+              {p.highlight && (
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent"
+                />
+              )}
+              {p.highlight && (
+                <span className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 rounded-full bg-primary px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-primary-foreground">Most popular</span>
+              )}
+              <div className="relative">
+                <span className={cn(
+                  "font-mono text-[10px] uppercase tracking-widest",
+                  p.highlight ? "text-primary" : "text-muted-foreground"
+                )}>
+                  {p.tier === "free" ? "Tier 00" : p.tier === "basic" ? "Tier 01" : p.tier === "pro" ? "Tier 02" : "Tier 03"}
+                </span>
+                <h3 className="mt-1 font-display text-2xl font-black uppercase tracking-tight">{p.name}</h3>
+                <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">{p.sub}</p>
+                <div className="mt-5 flex items-baseline gap-1">
+                  <span className={cn("font-display text-5xl font-black", p.highlight ? "text-primary" : "text-foreground")}>${price}</span>
+                  <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">{suffix || "/free"}</span>
+                </div>
               </div>
-              <ul className="mt-6 flex-1 space-y-2 text-sm">
+              <ul className="relative mt-6 flex-1 space-y-2 text-sm">
                 {p.features.map((f) => (
                   <li key={f} className="flex items-start gap-2">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -96,11 +118,11 @@ function PricingPage() {
                   </li>
                 ))}
               </ul>
-              <Button asChild className={cn("mt-6", p.highlight ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-secondary text-foreground hover:bg-secondary/80")}>
+              <Button asChild className={cn("relative mt-6 font-mono text-xs uppercase tracking-widest", p.highlight ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-secondary text-foreground hover:bg-secondary/80")}>
                 <Link to="/board" search={{ q: "", origin: "all", destination: "all", loadType: "all", equipment: "all", pickup: "", minRate: 0, maxDistance: 2000, border: false, zimra: false, urgent: false, minWeight: 0, maxWeight: 40, payment: "all", sort: "newest", load: undefined }}>{p.cta}</Link>
               </Button>
               {p.highlight && (
-                <div className="mt-3 flex items-center justify-center gap-1.5 rounded-md border border-primary/30 bg-primary/10 px-2 py-1.5 text-[11px] font-medium text-primary">
+                <div className="relative mt-3 flex items-center justify-center gap-1.5 rounded-md border border-primary/30 bg-primary/10 px-2 py-1.5 font-mono text-[10px] uppercase tracking-widest text-primary">
                   <Flame className="h-3.5 w-3.5" />
                   47 carriers signed up in the last 24 hours
                 </div>
