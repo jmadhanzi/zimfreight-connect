@@ -97,6 +97,7 @@ function Gate({ icon, title, body, cta }: { icon: React.ReactNode; title: string
 
 function AdminDashboard() {
   const qc = useQueryClient();
+  const [tab, setTab] = useState<"overview" | "users">("overview");
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-10">
@@ -113,12 +114,36 @@ function AdminDashboard() {
         </Button>
       </div>
 
-      <KpiRow />
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-        <DauChart />
-        <PlanBreakdown />
+      <div className="mt-6 inline-flex rounded-lg border border-border bg-card p-1">
+        {([
+          { id: "overview", label: "Overview", icon: <Activity className="h-3.5 w-3.5" /> },
+          { id: "users", label: "Users", icon: <UserCog className="h-3.5 w-3.5" /> },
+        ] as const).map(t => (
+          <button
+            key={t.id}
+            onClick={() => setTab(t.id)}
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 font-mono text-[11px] uppercase tracking-widest transition-colors",
+              tab === t.id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            {t.icon} {t.label}
+          </button>
+        ))}
       </div>
-      <ApprovalQueue />
+
+      {tab === "overview" ? (
+        <>
+          <KpiRow />
+          <div className="mt-6 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+            <DauChart />
+            <PlanBreakdown />
+          </div>
+          <ApprovalQueue />
+        </>
+      ) : (
+        <UsersTab />
+      )}
     </div>
   );
 }
