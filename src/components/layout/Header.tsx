@@ -73,6 +73,15 @@ export function Header({ onLogin }: { onLogin: () => void }) {
                 {l.label}
               </Link>
             ))}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="ml-1 inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
+                activeProps={{ className: "ml-1 inline-flex items-center gap-1 rounded-md border border-primary bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground" }}
+              >
+                <ShieldCheck className="h-3.5 w-3.5" /> Admin
+              </Link>
+            )}
           </nav>
 
           <div className="hidden items-center gap-2 md:flex">
