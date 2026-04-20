@@ -1,6 +1,6 @@
 import { ArrowRight, Bookmark, BookmarkCheck, MessageCircle, Lock, Flame, ShieldCheck, ChevronUp, ChevronDown, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatUSD, timeAgo, cn } from "@/lib/utils";
+import { formatUSD, timeAgo, transitProgress, cn } from "@/lib/utils";
 import type { Load, SortKey } from "@/types";
 
 const SAVED_KEY = "zf:saved_loads";
@@ -74,13 +74,14 @@ function Row({ load, onSelect, canSeeContacts, onUpgrade, saved, onToggleSave }:
   saved: boolean; onToggleSave: (id: string) => void;
 }) {
   const stop = (e: React.MouseEvent) => e.stopPropagation();
+  const progress = transitProgress(load.created_at);
   return (
     <tr
       onClick={() => onSelect(load)}
+      style={{ ["--transit-progress" as string]: `${progress}%` }}
       className={cn(
-        "group relative cursor-pointer border-b border-border/60 transition-colors hover:bg-background/40",
-        load.is_urgent && "transit-bar-row",
-        !load.is_urgent && "border-l-2 border-l-transparent hover:border-l-primary",
+        "group relative cursor-pointer border-b border-border/60 transition-colors hover:bg-background/40 transit-bar-row",
+        !load.is_urgent && "hover:[&>td:first-child]:before:opacity-100",
       )}
     >
       <td className="px-3 py-3">
