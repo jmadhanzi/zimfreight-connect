@@ -21,7 +21,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <OfflineBanner />
       {import.meta.env.DEV && (
         <div className="bg-primary/15 px-3 py-1 text-center font-mono text-[10px] uppercase tracking-widest text-primary">
-          ⚡ Dev bypass active · Fleet tier forced · all paywalls open
+          ⚡ Dev bypass · Fleet tier + admin role · all gates open
         </div>
       )}
       <Header onLogin={() => setAuthOpen(true)} />
