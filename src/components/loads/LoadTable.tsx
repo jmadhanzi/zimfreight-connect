@@ -78,8 +78,8 @@ function Row({ load, onSelect, canSeeContacts, onUpgrade, saved, onToggleSave }:
     <tr
       onClick={() => onSelect(load)}
       className={cn(
-        "group cursor-pointer border-b border-border/60 transition-colors hover:bg-background/40",
-        load.is_urgent && "border-l-2 border-l-destructive animate-[pulse_2s_ease-in-out_infinite]",
+        "group relative cursor-pointer border-b border-border/60 transition-colors hover:bg-background/40",
+        load.is_urgent && "transit-bar-row",
         !load.is_urgent && "border-l-2 border-l-transparent hover:border-l-primary",
       )}
     >
