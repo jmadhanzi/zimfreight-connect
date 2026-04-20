@@ -312,14 +312,21 @@ function LandingPage() {
           </div>
 
           <div className="reveal mt-10 grid grid-cols-2 items-center gap-x-8 gap-y-8 sm:grid-cols-3 md:grid-cols-6">
-            {PARTNERS.map((p) => (
+            {[
+              "Moyo Logistics",
+              "Khumalo Transport",
+              "Sable Freight",
+              "Zambezi Cargo",
+              "Kopje Haulage",
+              "Limpopo Lines",
+            ].map((name) => (
               <div
-                key={p.name}
+                key={name}
                 className="group flex h-16 items-center justify-center rounded-lg border border-border bg-background px-4 transition-all hover:border-primary/40 hover:shadow-[0_0_30px_-12px_var(--primary)]"
-                title={p.name}
+                title={name}
               >
                 <span className="font-display text-base font-black uppercase tracking-tight text-muted-foreground transition-colors group-hover:text-primary md:text-lg">
-                  {p.name}
+                  {name}
                 </span>
               </div>
             ))}
