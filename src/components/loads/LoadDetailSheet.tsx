@@ -10,6 +10,17 @@ import { db } from "@/lib/db";
 import type { BorderStatus, RouteRate } from "@/types";
 import { toast } from "sonner";
 import { recordLoadView } from "@/components/conversion/SoftGateModal";
+import { cacheRate, getCachedRate } from "@/lib/offlineDb";
+import { useNetworkStatus } from "@/hooks/useNetworkStatus";
+
+function humanCacheAge(ms: number) {
+  const m = Math.floor(ms / 60_000);
+  if (m < 1) return "just now";
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
+}
 
 interface Props {
   load: Load | null;
@@ -26,18 +37,27 @@ export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved
   const canSeeContacts = !!user && (plan === "basic" || plan === "pro" || plan === "fleet");
   const isPro = !!user && (plan === "pro" || plan === "fleet");
   const [marketRate, setMarketRate] = useState<number | null>(null);
+  const [rateCachedAt, setRateCachedAt] = useState<number | null>(null);
   const [beit, setBeit] = useState<BorderStatus | null>(null);
+  const online = useNetworkStatus();
 
   useEffect(() => {
     if (!load) return;
     recordLoadView(load.id);
-    db.from("route_rates").select("*").eq("origin", load.origin).eq("destination", load.destination).maybeSingle()
-      .then(({ data }: { data: RouteRate | null }) => setMarketRate(data ? Number(data.avg_rate_per_km) : null));
+    (async () => {
+      const cached = await getCachedRate(load.origin, load.destination);
+      if (cached) { setMarketRate(Number(cached.rate.avg_rate_per_km)); setRateCachedAt(cached.cachedAt); }
+      if (typeof navigator !== "undefined" && !navigator.onLine) return;
+      const { data } = await db.from("route_rates").select("*").eq("origin", load.origin).eq("destination", load.destination).maybeSingle();
+      const rate = data as RouteRate | null;
+      if (rate) { setMarketRate(Number(rate.avg_rate_per_km)); setRateCachedAt(null); void cacheRate(load.origin, load.destination, rate); }
+    })();
     if (load.is_border_crossing) {
+      if (typeof navigator !== "undefined" && !navigator.onLine) return;
       db.from("border_status").select("*").eq("border_name", "Beitbridge").maybeSingle()
         .then(({ data }: { data: BorderStatus | null }) => setBeit(data));
     }
-  }, [load]);
+  }, [load, online]);
 
   if (!load) return <Sheet open={false} onOpenChange={(o) => !o && onClose()}><SheetContent /></Sheet>;
 
@@ -85,7 +105,10 @@ export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved
             {ratePos && marketRate && (
               <div className="mt-3 rounded-md border border-border bg-background/40 p-3">
                 <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest">
-                  <span className="text-muted-foreground">Market avg ${marketRate.toFixed(2)}</span>
+                  <span className={cn("text-muted-foreground", rateCachedAt && "text-orange-400")}>
+                    Market avg ${marketRate.toFixed(2)}
+                    {rateCachedAt && <span className="ml-1.5 normal-case tracking-normal">· cached {humanCacheAge(Date.now() - rateCachedAt)}</span>}
+                  </span>
                   <span className={cn(
                     ratePos.tone === "success" && "text-[color:var(--success)]",
                     ratePos.tone === "destructive" && "text-destructive",

@@ -20,6 +20,7 @@ import { ZIM_CITIES, ALL_DEST_CITIES, CROSS_BORDER_CITIES } from "@/types";
 import { cn, formatUSD } from "@/lib/utils";
 import { format, addDays } from "date-fns";
 import { toast } from "sonner";
+import { saveDraft as idbSaveDraft, loadDraft as idbLoadDraft, clearDraft as idbClearDraft, enqueuePost } from "@/lib/offlineDb";
 import {
   ArrowLeft, ArrowRight, CalendarIcon, ChevronsUpDown, Check, Loader2, Lock, Truck,
   Flame, Sparkles, AlertTriangle, ShieldCheck, Fuel, Clock, Save, PartyPopper, Share2, Copy,
@@ -194,15 +195,27 @@ function PostLoadPage() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const raw = localStorage.getItem(DRAFT_KEY);
-    if (!raw) return;
-    try {
+    if (raw) {
+      try {
       const parsed = JSON.parse(raw) as { savedAt: number };
       const ageMs = Date.now() - parsed.savedAt;
       if (ageMs < 1000 * 60 * 60 * 24 * 14) {
         setDraftAge(humanAge(ageMs));
         setShowDraftPrompt(true);
+          return;
       }
-    } catch { /* ignore */ }
+      } catch { /* ignore */ }
+    }
+    // Fallback: check IndexedDB (e.g., if localStorage was cleared but IDB persists)
+    void (async () => {
+      const idb = await idbLoadDraft();
+      if (!idb) return;
+      const ageMs = Date.now() - idb.savedAt;
+      if (ageMs < 1000 * 60 * 60 * 24 * 14) {
+        setDraftAge(humanAge(ageMs));
+        setShowDraftPrompt(true);
+      }
+    })();
   }, []);
 
   // Autosave every 30s
@@ -214,6 +227,7 @@ function PostLoadPage() {
   function saveDraft(values: FormValues) {
     if (typeof window === "undefined") return;
     localStorage.setItem(DRAFT_KEY, JSON.stringify({ savedAt: Date.now(), values }));
+    void idbSaveDraft(values);
     lastSavedRef.current = Date.now();
   }
 
@@ -229,6 +243,7 @@ function PostLoadPage() {
   }
   function discardDraft() {
     localStorage.removeItem(DRAFT_KEY);
+    void idbClearDraft();
     setShowDraftPrompt(false);
   }
 
@@ -269,7 +284,7 @@ function PostLoadPage() {
       const distance_km = intel?.distance ?? null;
       const rate_per_km = distance_km ? +(values.rate_usd / distance_km).toFixed(2) : null;
       const crossBorder = isCrossBorder(values.origin, values.destination);
-      const { data, error } = await db.from("loads").insert({
+      const payload = {
         poster_id: user.id,
         origin: values.origin,
         destination: values.destination,
@@ -289,8 +304,17 @@ function PostLoadPage() {
         zimra_required: crossBorder,
         is_urgent: values.is_urgent,
         commodity_value: values.commodity_value ?? null,
-        status: "available",
-      }).select("id").single();
+        status: "available" as const,
+      };
+      // Offline → queue and report success; OfflineBanner drains the queue on reconnect.
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        await enqueuePost(payload);
+        toast.success("You're offline — your load will post when you reconnect");
+        discardDraft();
+        setPostedId("queued");
+        return;
+      }
+      const { data, error } = await db.from("loads").insert(payload).select("id").single();
       if (error) throw error;
       discardDraft();
       setPostedId(data.id as string);

@@ -7,6 +7,8 @@ import { db } from "@/lib/db";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useNetworkStatus } from "@/hooks/useNetworkStatus";
+import { WifiOff } from "lucide-react";
 
 interface Msg { id: string; role: "user" | "assistant"; content: string; created_at: string }
 
@@ -36,6 +38,7 @@ export function AiChatPanel() {
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
   const [typing, setTyping] = useState(false);
+  const online = useNetworkStatus();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const taRef = useRef<HTMLTextAreaElement>(null);
 
@@ -65,6 +68,15 @@ export function AiChatPanel() {
   const send = async (text: string) => {
     const trimmed = text.trim();
     if (!trimmed || streaming) return;
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      setMessages((p) => [...p, {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: `📵 **Requires internet** — I can't reach the dispatcher while you're offline.\n\n**Tips while offline:**\n• Browse cached loads on the board\n• Save your draft load — it'll post when you reconnect\n• Check the offline ZIMRA checklist (saved on this device)\n\nI'll be back the moment your connection returns.`,
+        created_at: new Date().toISOString(),
+      }]);
+      return;
+    }
     const userMsg: Msg = { id: crypto.randomUUID(), role: "user", content: trimmed, created_at: new Date().toISOString() };
     setMessages((p) => [...p, userMsg]);
     setInput("");
@@ -154,7 +166,10 @@ export function AiChatPanel() {
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#06CF9C] text-[#0B141A]">🤖</div>
           <div>
             <div className="text-sm font-medium text-[#E9EDEF]">ZimFreight Dispatch AI</div>
-            <div className="text-[11px] text-[#8696A0]">{typing ? "typing..." : "online"}</div>
+            <div className="text-[11px] text-[#8696A0]">
+              {!online ? <span className="inline-flex items-center gap-1 text-orange-400"><WifiOff className="h-3 w-3" /> offline</span>
+                : typing ? "typing..." : "online"}
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-1">
