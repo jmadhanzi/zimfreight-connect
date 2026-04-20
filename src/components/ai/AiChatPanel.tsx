@@ -7,6 +7,8 @@ import { db } from "@/lib/db";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useNetworkStatus } from "@/hooks/useNetworkStatus";
+import { WifiOff } from "lucide-react";
 
 interface Msg { id: string; role: "user" | "assistant"; content: string; created_at: string }
 
@@ -36,6 +38,7 @@ export function AiChatPanel() {
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
   const [typing, setTyping] = useState(false);
+  const online = useNetworkStatus();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const taRef = useRef<HTMLTextAreaElement>(null);
 
