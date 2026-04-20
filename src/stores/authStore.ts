@@ -18,7 +18,7 @@ interface AuthState {
   currentPlan: () => PlanTier;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   session: null,
   user: null,
   profile: null,
@@ -29,13 +29,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   setSubscription: (subscription) => set({ subscription }),
   setLoading: (loading) => set({ loading }),
   reset: () => set({ session: null, user: null, profile: null, subscription: null }),
-  currentPlan: () => {
-    const sub = (useAuthStore.getState?.() as AuthState | undefined)?.subscription;
-    return (sub?.plan as PlanTier) ?? "free";
-  },
+  currentPlan: () => (get().subscription?.plan as PlanTier) ?? "free",
   hasPlan: (min: PlanTier) => {
-    const sub = (useAuthStore.getState?.() as AuthState | undefined)?.subscription;
-    const plan = (sub?.plan as PlanTier) ?? "free";
+    const plan: PlanTier = (get().subscription?.plan as PlanTier) ?? "free";
     return PLAN_LEVEL[plan] >= PLAN_LEVEL[min];
   },
 }));
