@@ -9,7 +9,7 @@ export function StatsBar() {
   const [carriers] = useState(312);
   const [avgRate, setAvgRate] = useState(2.84);
   const [beit, setBeit] = useState<BorderStatus | null>(null);
-  const [updated, setUpdated] = useState<Date>(() => new Date());
+  const [updated, setUpdated] = useState<Date | null>(null);
 
   async function refresh() {
     const [{ count }, { data: rates }, { data: borders }] = await Promise.all([
@@ -51,7 +51,7 @@ export function StatsBar() {
         } />
         <button onClick={refresh} className="ml-auto inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground">
           <RefreshCw className="h-3 w-3" />
-          <span suppressHydrationWarning>Updated {fmtAgo(updated)}</span>
+          <span suppressHydrationWarning>Updated {updated ? fmtAgo(updated) : "—"}</span>
         </button>
       </div>
     </div>
