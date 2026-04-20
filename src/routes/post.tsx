@@ -483,23 +483,12 @@ function StepRoute({ form }: StepFormProps) {
   );
 }
 
-/* ----------------------------- Step 2 ----------------------------- */
+/* ----------------------------- Step 2 — Cargo ----------------------------- */
 
-function Step2({ form }: StepFormProps) {
-  const origin = form.watch("origin");
-  const destination = form.watch("destination");
-  const intel = useMemo(() => intelFor(origin, destination), [origin, destination]);
-  const rate = Number(form.watch("rate_usd")) || 0;
+function StepCargo({ form }: StepFormProps) {
   const errs = form.formState.errors;
-
-  const zone: "low" | "mid" | "high" =
-    !intel || !rate ? "mid" :
-    rate < intel.low ? "low" :
-    rate > intel.high ? "high" : "mid";
-
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
-      {/* LEFT */}
+    <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
       <div className="space-y-5 rounded-lg border border-border bg-card p-5">
         <div>
           <Label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Load type</Label>
@@ -530,8 +519,87 @@ function Step2({ form }: StepFormProps) {
           </Field>
         </div>
       </div>
+      <aside className="space-y-3 rounded-lg border border-primary/20 bg-gradient-to-b from-primary/5 to-card p-5">
+        <div className="font-mono text-[10px] uppercase tracking-widest text-primary">Cargo tips</div>
+        <ul className="space-y-2 text-xs text-muted-foreground">
+          <li>• Pick the closest match — carriers filter by load type and equipment.</li>
+          <li>• Multi-load postings (2+) get a "fleet" badge and reach owner-operators with multiple trucks.</li>
+          <li>• Commodity value is private. Used only for insurance estimates.</li>
+        </ul>
+      </aside>
+    </div>
+  );
+}
 
-      {/* RIGHT — Rate intelligence */}
+/* ----------------------------- Step 3 — Rate & Date ----------------------------- */
+
+function StepRateDate({ form }: StepFormProps) {
+  const origin = form.watch("origin");
+  const destination = form.watch("destination");
+  const pickup = form.watch("pickup_date");
+  const intel = useMemo(() => intelFor(origin, destination), [origin, destination]);
+  const rate = Number(form.watch("rate_usd")) || 0;
+  const errs = form.formState.errors;
+
+  const zone: "low" | "mid" | "high" =
+    !intel || !rate ? "mid" :
+    rate < intel.low ? "low" :
+    rate > intel.high ? "high" : "mid";
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
+      <div className="space-y-5 rounded-lg border border-border bg-card p-5">
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field label="Pickup date" error={errs.pickup_date?.message}>
+            <Controller control={form.control} name="pickup_date" render={({ field }) => (
+              <DateField value={field.value} onChange={field.onChange} minDate={new Date()} />
+            )} />
+          </Field>
+          <Field label="Delivery deadline" error={errs.delivery_deadline?.message}>
+            <Controller control={form.control} name="delivery_deadline" render={({ field }) => (
+              <DateField value={field.value} onChange={field.onChange} minDate={pickup ? new Date(pickup) : new Date()} />
+            )} />
+          </Field>
+        </div>
+        <label className="flex items-center justify-between rounded-md border border-border bg-background/40 px-3 py-2.5">
+          <span className="text-sm">Flexible dates <span className="text-muted-foreground">(±1 day)</span></span>
+          <Controller control={form.control} name="flexible_dates" render={({ field }) => (
+            <Switch checked={!!field.value} onCheckedChange={field.onChange} />
+          )} />
+        </label>
+
+        <div>
+          <Label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Payment terms</Label>
+          <div className="mt-2 grid grid-cols-2 gap-1.5">
+            {PAYMENT_OPTIONS.map(p => {
+              const active = form.watch("payment_terms") === p.value;
+              return (
+                <button key={p.value} type="button" onClick={() => form.setValue("payment_terms", p.value, { shouldValidate: true })}
+                  className={cn("flex items-center gap-1.5 rounded-md border px-2.5 py-2 text-left text-xs transition",
+                    active ? "border-primary bg-primary/10 text-foreground" : "border-border bg-background/40 hover:border-primary/40")}>
+                  <span>{p.icon}</span><span className="leading-tight">{p.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          {errs.payment_terms && <p className="mt-1 text-xs text-destructive">{errs.payment_terms.message}</p>}
+        </div>
+
+        <label className="flex cursor-pointer items-start justify-between gap-3 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2.5">
+          <span className="text-sm">
+            <span className="flex items-center gap-1.5 font-bold text-destructive"><Flame className="h-3.5 w-3.5" /> Mark as URGENT</span>
+            <span className="text-xs text-muted-foreground">Boost visibility — $5 extra · pinned to top</span>
+          </span>
+          <Controller control={form.control} name="is_urgent" render={({ field }) => (
+            <Switch checked={!!field.value} onCheckedChange={field.onChange} />
+          )} />
+        </label>
+
+        <Field label="Special notes">
+          <Textarea rows={3} maxLength={500} placeholder="Any handling instructions, paperwork, or contact preferences" {...form.register("notes")} />
+        </Field>
+      </div>
+
       <aside className="space-y-4 rounded-lg border border-primary/20 bg-gradient-to-b from-primary/5 to-card p-5">
         <div>
           <div className="font-mono text-[10px] uppercase tracking-widest text-primary">Set your rate</div>
@@ -569,37 +637,6 @@ function Step2({ form }: StepFormProps) {
             </div>
           </>
         )}
-
-        <div>
-          <Label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Payment terms</Label>
-          <div className="mt-2 grid grid-cols-2 gap-1.5">
-            {PAYMENT_OPTIONS.map(p => {
-              const active = form.watch("payment_terms") === p.value;
-              return (
-                <button key={p.value} type="button" onClick={() => form.setValue("payment_terms", p.value, { shouldValidate: true })}
-                  className={cn("flex items-center gap-1.5 rounded-md border px-2.5 py-2 text-left text-xs transition",
-                    active ? "border-primary bg-primary/10 text-foreground" : "border-border bg-background/40 hover:border-primary/40")}>
-                  <span>{p.icon}</span><span className="leading-tight">{p.label}</span>
-                </button>
-              );
-            })}
-          </div>
-          {errs.payment_terms && <p className="mt-1 text-xs text-destructive">{errs.payment_terms.message}</p>}
-        </div>
-
-        <label className="flex cursor-pointer items-start justify-between gap-3 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2.5">
-          <span className="text-sm">
-            <span className="flex items-center gap-1.5 font-bold text-destructive"><Flame className="h-3.5 w-3.5" /> Mark as URGENT</span>
-            <span className="text-xs text-muted-foreground">Boost visibility — $5 extra · pinned to top</span>
-          </span>
-          <Controller control={form.control} name="is_urgent" render={({ field }) => (
-            <Switch checked={!!field.value} onCheckedChange={field.onChange} />
-          )} />
-        </label>
-
-        <Field label="Special notes">
-          <Textarea rows={3} maxLength={500} placeholder="Any handling instructions, paperwork, or contact preferences" {...form.register("notes")} />
-        </Field>
       </aside>
     </div>
   );
