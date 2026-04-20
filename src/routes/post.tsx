@@ -406,14 +406,13 @@ function Stepper({ step }: { step: number }) {
   );
 }
 
-/* ----------------------------- Step 1 ----------------------------- */
+/* ----------------------------- Step 1 — Route ----------------------------- */
 
 type StepFormProps = { form: ReturnType<typeof useForm<FormValues, unknown, ParsedValues>> };
 
-function Step1({ form }: StepFormProps) {
+function StepRoute({ form }: StepFormProps) {
   const origin = form.watch("origin");
   const destination = form.watch("destination");
-  const pickup = form.watch("pickup_date");
   const intel = useMemo(() => intelFor(origin, destination), [origin, destination]);
   const cross = useMemo(() => isCrossBorder(origin, destination), [origin, destination]);
   const errs = form.formState.errors;
@@ -432,23 +431,7 @@ function Step1({ form }: StepFormProps) {
           <Field label="Pickup address (optional)" className="md:col-span-2">
             <Input maxLength={200} placeholder="e.g. Workington Industrial, Stand 24" {...form.register("pickup_address")} />
           </Field>
-          <Field label="Pickup date" error={errs.pickup_date?.message}>
-            <Controller control={form.control} name="pickup_date" render={({ field }) => (
-              <DateField value={field.value} onChange={field.onChange} minDate={new Date()} />
-            )} />
-          </Field>
-          <Field label="Delivery deadline" error={errs.delivery_deadline?.message}>
-            <Controller control={form.control} name="delivery_deadline" render={({ field }) => (
-              <DateField value={field.value} onChange={field.onChange} minDate={pickup ? new Date(pickup) : new Date()} />
-            )} />
-          </Field>
         </div>
-        <label className="flex items-center justify-between rounded-md border border-border bg-background/40 px-3 py-2.5">
-          <span className="text-sm">Flexible dates <span className="text-muted-foreground">(±1 day)</span></span>
-          <Controller control={form.control} name="flexible_dates" render={({ field }) => (
-            <Switch checked={!!field.value} onCheckedChange={field.onChange} />
-          )} />
-        </label>
       </div>
 
       {/* RIGHT — Live preview */}
