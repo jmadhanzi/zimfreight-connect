@@ -97,7 +97,7 @@ function PricingPage() {
                 ))}
               </ul>
               <Button asChild className={cn("mt-6", p.highlight ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-secondary text-foreground hover:bg-secondary/80")}>
-                <Link to="/board" search={{}}>{p.cta}</Link>
+                <Link to="/board" search={(prev) => prev}>{p.cta}</Link>
               </Button>
               {p.highlight && (
                 <div className="mt-3 flex items-center justify-center gap-1.5 rounded-md border border-primary/30 bg-primary/10 px-2 py-1.5 text-[11px] font-medium text-primary">
@@ -163,7 +163,7 @@ function PricingPage() {
         <h2 className="font-display text-3xl font-black uppercase tracking-tight md:text-4xl">Try free for 14 days — no credit card</h2>
         <p className="mt-2 text-muted-foreground">Join 2,400+ Zimbabwean carriers and brokers already on ZimFreight.</p>
         <Button asChild size="lg" className="mt-6 bg-primary text-primary-foreground hover:bg-primary/90">
-          <Link to="/board" search={{}}>Get started free →</Link>
+          <Link to="/board" search={(prev) => prev}>Get started free →</Link>
         </Button>
       </div>
     </div>

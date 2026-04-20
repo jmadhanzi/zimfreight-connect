@@ -17,7 +17,7 @@ export function Footer() {
         <div>
           <h4 className="font-display text-sm font-bold uppercase tracking-wider text-foreground">Platform</h4>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/board" search={{}} className="hover:text-foreground">Find Loads</Link></li>
+            <li><Link to="/board" search={(prev) => prev} className="hover:text-foreground">Find Loads</Link></li>
             <li><Link to="/post" className="hover:text-foreground">Post a Load</Link></li>
             <li><Link to="/pricing" className="hover:text-foreground">Pricing</Link></li>
             <li><Link to="/ai-agent" className="hover:text-foreground">AI Agent</Link></li>
