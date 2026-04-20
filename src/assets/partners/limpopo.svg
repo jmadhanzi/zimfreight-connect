@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 56" fill="currentColor" aria-label="Limpopo Lines">
+  <!-- parallel route lines mark -->
+  <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+    <path d="M6 18 L34 18"/>
+    <path d="M6 28 L34 28" stroke-dasharray="3 3"/>
+    <path d="M6 38 L34 38"/>
+  </g>
+  <circle cx="34" cy="28" r="3" fill="currentColor"/>
+  <text x="46" y="26" font-family="'Helvetica Neue', sans-serif" font-size="18" font-weight="900" letter-spacing="-0.3">LIMPOPO</text>
+  <text x="46" y="42" font-family="'Helvetica Neue', sans-serif" font-size="9" font-weight="400" letter-spacing="6">L I N E S</text>
+</svg>
