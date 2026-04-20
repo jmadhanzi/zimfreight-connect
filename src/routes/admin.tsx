@@ -466,3 +466,171 @@ function ApprovalQueue() {
     </div>
   );
 }
+
+/* --------------------------- Users tab --------------------------- */
+
+type AppRole = "admin" | "moderator" | "user";
+
+type UserRow = {
+  user_id: string;
+  full_name: string;
+  company_name: string | null;
+  city: string | null;
+  phone_whatsapp: string | null;
+  created_at: string;
+  plan: PlanTier;
+  sub_status: string;
+  roles: AppRole[];
+};
+
+function UsersTab() {
+  const qc = useQueryClient();
+  const [search, setSearch] = useState("");
+  const [busy, setBusy] = useState<string | null>(null);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin", "users"],
+    queryFn: async () => {
+      const [{ data: profiles, error: e1 }, { data: subs, error: e2 }, { data: roles, error: e3 }] = await Promise.all([
+        db.from("profiles").select("user_id,full_name,company_name,city,phone_whatsapp,created_at").order("created_at", { ascending: false }).limit(500),
+        db.from("subscriptions").select("user_id,plan,status,created_at").order("created_at", { ascending: false }),
+        db.from("user_roles").select("user_id,role"),
+      ]);
+      if (e1 || e2 || e3) throw e1 ?? e2 ?? e3;
+      const subByUser = new Map<string, { plan: PlanTier; status: string }>();
+      for (const s of subs ?? []) {
+        if (!subByUser.has(s.user_id)) subByUser.set(s.user_id, { plan: s.plan as PlanTier, status: s.status as string });
+      }
+      const rolesByUser = new Map<string, AppRole[]>();
+      for (const r of roles ?? []) {
+        const arr = rolesByUser.get(r.user_id) ?? [];
+        arr.push(r.role as AppRole);
+        rolesByUser.set(r.user_id, arr);
+      }
+      return (profiles ?? []).map((p: { user_id: string; full_name: string; company_name: string | null; city: string | null; phone_whatsapp: string | null; created_at: string }) => ({
+        user_id: p.user_id,
+        full_name: p.full_name,
+        company_name: p.company_name,
+        city: p.city,
+        phone_whatsapp: p.phone_whatsapp,
+        created_at: p.created_at,
+        plan: subByUser.get(p.user_id)?.plan ?? "free",
+        sub_status: subByUser.get(p.user_id)?.status ?? "—",
+        roles: rolesByUser.get(p.user_id) ?? [],
+      })) as UserRow[];
+    },
+  });
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return data ?? [];
+    return (data ?? []).filter(u =>
+      u.full_name?.toLowerCase().includes(q) ||
+      u.company_name?.toLowerCase().includes(q) ||
+      u.city?.toLowerCase().includes(q) ||
+      u.phone_whatsapp?.toLowerCase().includes(q) ||
+      u.user_id.toLowerCase().includes(q)
+    );
+  }, [data, search]);
+
+  const toggleRole = useMutation({
+    mutationFn: async ({ userId, role, hasRole }: { userId: string; role: AppRole; hasRole: boolean }) => {
+      if (hasRole) {
+        const { error } = await db.from("user_roles").delete().eq("user_id", userId).eq("role", role);
+        if (error) throw error;
+      } else {
+        const { error } = await db.from("user_roles").insert({ user_id: userId, role });
+        if (error) throw error;
+      }
+    },
+    onMutate: ({ userId, role }) => setBusy(`${userId}:${role}`),
+    onSettled: () => setBusy(null),
+    onSuccess: (_d, vars) => {
+      toast.success(vars.hasRole ? `Revoked ${vars.role}` : `Granted ${vars.role}`);
+      qc.invalidateQueries({ queryKey: ["admin", "users"] });
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Role update failed"),
+  });
+
+  const planClass = (plan: PlanTier) =>
+    plan === "fleet" ? "bg-[color:var(--zim-yellow)]/15 text-[color:var(--zim-yellow)] border-[color:var(--zim-yellow)]/30"
+    : plan === "pro" ? "bg-primary/15 text-primary border-primary/30"
+    : plan === "basic" ? "bg-primary/10 text-primary/80 border-primary/20"
+    : "bg-muted text-muted-foreground border-border";
+
+  return (
+    <div className="mt-6 rounded-lg border border-border bg-card">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4">
+        <div>
+          <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Users</div>
+          <div className="font-display text-lg font-black uppercase tracking-tight">
+            Manage roles {data?.length ? <span className="ml-2 font-mono text-xs text-muted-foreground">{filtered.length}/{data.length}</span> : null}
+          </div>
+        </div>
+        <div className="relative w-full max-w-xs">
+          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search name, company, city, phone…"
+            className="h-9 w-full rounded-md border border-border bg-background pl-8 pr-3 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+          />
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="space-y-2 p-5">
+          {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-14" />)}
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="px-5 py-12 text-center text-sm text-muted-foreground">No users match your search.</div>
+      ) : (
+        <ul className="divide-y divide-border">
+          {filtered.map(u => {
+            const isAdmin = u.roles.includes("admin");
+            const isMod = u.roles.includes("moderator");
+            const adminBusy = busy === `${u.user_id}:admin`;
+            const modBusy = busy === `${u.user_id}:moderator`;
+            return (
+              <li key={u.user_id} className="flex flex-wrap items-center gap-4 px-5 py-3.5">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-display text-sm font-bold">{u.full_name || "Unnamed"}</span>
+                    <Badge variant="outline" className={cn("text-[10px] uppercase", planClass(u.plan))}>{u.plan}</Badge>
+                    {u.sub_status === "pending" && <Badge variant="outline" className="border-[color:var(--zim-yellow)]/40 text-[10px] uppercase text-[color:var(--zim-yellow)]">pending</Badge>}
+                    {isAdmin && <Badge className="border-0 bg-primary text-[10px] uppercase text-primary-foreground"><ShieldCheck className="mr-0.5 h-2.5 w-2.5" />admin</Badge>}
+                    {isMod && <Badge className="border-0 bg-secondary text-[10px] uppercase">mod</Badge>}
+                  </div>
+                  <div className="mt-0.5 truncate text-xs text-muted-foreground">
+                    {u.company_name ?? "—"}{u.city ? ` · ${u.city}` : ""}{u.phone_whatsapp ? ` · ${u.phone_whatsapp}` : ""}
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant={isMod ? "default" : "outline"}
+                    disabled={modBusy}
+                    onClick={() => toggleRole.mutate({ userId: u.user_id, role: "moderator", hasRole: isMod })}
+                  >
+                    {modBusy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <UserCog className="h-3.5 w-3.5" />}
+                    <span className="ml-1">{isMod ? "Revoke mod" : "Grant mod"}</span>
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={isAdmin ? "default" : "outline"}
+                    disabled={adminBusy}
+                    className={isAdmin ? "bg-primary text-primary-foreground hover:bg-primary/90" : ""}
+                    onClick={() => toggleRole.mutate({ userId: u.user_id, role: "admin", hasRole: isAdmin })}
+                  >
+                    {adminBusy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ShieldCheck className="h-3.5 w-3.5" />}
+                    <span className="ml-1">{isAdmin ? "Revoke admin" : "Grant admin"}</span>
+                  </Button>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
