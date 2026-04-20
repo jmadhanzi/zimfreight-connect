@@ -78,6 +78,7 @@ function Row({ load, onSelect, canSeeContacts, onUpgrade, saved, onToggleSave }:
 }) {
   const stop = (e: React.MouseEvent) => e.stopPropagation();
   const progress = transitProgress(load.created_at);
+  const postedLabel = `Posted ${timeAgo(load.created_at)}`;
   return (
     <tr
       onClick={() => onSelect(load)}
@@ -88,6 +89,18 @@ function Row({ load, onSelect, canSeeContacts, onUpgrade, saved, onToggleSave }:
       )}
     >
       <td className="px-3 py-3">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span
+              aria-label={postedLabel}
+              onClick={stop}
+              className="absolute left-0 top-0 z-10 h-full w-2 cursor-help"
+            />
+          </TooltipTrigger>
+          <TooltipContent side="right" className="font-mono text-[10px] uppercase tracking-widest">
+            {postedLabel}
+          </TooltipContent>
+        </Tooltip>
         <div className="flex items-center gap-2 font-display text-base font-bold leading-none">
           {load.origin}<ArrowRight className="h-3.5 w-3.5 text-primary" />{load.destination}
           {load.is_border_crossing && (
