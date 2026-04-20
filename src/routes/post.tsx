@@ -359,16 +359,17 @@ function PostLoadPage() {
       )}
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6">
-        {step === 0 && <Step1 form={form} />}
-        {step === 1 && <Step2 form={form} />}
-        {step === 2 && <Step3 form={form} />}
+        {step === 0 && <StepRoute form={form} />}
+        {step === 1 && <StepCargo form={form} />}
+        {step === 2 && <StepRateDate form={form} />}
+        {step === 3 && <StepReview form={form} />}
 
         {/* Nav */}
         <div className="mt-6 flex items-center justify-between gap-3 md:static fixed inset-x-0 bottom-16 z-30 border-t border-border bg-background/95 px-4 py-3 backdrop-blur md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
           {step > 0 ? (
             <Button type="button" variant="outline" onClick={back}><ArrowLeft className="mr-1.5 h-4 w-4" /> Back</Button>
           ) : <span />}
-          {step < 2 ? (
+          {step < 3 ? (
             <Button type="button" onClick={next} className="bg-primary text-primary-foreground hover:bg-primary/90">Continue <ArrowRight className="ml-1.5 h-4 w-4" /></Button>
           ) : (
             <Button type="submit" disabled={submitting} className="bg-primary px-6 text-base font-bold text-primary-foreground hover:bg-primary/90">
@@ -377,7 +378,7 @@ function PostLoadPage() {
             </Button>
           )}
         </div>
-        {step === 2 && <p className="mt-2 text-right text-xs text-muted-foreground">Your load will be live within 60 seconds.</p>}
+        {step === 3 && <p className="mt-2 text-right text-xs text-muted-foreground">Your load will be live within 60 seconds.</p>}
       </form>
     </div>
   );
