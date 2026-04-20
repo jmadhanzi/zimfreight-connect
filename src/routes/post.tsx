@@ -953,3 +953,16 @@ function humanAge(ms: number) {
   const d = Math.floor(h / 24);
   return `${d} day${d === 1 ? "" : "s"} ago`;
 }
+
+function ReviewRow({ label, children, onEdit }: { label: string; children: React.ReactNode; onEdit: () => void }) {
+  return (
+    <button type="button" onClick={onEdit}
+      className="group flex w-full items-center justify-between gap-3 rounded-md border border-border bg-background/40 px-3 py-2.5 text-left transition hover:border-primary/40 hover:bg-background/60">
+      <div className="min-w-0 flex-1">
+        <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</div>
+        <div className="mt-0.5 text-sm">{children}</div>
+      </div>
+      <span className="font-mono text-[10px] uppercase tracking-widest text-primary opacity-0 transition group-hover:opacity-100">Edit</span>
+    </button>
+  );
+}
