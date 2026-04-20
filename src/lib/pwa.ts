@@ -25,11 +25,7 @@ export function registerPwa() {
 
   if (!("serviceWorker" in navigator)) return;
 
-  // Lazy import so the virtual module is only pulled in when we actually register.
-  // @ts-expect-error - virtual module provided by vite-plugin-pwa at build time
-  import("virtual:pwa-register")
-    .then(({ registerSW }) => {
-      registerSW({ immediate: true });
-    })
-    .catch(() => { /* virtual module unavailable in dev — ignore */ });
+  navigator.serviceWorker.register("/sw.js").catch(() => {
+    /* service worker unavailable until production build — ignore */
+  });
 }
