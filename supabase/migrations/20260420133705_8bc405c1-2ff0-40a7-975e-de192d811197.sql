@@ -1,0 +1,1 @@
+DELETE FROM public.loads WHERE id = 'e52e024e-81f3-43b6-9c8d-eca9cf1170bc';
