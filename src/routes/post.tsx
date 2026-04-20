@@ -20,6 +20,7 @@ import { ZIM_CITIES, ALL_DEST_CITIES, CROSS_BORDER_CITIES } from "@/types";
 import { cn, formatUSD } from "@/lib/utils";
 import { format, addDays } from "date-fns";
 import { toast } from "sonner";
+import { saveDraft as idbSaveDraft, loadDraft as idbLoadDraft, clearDraft as idbClearDraft, enqueuePost } from "@/lib/offlineDb";
 import {
   ArrowLeft, ArrowRight, CalendarIcon, ChevronsUpDown, Check, Loader2, Lock, Truck,
   Flame, Sparkles, AlertTriangle, ShieldCheck, Fuel, Clock, Save, PartyPopper, Share2, Copy,
