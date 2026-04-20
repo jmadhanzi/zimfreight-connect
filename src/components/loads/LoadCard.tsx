@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { ArrowRight, MapPin, Calendar, Truck as TruckIcon, Flame, ShieldCheck } from "lucide-react";
 import { formatUSD, timeAgo, cn } from "@/lib/utils";
 import type { Load } from "@/types";
@@ -12,10 +11,13 @@ export function LoadCard({ load, onClick }: { load: Load; onClick?: () => void }
         "hover:border-primary/40 hover:bg-card/80 hover:shadow-[0_0_0_1px_var(--primary)/20]",
       )}
     >
+      {/* Amber transit bar — animated route progress indicator */}
+      <div className="absolute inset-x-0 top-0 transit-bar" aria-hidden="true" />
+
       {load.is_urgent && (
-        <div className="absolute right-0 top-0 flex items-center gap-1 rounded-bl-lg bg-destructive px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-destructive-foreground">
+        <span className="glass-chip glass-chip-danger absolute right-3 top-3">
           <Flame className="h-3 w-3" /> Urgent
-        </div>
+        </span>
       )}
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
@@ -37,28 +39,24 @@ export function LoadCard({ load, onClick }: { load: Load; onClick?: () => void }
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
-        <Badge variant="outline" className="border-border bg-background/40 text-xs font-normal text-foreground">
-          <TruckIcon className="mr-1 h-3 w-3" /> {load.load_type}
-        </Badge>
+        <span className="glass-chip">
+          <TruckIcon className="h-3 w-3" /> {load.load_type}
+        </span>
         {load.equipment_required && (
-          <Badge variant="outline" className="border-border bg-background/40 text-xs font-normal text-muted-foreground">
-            {load.equipment_required}
-          </Badge>
+          <span className="glass-chip text-muted-foreground">{load.equipment_required}</span>
         )}
         {load.weight_tonnes && (
-          <Badge variant="outline" className="border-border bg-background/40 text-xs font-normal text-muted-foreground font-mono">
-            {load.weight_tonnes}t
-          </Badge>
+          <span className="glass-chip text-muted-foreground font-mono">{load.weight_tonnes}t</span>
         )}
         {load.is_border_crossing && (
-          <Badge className="bg-[color-mix(in_oklab,var(--info)_20%,transparent)] text-[color:var(--info)] border-0 text-xs font-normal">
-            <MapPin className="mr-1 h-3 w-3" /> Border
-          </Badge>
+          <span className="glass-chip glass-chip-info">
+            <MapPin className="h-3 w-3" /> Border
+          </span>
         )}
         {load.zimra_required && (
-          <Badge className="bg-[color-mix(in_oklab,var(--gold)_20%,transparent)] text-primary border-0 text-xs font-normal">
-            <ShieldCheck className="mr-1 h-3 w-3" /> ZIMRA
-          </Badge>
+          <span className="glass-chip glass-chip-amber">
+            <ShieldCheck className="h-3 w-3" /> ZIMRA
+          </span>
         )}
         {load.pickup_date && (
           <span className="ml-auto inline-flex items-center gap-1 text-xs text-muted-foreground">
