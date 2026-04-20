@@ -31,6 +31,13 @@ function addHidden(id: string) {
   return next;
 }
 
+export const BOARD_DEFAULT_SEARCH = {
+  q: "", origin: "all", destination: "all", loadType: "all", equipment: "all",
+  pickup: "", minRate: 0, maxDistance: 2000, border: false, zimra: false,
+  urgent: false, minWeight: 0, maxWeight: 40, payment: "all",
+  sort: "newest" as const, load: undefined as string | undefined,
+};
+
 const searchSchema = z.object({
   q: fallback(z.string(), "").default(""),
   origin: fallback(z.string(), "all").default("all"),
