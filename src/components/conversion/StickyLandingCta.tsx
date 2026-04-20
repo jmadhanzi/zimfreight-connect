@@ -32,7 +32,7 @@ export function StickyLandingCta() {
           <span className="font-display text-base font-black text-primary">847 loads</span> live right now — start free
         </p>
         <Button asChild size="sm" className="bg-primary font-display font-bold uppercase tracking-wide text-primary-foreground hover:bg-primary/90">
-          <Link to="/board" search={(prev) => prev}>Join Free <ArrowRight className="ml-1 h-3.5 w-3.5" /></Link>
+          <Link to="/board" search={{ q: "", origin: "all", destination: "all", loadType: "all", equipment: "all", pickup: "", minRate: 0, maxDistance: 2000, border: false, zimra: false, urgent: false, minWeight: 0, maxWeight: 40, payment: "all", sort: "newest", load: undefined }}>Join Free <ArrowRight className="ml-1 h-3.5 w-3.5" /></Link>
         </Button>
         <button onClick={() => setDismissed(true)} aria-label="Dismiss" className="text-muted-foreground hover:text-foreground">
           <X className="h-4 w-4" />
