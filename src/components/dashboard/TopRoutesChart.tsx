@@ -30,7 +30,7 @@ export function TopRoutesChart({ bookings }: { bookings: BookingRow[] }) {
           <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
           <XAxis type="number" stroke="var(--muted-foreground)" tick={{ fontSize: 11 }} />
           <YAxis type="category" dataKey="route" stroke="var(--muted-foreground)" tick={{ fontSize: 11 }} width={70} />
-          <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8, color: "var(--foreground)", fontSize: 12 }} formatter={(v: number, k: string) => k === "rate" ? [`$${v}/km`, "Avg rate"] : [v, "Loads"]} />
+          <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8, color: "var(--foreground)", fontSize: 12 }} formatter={(v) => [String(v), "Loads"]} />
           <Bar dataKey="count" fill="var(--primary)" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
