@@ -1,5 +1,6 @@
 import { ArrowRight, Bookmark, BookmarkCheck, MessageCircle, Lock, Flame, ShieldCheck, ChevronUp, ChevronDown, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { formatUSD, timeAgo, transitProgress, cn } from "@/lib/utils";
 import type { Load, SortKey } from "@/types";
 
@@ -44,6 +45,7 @@ export function LoadTable({ loads, onSelect, canSeeContacts, onUpgrade, sort, on
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
       <div className="overflow-x-auto">
+        <TooltipProvider delayDuration={150}>
         <table className="w-full text-sm">
           <thead className="sticky top-[44px] z-20 bg-[color:var(--bg-secondary)] font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
             <tr className="border-b border-border">
@@ -64,6 +66,7 @@ export function LoadTable({ loads, onSelect, canSeeContacts, onUpgrade, sort, on
             ))}
           </tbody>
         </table>
+        </TooltipProvider>
       </div>
     </div>
   );
@@ -75,6 +78,7 @@ function Row({ load, onSelect, canSeeContacts, onUpgrade, saved, onToggleSave }:
 }) {
   const stop = (e: React.MouseEvent) => e.stopPropagation();
   const progress = transitProgress(load.created_at);
+  const postedLabel = `Posted ${timeAgo(load.created_at)}`;
   return (
     <tr
       onClick={() => onSelect(load)}
@@ -85,6 +89,18 @@ function Row({ load, onSelect, canSeeContacts, onUpgrade, saved, onToggleSave }:
       )}
     >
       <td className="px-3 py-3">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span
+              aria-label={postedLabel}
+              onClick={stop}
+              className="absolute left-0 top-0 z-10 h-full w-2 cursor-help"
+            />
+          </TooltipTrigger>
+          <TooltipContent side="right" className="font-mono text-[10px] uppercase tracking-widest">
+            {postedLabel}
+          </TooltipContent>
+        </Tooltip>
         <div className="flex items-center gap-2 font-display text-base font-bold leading-none">
           {load.origin}<ArrowRight className="h-3.5 w-3.5 text-primary" />{load.destination}
           {load.is_border_crossing && (
