@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { cn, formatUSD } from "@/lib/utils";
 import {
   ShieldCheck, Users, DollarSign, TrendingUp, Clock, Check, X,
-  ShieldAlert, Loader2, Activity, RefreshCw,
+  ShieldAlert, Loader2, Activity, RefreshCw, Search, UserCog,
 } from "lucide-react";
 import type { PlanTier } from "@/types";
 
