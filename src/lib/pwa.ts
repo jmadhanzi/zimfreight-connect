@@ -1,4 +1,3 @@
-/// <reference types="vite-plugin-pwa/client" />
 // Service worker registration with strict iframe + preview-host guards.
 // The SW must NEVER register inside the Lovable preview iframe — it causes
 // stale builds and broken navigation.
@@ -27,6 +26,7 @@ export function registerPwa() {
   if (!("serviceWorker" in navigator)) return;
 
   // Lazy import so the virtual module is only pulled in when we actually register.
+  // @ts-expect-error - virtual module provided by vite-plugin-pwa at build time
   import("virtual:pwa-register")
     .then(({ registerSW }) => {
       registerSW({ immediate: true });
