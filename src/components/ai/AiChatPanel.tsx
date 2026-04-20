@@ -166,7 +166,10 @@ export function AiChatPanel() {
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#06CF9C] text-[#0B141A]">🤖</div>
           <div>
             <div className="text-sm font-medium text-[#E9EDEF]">ZimFreight Dispatch AI</div>
-            <div className="text-[11px] text-[#8696A0]">{typing ? "typing..." : "online"}</div>
+            <div className="text-[11px] text-[#8696A0]">
+              {!online ? <span className="inline-flex items-center gap-1 text-orange-400"><WifiOff className="h-3 w-3" /> offline</span>
+                : typing ? "typing..." : "online"}
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-1">
