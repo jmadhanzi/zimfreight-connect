@@ -642,16 +642,48 @@ function StepRateDate({ form }: StepFormProps) {
   );
 }
 
-/* ----------------------------- Step 3 ----------------------------- */
+/* ----------------------------- Step 4 — Review ----------------------------- */
 
-function Step3({ form }: StepFormProps) {
+function StepReview({ form }: StepFormProps) {
   const v = form.watch();
   const intel = useMemo(() => intelFor(v.origin, v.destination), [v.origin, v.destination]);
   const errs = form.formState.errors;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
-      <div className="space-y-5 rounded-lg border border-border bg-card p-5">
+      <div className="space-y-5">
+        {/* Review summary */}
+        <div className="rounded-lg border border-primary/30 bg-primary/5 p-5">
+          <div className="flex items-center justify-between gap-3">
+            <div className="font-mono text-[10px] uppercase tracking-widest text-primary">Review your load</div>
+            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Tap a section to edit</span>
+          </div>
+          <div className="mt-3 space-y-2">
+            <ReviewRow label="Route" stepIndex={0} form={form}>
+              <span className="font-display text-base font-black">{v.origin || "—"} → {v.destination || "—"}</span>
+              {intel?.distance && <span className="ml-2 font-mono-num text-xs text-muted-foreground">{intel.distance}km · {intel.highway}</span>}
+            </ReviewRow>
+            <ReviewRow label="Cargo" stepIndex={1} form={form}>
+              <span>{v.load_type || "—"}</span>
+              <span className="text-muted-foreground"> · {v.equipment_required || "—"}</span>
+              <span className="text-muted-foreground"> · {v.weight_tonnes ? `${v.weight_tonnes}T × ${v.num_loads}` : "—"}</span>
+            </ReviewRow>
+            <ReviewRow label="Rate" stepIndex={2} form={form}>
+              <span className="font-display text-base font-black text-primary">{v.rate_usd ? formatUSD(Number(v.rate_usd)) : "—"}</span>
+              <span className="text-muted-foreground"> · {v.payment_terms || "—"}</span>
+              {v.is_urgent && <Badge className="ml-2 border-0 bg-destructive text-[10px] uppercase text-destructive-foreground">Urgent</Badge>}
+            </ReviewRow>
+            <ReviewRow label="Pickup" stepIndex={2} form={form}>
+              <span>{v.pickup_date || "—"}</span>
+              {v.delivery_deadline && <span className="text-muted-foreground"> → {v.delivery_deadline}</span>}
+              {v.flexible_dates && <Badge variant="outline" className="ml-2 text-[10px]">Flex ±1d</Badge>}
+            </ReviewRow>
+          </div>
+        </div>
+
+        {/* Contact + distribution */}
+        <div className="space-y-5 rounded-lg border border-border bg-card p-5">
+          <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Contact details</div>
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Company name" error={errs.company_name?.message}>
             <Input maxLength={120} {...form.register("company_name")} />
@@ -678,6 +710,7 @@ function Step3({ form }: StepFormProps) {
           <ShareRow form={form} name="share_zha" label="Zimbabwe Hauliers Association" sub="520 members" />
           <ShareRow form={form} name="share_email_network" label="Email my saved carrier network" />
           <ShareRow form={form} name="is_private" label="Private — only carriers I invite" sub="Hidden from public board" />
+        </div>
         </div>
       </div>
 
