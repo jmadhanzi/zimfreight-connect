@@ -86,6 +86,16 @@ export const ZIM_CITIES = [
   "Plumtree", "Victoria Falls", "Kariba", "Hwange", "Bindura",
 ];
 
+export const CROSS_BORDER_CITIES = [
+  "Johannesburg", "Lusaka", "Maputo", "Gaborone", "Lilongwe", "Pretoria",
+];
+
+export const ALL_DEST_CITIES = [...ZIM_CITIES, ...CROSS_BORDER_CITIES];
+
+export const PAYMENT_TERMS_OPTIONS = ["COD", "Net 7 days", "Net 14 days", "Net 30 days"];
+
+export type SortKey = "newest" | "rate_high" | "rate_low" | "rate_per_km" | "distance";
+
 export const LOAD_TYPES = [
   "General Cargo", "Containers", "Bulk Grain", "Fuel/Tanker",
   "Refrigerated", "Livestock", "Mining/Ore", "Cement", "Steel",
