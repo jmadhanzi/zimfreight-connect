@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Truck, Menu, X } from "lucide-react";
+import { Truck, Menu, X, ShieldCheck } from "lucide-react";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/lib/db";
 import { useAuthStore } from "@/stores/authStore";
 import { NotificationBell } from "@/components/dashboard/NotificationsPanel";
 
@@ -11,6 +13,21 @@ export function Header({ onLogin }: { onLogin: () => void }) {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+
+  const { data: isAdmin } = useQuery({
+    queryKey: ["is-admin", user?.id],
+    enabled: !!user?.id,
+    staleTime: 5 * 60_000,
+    queryFn: async () => {
+      const { data } = await db
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user!.id)
+        .eq("role", "admin")
+        .maybeSingle();
+      return !!data;
+    },
+  });
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -56,6 +73,15 @@ export function Header({ onLogin }: { onLogin: () => void }) {
                 {l.label}
               </Link>
             ))}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="ml-1 inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
+                activeProps={{ className: "ml-1 inline-flex items-center gap-1 rounded-md border border-primary bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground" }}
+              >
+                <ShieldCheck className="h-3.5 w-3.5" /> Admin
+              </Link>
+            )}
           </nav>
 
           <div className="hidden items-center gap-2 md:flex">
@@ -90,6 +116,11 @@ export function Header({ onLogin }: { onLogin: () => void }) {
                   {l.label}
                 </Link>
               ))}
+              {isAdmin && (
+                <Link to="/admin" className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-sm font-semibold text-primary" onClick={() => setOpen(false)}>
+                  <ShieldCheck className="h-3.5 w-3.5" /> Admin
+                </Link>
+              )}
               <div className="mt-2 border-t border-border pt-2">
                 {user ? (
                   <Button variant="outline" size="sm" className="w-full" onClick={signOut}>Sign out</Button>
