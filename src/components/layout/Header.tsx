@@ -20,6 +20,7 @@ export function Header({ onLogin }: { onLogin: () => void }) {
   const navLinks = [
     { to: "/board", label: "Load Board" },
     { to: "/post", label: "Post Load" },
+    { to: "/ai-agent", label: "AI Agent" },
     { to: "/dashboard", label: "Dashboard" },
     { to: "/pricing", label: "Pricing" },
   ] as const;
