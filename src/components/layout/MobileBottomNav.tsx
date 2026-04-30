@@ -1,14 +1,15 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { LayoutGrid, Plus, Bot, BarChart3, User } from "lucide-react";
+import { LayoutGrid, Plus, Bot, BarChart3, Map, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/** Sticky 5-tab bottom nav, mobile-only. Renders below md breakpoint. */
+/** Sticky 6-tab bottom nav, mobile-only. Renders below md breakpoint. */
 const TABS = [
-  { to: "/board", label: "Board", icon: LayoutGrid },
-  { to: "/post", label: "Post", icon: Plus },
-  { to: "/ai-agent", label: "AI", icon: Bot },
-  { to: "/dashboard", label: "Dash", icon: BarChart3 },
-  { to: "/profile", label: "Profile", icon: User },
+  { to: "/board",     label: "Board",   icon: LayoutGrid },
+  { to: "/map",       label: "Map",     icon: Map },
+  { to: "/post",      label: "Post",    icon: Plus },
+  { to: "/ai-agent",  label: "AI",      icon: Bot },
+  { to: "/dashboard", label: "Dash",    icon: BarChart3 },
+  { to: "/profile",   label: "Profile", icon: User },
 ] as const;
 
 export function MobileBottomNav() {
@@ -19,7 +20,7 @@ export function MobileBottomNav() {
       className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 backdrop-blur md:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <ul className="mx-auto grid max-w-md grid-cols-5">
+      <ul className="mx-auto grid max-w-md grid-cols-6">
         {TABS.map(({ to, label, icon: Icon }) => {
           const active = pathname === to || (to !== "/board" && pathname.startsWith(to));
           return (
@@ -31,7 +32,10 @@ export function MobileBottomNav() {
                   active ? "text-primary" : "text-muted-foreground hover:text-foreground",
                 )}
               >
-                <Icon className={cn("h-5 w-5", active && "drop-shadow-[0_0_6px_color-mix(in_oklab,var(--primary)_60%,transparent)]")} strokeWidth={active ? 2.5 : 2} />
+                <Icon
+                  className={cn("h-5 w-5", active && "drop-shadow-[0_0_6px_color-mix(in_oklab,var(--primary)_60%,transparent)]")}
+                  strokeWidth={active ? 2.5 : 2}
+                />
                 <span>{label}</span>
               </Link>
             </li>

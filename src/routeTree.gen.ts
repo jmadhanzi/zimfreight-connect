@@ -1,4 +1,3 @@
-/* eslint-disable */
 
 // @ts-nocheck
 
@@ -13,6 +12,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PostRouteImport } from './routes/post'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as MapRouteImport } from './routes/map'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BoardRouteImport } from './routes/board'
@@ -38,6 +38,11 @@ const PostRoute = PostRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapRoute = MapRouteImport.update({
+  id: '/map',
+  path: '/map',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -78,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/board': typeof BoardRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/map': typeof MapRoute
   '/onboarding': typeof OnboardingRoute
   '/post': typeof PostRoute
   '/pricing': typeof PricingRoute
@@ -90,6 +96,7 @@ export interface FileRoutesByTo {
   '/board': typeof BoardRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/map': typeof MapRoute
   '/onboarding': typeof OnboardingRoute
   '/post': typeof PostRoute
   '/pricing': typeof PricingRoute
@@ -103,6 +110,7 @@ export interface FileRoutesById {
   '/board': typeof BoardRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/map': typeof MapRoute
   '/onboarding': typeof OnboardingRoute
   '/post': typeof PostRoute
   '/pricing': typeof PricingRoute
@@ -117,6 +125,7 @@ export interface FileRouteTypes {
     | '/board'
     | '/dashboard'
     | '/login'
+    | '/map'
     | '/onboarding'
     | '/post'
     | '/pricing'
@@ -129,6 +138,7 @@ export interface FileRouteTypes {
     | '/board'
     | '/dashboard'
     | '/login'
+    | '/map'
     | '/onboarding'
     | '/post'
     | '/pricing'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/board'
     | '/dashboard'
     | '/login'
+    | '/map'
     | '/onboarding'
     | '/post'
     | '/pricing'
@@ -154,6 +165,7 @@ export interface RootRouteChildren {
   BoardRoute: typeof BoardRoute
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
+  MapRoute: typeof MapRoute
   OnboardingRoute: typeof OnboardingRoute
   PostRoute: typeof PostRoute
   PricingRoute: typeof PricingRoute
@@ -188,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/map': {
+      id: '/map'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof MapRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -242,6 +261,7 @@ const rootRouteChildren: RootRouteChildren = {
   BoardRoute: BoardRoute,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
+  MapRoute: MapRoute,
   OnboardingRoute: OnboardingRoute,
   PostRoute: PostRoute,
   PricingRoute: PricingRoute,

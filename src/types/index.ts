@@ -78,6 +78,9 @@ export interface BorderStatus {
   wait_hours: number;
   status: string;
   updated_at: string;
+  lat?: number | null;
+  lng?: number | null;
+  notes?: string | null;
 }
 
 export const ZIM_CITIES = [
