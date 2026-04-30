@@ -8,6 +8,9 @@ import { LoadTable, getSaved, toggleSaved } from "@/components/loads/LoadTable";
 import { SwipeableLoadCard } from "@/components/loads/SwipeableLoadCard";
 import { LoadDetailSheet } from "@/components/loads/LoadDetailSheet";
 import { StatsBar } from "@/components/loads/StatsBar";
+import { CorridorBar, ZIM_CORRIDORS, type Corridor } from "@/components/loads/CorridorBar";
+import { BackloadFinder } from "@/components/loads/BackloadFinder";
+import { RateIntelligenceBar } from "@/components/loads/RateIntelligenceBar";
 import { BoardSidebar } from "@/components/loads/Sidebar";
 import { AuthModal } from "@/components/auth/AuthModal";
 import type { Load, SortKey } from "@/types";
@@ -78,6 +81,8 @@ function LoadBoardPage() {
   const plan: PlanTier = (subscription?.plan as PlanTier) ?? "free";
   const isFree = !user || PLAN_LEVEL[plan] < PLAN_LEVEL.basic;
   const canSeeContacts = !isFree;
+  const [activeCorridor, setActiveCorridor] = useState("all");
+  const zwlRate = 3850;
 
   const filters: Filters = useMemo(() => ({
     q: search.q, origin: search.origin, destination: search.destination,
@@ -155,9 +160,30 @@ function LoadBoardPage() {
   const selected = useMemo(() => loads.find(l => l.id === search.load) ?? null, [loads, search.load]);
   const setSelected = (l: Load | null) => navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, load: l?.id }) as never, replace: true });
 
+  const handleCorridorSelect = (c: Corridor) => {
+    setActiveCorridor(c.id);
+    navigate({
+      search: (prev: Record<string, unknown>) => ({ ...prev, origin: c.origin, destination: c.destination }) as never,
+      replace: true,
+    });
+  };
+
+  const returnOrigin = search.destination !== "all" ? search.destination : "";
+  const returnDest = search.origin !== "all" ? search.origin : "";
+  const returnCount = returnOrigin && returnDest
+    ? loads.filter(l => l.origin === returnOrigin && l.destination === returnDest && l.status === "available").length
+    : 0;
+
+  const avgRatePerKm = useMemo(() => {
+    const withRate = filtered.filter(l => l.rate_per_km && Number(l.rate_per_km) > 0);
+    if (!withRate.length) return null;
+    return withRate.reduce((s, l) => s + Number(l.rate_per_km), 0) / withRate.length;
+  }, [filtered]);
+
   return (
     <div>
       <StatsBar />
+      <CorridorBar active={activeCorridor} onSelect={handleCorridorSelect} resultCount={filtered.length} loading={loading} />
       <div className="mx-auto flex max-w-7xl gap-6 px-4 md:px-6">
         <BoardSidebar />
         <main className="min-w-0 flex-1 py-6">
@@ -173,6 +199,25 @@ function LoadBoardPage() {
 
           <div className="mt-4 space-y-3">
             <LoadFilters filters={filters} setFilters={setFilters} />
+            {avgRatePerKm && (
+              <RateIntelligenceBar
+                corridor={activeCorridor !== "all" ? `${search.origin} → ${search.destination}` : "All Zimbabwe"}
+                avgRatePerKm={avgRatePerKm}
+                marketTrend="up"
+                trendPct={2.3}
+                zwlRate={zwlRate}
+              />
+            )}
+            {returnCount > 0 && returnOrigin && returnDest && (
+              <BackloadFinder
+                origin={returnOrigin}
+                destination={returnDest}
+                returnCount={returnCount}
+                onFind={() => handleCorridorSelect(
+                  ZIM_CORRIDORS.find(c => c.origin === returnOrigin && c.destination === returnDest) ?? ZIM_CORRIDORS[0]
+                )}
+              />
+            )}
 
             {!loading && filtered.length === 0 ? (
               <div className="rounded-lg border border-dashed border-border bg-card/50 p-16 text-center">

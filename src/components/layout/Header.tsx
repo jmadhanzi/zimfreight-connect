@@ -38,22 +38,24 @@ export function Header({ onLogin }: { onLogin: () => void }) {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl shadow-[0_1px_0_0_rgba(0,0,0,0.04)]">
+      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
           <Link to="/" className="flex items-center gap-2">
-            <Truck className="h-7 w-7 text-secondary" strokeWidth={2.5} />
-            <span className="font-display text-2xl font-extrabold tracking-tighter text-foreground">
-              ZimFreight
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shadow-sm">
+              <Truck className="h-4 w-4 text-primary-foreground" strokeWidth={2.5} />
+            </div>
+            <span className="font-display text-xl font-extrabold tracking-tighter text-foreground">
+              Zim<span className="text-secondary">Freight</span>
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-8 md:flex">
+          <nav className="hidden items-center gap-0.5 md:flex">
             {navLinks.map((l) => (
               <Link
                 key={l.to}
                 to={l.to}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-secondary"
-                activeProps={{ className: "text-sm font-bold text-secondary border-b-2 border-secondary pb-1" }}
+                className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                activeProps={{ className: "rounded-lg px-3 py-2 text-sm font-bold bg-primary/10 text-primary" }}
               >
                 {l.label}
               </Link>
@@ -61,8 +63,8 @@ export function Header({ onLogin }: { onLogin: () => void }) {
             {isAdmin && (
               <Link
                 to="/admin"
-                className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-secondary"
-                activeProps={{ className: "inline-flex items-center gap-1 text-sm font-bold text-secondary border-b-2 border-secondary pb-1" }}
+                className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-semibold text-primary hover:bg-primary/10"
+                activeProps={{ className: "inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-bold bg-primary/10 text-primary" }}
               >
                 <ShieldCheck className="h-3.5 w-3.5" /> Admin
               </Link>
@@ -72,10 +74,13 @@ export function Header({ onLogin }: { onLogin: () => void }) {
           <div className="hidden items-center gap-3 md:flex">
             {user ? (
               <>
-                <span className="text-sm text-muted-foreground">
-                  {profile?.full_name || user.email}
-                </span>
                 <NotificationBell />
+                <div className="flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/15 text-[10px] font-bold text-primary">
+                    {(profile?.full_name || user.email || "U")[0].toUpperCase()}
+                  </div>
+                  <span className="max-w-[120px] truncate text-sm text-foreground">{profile?.full_name || user.email}</span>
+                </div>
                 <Button variant="outline" size="sm" onClick={signOut} className="rounded-full">Sign out</Button>
               </>
             ) : (

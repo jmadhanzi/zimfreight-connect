@@ -1,21 +1,56 @@
-import { ArrowRight, Bookmark, BookmarkCheck, MessageCircle, Lock, Flame, ShieldCheck, ChevronUp, ChevronDown, MapPin } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronUp, Lock, MessageCircle, Bookmark, BookmarkCheck, Flame, MapPin, ShieldCheck, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatUSD, timeAgo, transitProgress, cn } from "@/lib/utils";
 import type { Load, SortKey } from "@/types";
 
-const SAVED_KEY = "zf:saved_loads";
+export const SAVED_KEY = "zf:saved_loads";
 
-function getSaved(): string[] {
+export function getSaved(): string[] {
   if (typeof window === "undefined") return [];
   try { const v = JSON.parse(localStorage.getItem(SAVED_KEY) ?? "[]"); return Array.isArray(v) ? v : []; } catch { return []; }
 }
-function toggleSaved(id: string) {
+export function toggleSaved(id: string) {
   const cur = getSaved();
   const next = cur.includes(id) ? cur.filter(x => x !== id) : [...cur, id];
   localStorage.setItem(SAVED_KEY, JSON.stringify(next));
   window.dispatchEvent(new Event("zf:saved-changed"));
   return next;
+}
+
+/** DAT-style colour-coded freshness badge */
+function AgeBadge({ iso }: { iso: string }) {
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diffMs / 60_000);
+  const hours = Math.floor(mins / 60);
+  let cls = "age-badge ";
+  let label = "";
+  if (mins < 60) { cls += "age-badge-fresh"; label = mins < 1 ? "just now" : `${mins}m`; }
+  else if (hours < 6) { cls += "age-badge-recent"; label = `${hours}h`; }
+  else if (hours < 24) { cls += "age-badge-old"; label = `${hours}h`; }
+  else { cls += "age-badge-stale"; label = `${Math.floor(hours / 24)}d`; }
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span className={cls}><Clock className="h-2.5 w-2.5" />{label}</span>
+      </TooltipTrigger>
+      <TooltipContent side="right" className="font-mono text-[10px] uppercase tracking-widest">
+        Posted {timeAgo(iso)}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
+/** Zimbabwe broker trust score */
+function TrustScore({ verified, zimra }: { verified?: boolean; zimra?: boolean }) {
+  const score = 60 + (verified ? 25 : 0) + (zimra ? 15 : 0);
+  const cls = score >= 90 ? "text-[color:var(--success)]" : score >= 75 ? "text-[color:var(--zim-yellow)]" : "text-destructive";
+  const label = score >= 90 ? "High" : score >= 75 ? "Med" : "Low";
+  return (
+    <span className={`inline-flex items-center gap-1 font-mono text-[10px] font-bold ${cls}`}>
+      <ShieldCheck className="h-3 w-3" />{label} ({score})
+    </span>
+  );
 }
 
 interface LoadTableProps {
@@ -31,41 +66,43 @@ interface LoadTableProps {
 
 export function LoadTable({ loads, onSelect, canSeeContacts, onUpgrade, sort, onSort, savedIds, onToggleSave }: LoadTableProps) {
   const sortBtn = (key: SortKey, label: string) => {
-    const active = sort === key || (key === "rate_high" && sort === "rate_low");
+    const isRate = key === "rate_high";
+    const active = sort === key || (isRate && sort === "rate_low");
     const dir = sort === "rate_high" ? "down" : sort === "rate_low" ? "up" : "down";
     return (
-      <button type="button" onClick={() => onSort(key === "rate_high" ? (sort === "rate_high" ? "rate_low" : "rate_high") : key)}
-        className={cn("inline-flex items-center gap-1 hover:text-foreground", active && "text-foreground")}>
+      <button type="button"
+        onClick={() => onSort(isRate ? (sort === "rate_high" ? "rate_low" : "rate_high") : key)}
+        className={cn("inline-flex items-center gap-1 transition-colors hover:text-foreground", active ? "text-foreground font-semibold" : "text-muted-foreground")}>
         {label}
         {active && (dir === "down" ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />)}
       </button>
     );
   };
-
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card">
+    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
       <div className="overflow-x-auto">
         <TooltipProvider delayDuration={150}>
-        <table className="w-full text-sm">
-          <thead className="sticky top-[44px] z-20 bg-[color:var(--bg-secondary)] font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            <tr className="border-b border-border">
-              <th className="px-3 py-2 text-left">Route</th>
-              <th className="px-3 py-2 text-left">Load type</th>
-              <th className="px-3 py-2 text-left">Weight</th>
-              <th className="px-3 py-2 text-right">{sortBtn("rate_high", "Rate")}</th>
-              <th className="px-3 py-2 text-left">Broker</th>
-              <th className="px-3 py-2 text-left">{sortBtn("newest", "Pickup")}</th>
-              <th className="px-3 py-2 text-left">Status</th>
-              <th className="px-3 py-2 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loads.map(l => (
-              <Row key={l.id} load={l} onSelect={onSelect} canSeeContacts={canSeeContacts} onUpgrade={onUpgrade}
-                saved={savedIds.includes(l.id)} onToggleSave={onToggleSave} />
-            ))}
-          </tbody>
-        </table>
+          <table className="w-full text-sm">
+            <thead className="sticky top-[44px] z-20 bg-[color:var(--bg-secondary)]">
+              <tr className="border-b border-border">
+                <th className="px-3 py-2.5 text-left font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Age</th>
+                <th className="px-3 py-2.5 text-left font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Route</th>
+                <th className="px-3 py-2.5 text-left font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Commodity</th>
+                <th className="px-3 py-2.5 text-left font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Weight</th>
+                <th className="px-3 py-2.5 text-right font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{sortBtn("rate_high", "Rate")}</th>
+                <th className="px-3 py-2.5 text-left font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Broker / Trust</th>
+                <th className="px-3 py-2.5 text-left font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{sortBtn("newest", "Pickup")}</th>
+                <th className="px-3 py-2.5 text-left font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Status</th>
+                <th className="px-3 py-2.5 text-right font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loads.map(l => (
+                <Row key={l.id} load={l} onSelect={onSelect} canSeeContacts={canSeeContacts}
+                  onUpgrade={onUpgrade} saved={savedIds.includes(l.id)} onToggleSave={onToggleSave} />
+              ))}
+            </tbody>
+          </table>
         </TooltipProvider>
       </div>
     </div>
@@ -78,40 +115,30 @@ function Row({ load, onSelect, canSeeContacts, onUpgrade, saved, onToggleSave }:
 }) {
   const stop = (e: React.MouseEvent) => e.stopPropagation();
   const progress = transitProgress(load.created_at);
-  const postedLabel = `Posted ${timeAgo(load.created_at)}`;
   return (
     <tr
       onClick={() => onSelect(load)}
       style={{ ["--transit-progress" as string]: `${progress}%` }}
       className={cn(
-        "group relative cursor-pointer border-b border-border/60 transition-colors hover:bg-background/40 transit-bar-row",
-        !load.is_urgent && "hover:[&>td:first-child]:before:opacity-100",
+        "group relative cursor-pointer border-b border-border/50 transition-colors transit-bar-row animate-fade-in",
+        load.is_urgent
+          ? "bg-[color-mix(in_oklab,var(--destructive)_3%,transparent)] hover:bg-[color-mix(in_oklab,var(--destructive)_6%,transparent)]"
+          : "hover:bg-[color-mix(in_oklab,var(--primary)_3%,transparent)]",
       )}
     >
+      <td className="px-3 py-3" onClick={stop}><AgeBadge iso={load.created_at} /></td>
       <td className="px-3 py-3">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span
-              aria-label={postedLabel}
-              onClick={stop}
-              className="absolute left-0 top-0 z-10 h-full w-12 cursor-help"
-            />
-          </TooltipTrigger>
-          <TooltipContent side="right" className="font-mono text-[10px] uppercase tracking-widest">
-            {postedLabel}
-          </TooltipContent>
-        </Tooltip>
-        <div className="flex items-center gap-2 font-display text-base font-bold leading-none">
-          {load.origin}<ArrowRight className="h-3.5 w-3.5 text-primary" />{load.destination}
+        <div className="flex items-center gap-1.5 font-display text-[15px] font-bold leading-none text-foreground">
+          <span>{load.origin}</span>
+          <ArrowRight className="h-3.5 w-3.5 shrink-0 text-primary" />
+          <span>{load.destination}</span>
           {load.is_border_crossing && (
-            <span className="glass-chip glass-chip-info ml-1 uppercase">
-              <MapPin className="h-2.5 w-2.5" /> Border
-            </span>
+            <span className="glass-chip glass-chip-info ml-1 uppercase"><MapPin className="h-2.5 w-2.5" /> Border</span>
           )}
         </div>
         <div className="mt-1 flex items-center gap-2 font-mono text-[10px] text-muted-foreground">
-          {load.highway && <span className="rounded bg-background/60 px-1.5 py-0.5 text-foreground/80">{load.highway}</span>}
-          {load.distance_km && <span>{load.distance_km}km</span>}
+          {load.highway && <span className="rounded bg-[color:var(--bg-secondary)] px-1.5 py-0.5 text-foreground/70">{load.highway}</span>}
+          {load.distance_km && <span>{load.distance_km} km</span>}
         </div>
       </td>
       <td className="px-3 py-3">
@@ -119,70 +146,76 @@ function Row({ load, onSelect, canSeeContacts, onUpgrade, saved, onToggleSave }:
         {load.equipment_required && <div className="font-mono text-[10px] text-muted-foreground">{load.equipment_required}</div>}
       </td>
       <td className="px-3 py-3">
-        <div className="font-mono-num font-bold text-foreground">{load.weight_tonnes ? `${load.weight_tonnes}T` : "—"}</div>
-        <div className="font-mono text-[10px] text-muted-foreground">×{load.num_loads} load{load.num_loads === 1 ? "" : "s"}</div>
+        <div className="font-mono-num font-bold text-foreground">{load.weight_tonnes ? `${load.weight_tonnes}T` : "\u2014"}</div>
+        <div className="font-mono text-[10px] text-muted-foreground">\xd7{load.num_loads} load{load.num_loads === 1 ? "" : "s"}</div>
       </td>
       <td className="px-3 py-3 text-right">
         <div className="font-display text-xl font-bold text-primary">{formatUSD(load.rate_usd)}</div>
-        {load.rate_per_km && <div className="font-mono text-[10px] text-muted-foreground">${Number(load.rate_per_km).toFixed(2)}/km</div>}
+        {load.rate_per_km && <div className="font-mono text-[10px] text-muted-foreground">${"{"}Number(load.rate_per_km).toFixed(2){"}"}/km</div>}
       </td>
       <td className="px-3 py-3">
         {canSeeContacts ? (
           <div>
-            <div className="text-foreground">Verified Broker</div>
-            <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
-              <span className="text-[color:var(--zim-yellow)]">★ 4.8</span>
-              <span>· 14d pay</span>
-              {load.zimra_required && (
-                <span className="glass-chip glass-chip-amber uppercase">
-                  <ShieldCheck className="h-2.5 w-2.5" /> ZIMRA
-                </span>
-              )}
+            <div className="text-sm font-medium text-foreground">Verified Broker</div>
+            <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+              <TrustScore verified={true} zimra={load.zimra_required} />
+              {load.payment_terms && <span className="font-mono text-[10px] text-muted-foreground">{"{"}load.payment_terms{"}"}</span>}
             </div>
           </div>
         ) : (
-          <button onClick={(e) => { stop(e); onUpgrade(); }} className="inline-flex items-center gap-1 rounded border border-primary/30 bg-primary/10 px-2 py-1 text-[11px] font-medium text-primary hover:bg-primary/20">
-            <Lock className="h-3 w-3" /> Upgrade
+          <button onClick={(e) => { stop(e); onUpgrade(); }}
+            className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/8 px-2.5 py-1.5 text-[11px] font-semibold text-primary transition-colors hover:bg-primary/15">
+            <Lock className="h-3 w-3" /> Upgrade to view
           </button>
         )}
       </td>
       <td className="px-3 py-3">
-        <div className="text-foreground">{load.pickup_date ?? "—"}</div>
-        <div className="font-mono text-[10px] text-muted-foreground">posted {timeAgo(load.created_at)}</div>
+        <div className="text-sm text-foreground">{"{"}load.pickup_date ?? "\u2014"{"}"}</div>
+        {"{"}load.delivery_deadline && <div className="font-mono text-[10px] text-muted-foreground">\u2192 {"{"}load.delivery_deadline{"}"}</div>{"}"}
       </td>
       <td className="px-3 py-3">
         {load.is_urgent ? (
-          <span className="glass-chip glass-chip-danger uppercase">
-            <Flame className="h-3 w-3" /> Urgent
-          </span>
+          <span className="glass-chip glass-chip-danger uppercase"><Flame className="h-3 w-3" /> Urgent</span>
         ) : load.status === "available" ? (
           <span className="glass-chip glass-chip-success uppercase">Available</span>
         ) : load.status === "booked" ? (
           <span className="glass-chip glass-chip-danger uppercase">Booked</span>
         ) : (
-          <span className="glass-chip uppercase">{load.status}</span>
+          <span className="glass-chip uppercase">{"{"}load.status{"}"}</span>
         )}
       </td>
       <td className="px-3 py-3">
         <div className="flex items-center justify-end gap-1.5" onClick={stop}>
-          <Button size="sm" onClick={() => onSelect(load)} className="h-8 bg-primary px-2.5 text-xs text-primary-foreground hover:bg-primary/90">Book</Button>
+          <Button size="sm" onClick={() => onSelect(load)}
+            className="h-8 bg-primary px-3 text-xs font-bold text-primary-foreground hover:bg-primary/90">View</Button>
           {canSeeContacts ? (
-            <Button size="sm" variant="outline" className="h-8 border-[color:var(--success)]/40 px-2 text-[color:var(--success)] hover:bg-[color:var(--success)]/10" aria-label="WhatsApp">
-              <MessageCircle className="h-3.5 w-3.5" />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="sm" variant="outline"
+                  className="h-8 border-[color:var(--success)]/40 px-2 text-[color:var(--success)] hover:bg-[color:var(--success)]/10"
+                  aria-label="WhatsApp" onClick={(e) => { stop(e); onSelect(load); }}>
+                  <MessageCircle className="h-3.5 w-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="font-mono text-[10px]">WhatsApp broker</TooltipContent>
+            </Tooltip>
           ) : (
-            <Button size="sm" variant="outline" onClick={onUpgrade} className="h-8 px-2 text-muted-foreground" aria-label="Locked">
+            <Button size="sm" variant="outline" onClick={onUpgrade}
+              className="h-8 px-2 text-muted-foreground hover:text-foreground" aria-label="Locked">
               <Lock className="h-3.5 w-3.5" />
             </Button>
           )}
-          <button onClick={() => onToggleSave(load.id)} aria-label={saved ? "Unsave" : "Save"}
-            className={cn("rounded p-1.5", saved ? "text-primary" : "text-muted-foreground hover:text-foreground")}>
-            {saved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
-          </button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button onClick={() => onToggleSave(load.id)} aria-label={saved ? "Unsave" : "Save"}
+                className={cn("rounded-md p-1.5 transition-colors", saved ? "text-primary hover:text-primary/80" : "text-muted-foreground hover:text-foreground")}>
+                {saved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="font-mono text-[10px]">{saved ? "Saved" : "Save load"}</TooltipContent>
+          </Tooltip>
         </div>
       </td>
     </tr>
   );
 }
-
-export { getSaved, toggleSaved };

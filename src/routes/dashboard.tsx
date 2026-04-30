@@ -59,9 +59,9 @@ function DashboardPage() {
     <div className="mx-auto max-w-7xl px-4 py-8 md:px-6">
       <Greeting profile={profile} subscription={subscription} />
       <div className="mt-5"><QuickActions /></div>
-      <div className="mt-4"><TickerSection /></div>
+      <div className="mt-4 overflow-hidden rounded-xl border border-border"><TickerSection /></div>
 
-      <div className="mt-8 space-y-10">
+      <div className="mt-10 space-y-12">
         {role === "broker" || role === "owner" ? <BrokerSections /> : <CarrierSections />}
         <SharedSections />
         <ProfileCompletion profile={profile} />
@@ -86,35 +86,38 @@ function CarrierSections() {
     : `Market avg $${market}`;
 
   return (
-    <section>
-      <h2 className="font-display text-2xl font-black uppercase tracking-tight">Your activity (last 30 days)</h2>
+    <section className="space-y-8">
+      <div>
+        <span className="font-mono text-xs uppercase tracking-widest text-primary">Carrier overview</span>
+        <h2 className="mt-1 font-display text-2xl font-black uppercase tracking-tight">Your activity — last 30 days</h2>
+      </div>
 
-      <div className="mt-4 grid gap-3 md:grid-cols-4">
+      <div className="grid gap-3 md:grid-cols-4">
         <StatsCard label="Loads booked" value={String(stats?.loads_booked ?? 0)} sub="this month" icon={Truck} accent="gold" />
         <StatsCard label="Est. revenue" value={`$${Number(stats?.est_revenue ?? 0).toLocaleString()}`} sub="USD" icon={DollarSign} accent="gold" />
         <StatsCard label="Km driven" value={`${Number(stats?.km_driven ?? 0).toLocaleString()} km`} icon={RouteIcon} accent="blue" />
         <StatsCard label="Avg rate / km" value={`$${Number(stats?.avg_rate_per_km ?? 0).toFixed(2)}`} sub={rateLabel} icon={TrendingUp} accent="green" />
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-3">
-        <div className="rounded-lg border border-border bg-card p-5 lg:col-span-2">
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="rounded-xl border border-border bg-card p-5 lg:col-span-2">
           <h3 className="font-display text-lg font-bold uppercase tracking-tight">Your rate vs market avg — last 30 days</h3>
-          <p className="text-xs text-muted-foreground">Gold = your earned $/km. Blue dashed = market average.</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">Gold = your earned $/km · Blue dashed = market average</p>
           <div className="mt-3"><RatePerformanceChart bookings={completed} marketAvg={market} /></div>
         </div>
-        <div className="rounded-lg border border-border bg-card p-5">
+        <div className="rounded-xl border border-border bg-card p-5">
           <h3 className="font-display text-lg font-bold uppercase tracking-tight">Top routes</h3>
-          <p className="text-xs text-muted-foreground">Your 5 most-run corridors.</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">Your 5 most-run corridors</p>
           <div className="mt-3"><TopRoutesChart bookings={completed} /></div>
         </div>
       </div>
 
-      <div className="mt-8">
+      <div>
         <h3 className="font-display text-xl font-bold uppercase tracking-tight">Active bookings</h3>
         <div className="mt-3"><CarrierBookings bookings={bookings} onChange={refresh} /></div>
       </div>
 
-      <div className="mt-8">
+      <div>
         <h3 className="font-display text-xl font-bold uppercase tracking-tight">Saved loads</h3>
         <div className="mt-3"><SavedLoadsGrid items={saved} /></div>
       </div>
@@ -128,21 +131,24 @@ function BrokerSections() {
   const { bids, refresh: refreshBids } = useIncomingBids();
 
   return (
-    <section>
-      <h2 className="font-display text-2xl font-black uppercase tracking-tight">Your posted loads</h2>
+    <section className="space-y-8">
+      <div>
+        <span className="font-mono text-xs uppercase tracking-widest text-primary">Broker overview</span>
+        <h2 className="mt-1 font-display text-2xl font-black uppercase tracking-tight">Your posted loads</h2>
+      </div>
 
-      <div className="mt-4 grid gap-3 md:grid-cols-4">
+      <div className="grid gap-3 md:grid-cols-4">
         <StatsCard label="Active loads" value={String(stats?.active_loads ?? 0)} sub="live now" icon={Layers} accent="gold" />
         <StatsCard label="Bids received" value={String(stats?.bids_received ?? 0)} sub="this month" icon={MessageSquare} accent="blue" />
         <StatsCard label="Loads filled" value={`${stats?.loads_filled ?? 0}`} sub={`${stats?.fill_rate ?? 0}% fill rate`} icon={CheckCircle2} accent="green" />
         <StatsCard label="Avg time to fill" value={`${stats?.avg_hours_to_fill ?? 0}h`} sub="from posting" icon={Clock} accent="red" />
       </div>
 
-      <div className="mt-6">
+      <div>
         <BrokerLoadsTable loads={loads} onChange={refresh} />
       </div>
 
-      <div className="mt-8">
+      <div>
         <h3 className="font-display text-xl font-bold uppercase tracking-tight">Incoming booking requests</h3>
         <div className="mt-3"><IncomingBids bids={bids} onChange={() => { refreshBids(); refresh(); }} /></div>
       </div>
@@ -158,25 +164,28 @@ function SharedSections() {
   return (
     <>
       <section id="rates">
-        <h2 className="font-display text-2xl font-black uppercase tracking-tight">Market rates — your routes</h2>
-        <p className="text-xs text-muted-foreground">Live $/km from the load board, with 7-day movement and a 30-day trend sparkline.</p>
+        <span className="font-mono text-xs uppercase tracking-widest text-primary">Rate intelligence</span>
+        <h2 className="mt-1 font-display text-2xl font-black uppercase tracking-tight">Market rates — your routes</h2>
+        <p className="mt-0.5 text-xs text-muted-foreground">Live $/km from the load board, with 7-day movement and a 30-day trend sparkline.</p>
         <div className="mt-4"><RouteIntelligence saved={saved} allRates={rates} /></div>
       </section>
 
       <section>
-        <h2 className="font-display text-2xl font-black uppercase tracking-tight">Border status</h2>
-        <p className="text-xs text-muted-foreground">Live wait times at Zimbabwe's main crossings.</p>
+        <span className="font-mono text-xs uppercase tracking-widest text-primary">Border intelligence</span>
+        <h2 className="mt-1 font-display text-2xl font-black uppercase tracking-tight">Border crossing status</h2>
+        <p className="mt-0.5 text-xs text-muted-foreground">Live wait times at Zimbabwe’s main crossings — updated every 30 minutes.</p>
         <div className="mt-4"><BorderStatusGrid borders={borders} /></div>
       </section>
 
       <section className="grid gap-6 lg:grid-cols-3">
-        <div className="rounded-lg border border-border bg-card p-5 lg:col-span-2">
+        <div className="rounded-xl border border-border bg-card p-5 lg:col-span-2">
           <h3 className="font-display text-lg font-bold uppercase tracking-tight">Route popularity — this week</h3>
-          <p className="text-xs text-muted-foreground">Top 8 routes by load volume.</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">Top 8 routes by load volume</p>
           <div className="mt-3"><RoutePopularityChart rates={rates} /></div>
         </div>
-        <div className="rounded-lg border border-border bg-card p-5">
+        <div className="rounded-xl border border-border bg-card p-5">
           <h3 className="font-display text-lg font-bold uppercase tracking-tight">ZWL / USD — last 30 days</h3>
+          <p className="mt-0.5 text-xs text-muted-foreground">Official RBZ interbank rate</p>
           <ZwlChart />
         </div>
       </section>

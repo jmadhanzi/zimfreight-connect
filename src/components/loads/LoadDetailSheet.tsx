@@ -138,28 +138,38 @@ export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved
 
           {/* BROKER */}
           <section className="rounded-lg border border-border bg-background/40 p-4">
-            <h4 className="font-display text-xs font-bold uppercase tracking-widest text-muted-foreground">Broker</h4>
+            <h4 className="font-display text-xs font-bold uppercase tracking-widest text-muted-foreground">Broker Profile</h4>
             {canSeeContacts ? (
               <div className="mt-2">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 font-display font-bold text-primary">VB</div>
-                  <div>
-                    <div className="font-medium text-foreground">Verified Broker · Harare</div>
-                    <div className="text-[11px] text-muted-foreground">⭐ 4.8 / 5.0 · 47 loads posted · Member since 2024</div>
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/15 font-display text-lg font-black text-primary ring-2 ring-primary/20">
+                    {((load as Load & { poster?: { full_name?: string } }).poster?.full_name ?? "B")[0].toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-bold text-foreground">
+                      {(load as Load & { poster?: { full_name?: string } }).poster?.full_name ?? "Verified Broker"}
+                    </div>
+                    <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+                      <span className="inline-flex items-center gap-1 text-[11px] text-[color:var(--success)]"><ShieldCheck className="h-3 w-3" /> Verified</span>
+                      {load.zimra_required && (
+                        <span className="inline-flex items-center gap-1 text-[11px] text-[color:var(--zim-yellow)]"><ShieldCheck className="h-3 w-3" /> ZIMRA Reg.</span>
+                      )}
+                    </div>
                   </div>
                 </div>
-                <div className="mt-3 grid gap-1">
-                  {[5,4,3,2,1].map(n => (
-                    <div key={n} className="flex items-center gap-2 text-[10px] text-muted-foreground">
-                      <span className="w-3">{n}★</span>
-                      <div className="h-1 flex-1 overflow-hidden rounded-full bg-background"><div className="h-full bg-primary" style={{ width: `${[68, 22, 6, 3, 1][5-n]}%` }} /></div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px]">
-                  <Badge variant="outline" className="border-border text-foreground">Days to pay: 14</Badge>
-                  {load.zimra_required && <Badge className="border-0 bg-[color-mix(in_oklab,var(--gold)_20%,transparent)] text-primary"><ShieldCheck className="mr-1 h-3 w-3" /> ZIMRA Registered</Badge>}
-                  <Badge variant="outline" className="border-[color:var(--success)]/40 text-[color:var(--success)]">Credit: Good</Badge>
+                <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+                  <div className="rounded-md bg-background/60 px-2 py-2.5">
+                    <div className="font-mono-num text-base font-black text-foreground">&mdash;</div>
+                    <div className="font-mono text-[9px] uppercase text-muted-foreground">Loads posted</div>
+                  </div>
+                  <div className="rounded-md bg-background/60 px-2 py-2.5">
+                    <div className="font-mono-num text-base font-black text-foreground">{load.payment_terms ?? "—"}</div>
+                    <div className="font-mono text-[9px] uppercase text-muted-foreground">Payment terms</div>
+                  </div>
+                  <div className="rounded-md bg-background/60 px-2 py-2.5">
+                    <div className="font-mono-num text-base font-black text-[color:var(--success)]">Good</div>
+                    <div className="font-mono text-[9px] uppercase text-muted-foreground">Credit rating</div>
+                  </div>
                 </div>
               </div>
             ) : (
