@@ -18,6 +18,14 @@ interface AuthState {
   currentPlan: () => PlanTier;
 }
 
+/** Returns true only when the subscription is active and not expired. */
+function isSubscriptionActive(sub: Subscription | null): boolean {
+  if (!sub) return false;
+  if (sub.status !== "active") return false;
+  if (sub.expires_at && new Date(sub.expires_at) < new Date()) return false;
+  return true;
+}
+
 export const useAuthStore = create<AuthState>((set, get) => ({
   session: null,
   user: null,
@@ -28,10 +36,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   setProfile: (profile) => set({ profile }),
   setSubscription: (subscription) => set({ subscription }),
   setLoading: (loading) => set({ loading }),
-  reset: () => set({ session: null, user: null, profile: null, subscription: null }),
-  currentPlan: () => (get().subscription?.plan as PlanTier) ?? "free",
+  // Bug fix: also reset `loading` to false so the app never hangs after sign-out.
+  reset: () => set({ session: null, user: null, profile: null, subscription: null, loading: false }),
+  currentPlan: () => {
+    const sub = get().subscription;
+    if (!isSubscriptionActive(sub)) return "free";
+    return (sub?.plan as PlanTier) ?? "free";
+  },
   hasPlan: (min: PlanTier) => {
-    const plan: PlanTier = (get().subscription?.plan as PlanTier) ?? "free";
+    const sub = get().subscription;
+    // Bug fix: treat pending/cancelled/expired subscriptions as free tier.
+    const plan: PlanTier = isSubscriptionActive(sub) ? ((sub?.plan as PlanTier) ?? "free") : "free";
     return PLAN_LEVEL[plan] >= PLAN_LEVEL[min];
   },
 }));

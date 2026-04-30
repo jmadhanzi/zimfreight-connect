@@ -11,7 +11,7 @@ export function registerPwa() {
   const isPreviewHost =
     host.includes("id-preview--") ||
     host.includes("lovableproject.com") ||
-    host.includes("lovable.app") && host.includes("--") || // preview subdomains
+    (host.includes("lovable.app") && host.includes("--")) || // preview subdomains
     host === "localhost" ||
     host === "127.0.0.1";
 

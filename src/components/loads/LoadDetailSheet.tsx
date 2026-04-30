@@ -204,14 +204,37 @@ export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved
 
           {/* ACTIONS */}
           <section className="space-y-2">
-            <Button onClick={() => { if (!user) { onClose(); onRequestAuth(); } else if (!canSeeContacts) onUpgrade(); else toast.success("Booking request sent"); }}
+            <Button
+              onClick={async () => {
+                if (!user) { onClose(); onRequestAuth(); return; }
+                if (!canSeeContacts) { onUpgrade(); return; }
+                try {
+                  const { error } = await db.from("bookings").insert({
+                    load_id: load.id,
+                    carrier_id: user.id,
+                    status: "pending",
+                  });
+                  if (error) throw error;
+                  toast.success("Booking request sent — the broker will be notified");
+                } catch (e) {
+                  toast.error(e instanceof Error ? e.message : "Failed to send booking request");
+                }
+              }}
               size="lg" className="w-full bg-primary text-base font-bold uppercase tracking-wide text-primary-foreground hover:bg-primary/90">
               🚛 Book this load
             </Button>
             {canSeeContacts ? (
               <div className="grid grid-cols-2 gap-2">
-                <Button variant="outline" className="border-[color:var(--success)]/40 text-[color:var(--success)] hover:bg-[color:var(--success)]/10"><MessageCircle className="mr-1.5 h-4 w-4" /> WhatsApp</Button>
-                <Button variant="outline"><Phone className="mr-1.5 h-4 w-4" /> Call</Button>
+                <Button variant="outline" asChild className="border-[color:var(--success)]/40 text-[color:var(--success)] hover:bg-[color:var(--success)]/10">
+                  <a href={`https://wa.me/${(load as Load & { poster?: { phone_whatsapp?: string | null } }).poster?.phone_whatsapp?.replace(/\D/g, "") ?? ""}`} target="_blank" rel="noopener noreferrer">
+                    <MessageCircle className="mr-1.5 h-4 w-4" /> WhatsApp
+                  </a>
+                </Button>
+                <Button variant="outline" asChild>
+                  <a href={`tel:${(load as Load & { poster?: { phone_whatsapp?: string | null } }).poster?.phone_whatsapp ?? ""}`}>
+                    <Phone className="mr-1.5 h-4 w-4" /> Call
+                  </a>
+                </Button>
               </div>
             ) : (
               <Button variant="outline" onClick={onUpgrade} className="w-full border-border text-muted-foreground"><Lock className="mr-1.5 h-4 w-4" /> Contact locked — Upgrade</Button>

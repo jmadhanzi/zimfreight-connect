@@ -36,6 +36,17 @@ Be conversational. Use Zimbabwean English. Mention specific towns and roads. For
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
+  // Verify the caller is an authenticated user (JWT is validated by Supabase
+  // before this function runs because verify_jwt = true in config.toml).
+  // We additionally check that the Authorization header is present so the
+  // error message is clear if someone calls the function without a token.
+  const authHeader = req.headers.get("authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return new Response(JSON.stringify({ error: "Unauthorized: valid Bearer token required" }), {
+      status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   try {
     const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
     if (!ANTHROPIC_API_KEY) {

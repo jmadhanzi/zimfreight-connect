@@ -178,9 +178,9 @@ function PostLoadPage() {
     defaultValues: {
       origin: "", destination: "", pickup_address: "", pickup_date: "", delivery_deadline: "",
       flexible_dates: false,
-      load_type: "", equipment_required: "", weight_tonnes: 28 as unknown as number,
-      num_loads: 1, commodity_value: undefined,
-      rate_usd: undefined as unknown as number, payment_terms: "", is_urgent: false, notes: "",
+      load_type: "", equipment_required: "", weight_tonnes: 28,
+      num_loads: 1, commodity_value: "" as unknown as number,
+      rate_usd: "" as unknown as number, payment_terms: "", is_urgent: false, notes: "",
       company_name: "", contact_person: "", whatsapp: "", alt_contact: "", company_address: "",
       share_to_zf: true, share_harare: false, share_bulawayo: false, share_zha: false,
       share_email_network: false, is_private: false,

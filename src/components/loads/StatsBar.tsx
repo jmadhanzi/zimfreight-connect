@@ -5,9 +5,10 @@ import { RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function StatsBar() {
-  const [loadCount, setLoadCount] = useState(847);
-  const [carriers] = useState(312);
-  const [avgRate, setAvgRate] = useState(2.84);
+  // Bug fix: use null as initial state instead of hardcoded placeholder values
+  // so the UI shows "—" until real data is fetched from the database.
+  const [loadCount, setLoadCount] = useState<number | null>(null);
+  const [avgRate, setAvgRate] = useState<number | null>(null);
   const [beit, setBeit] = useState<BorderStatus | null>(null);
   const [updated, setUpdated] = useState<Date | null>(null);
 
@@ -34,19 +35,18 @@ export function StatsBar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const beitWait = beit?.wait_hours ?? 2.5;
-  const beitOrange = beitWait > 2;
+  const beitWait = beit?.wait_hours ?? null;
+  const beitOrange = beitWait !== null && beitWait > 2;
 
   return (
     <div className="sticky top-0 z-30 border-b border-border bg-[color:var(--bg-secondary)]/95 backdrop-blur supports-[backdrop-filter]:bg-[color:var(--bg-secondary)]/80">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-2 text-xs md:px-6">
-        <Stat dot="success" label={<><span className="font-display text-base font-bold text-primary">{loadCount}</span> <span className="text-muted-foreground">loads today</span></>} />
-        <Stat label={<><span className="font-display text-base font-bold text-foreground">{carriers}</span> <span className="text-muted-foreground">carriers online</span></>} />
-        <Stat label={<><span className="text-muted-foreground">Avg</span> <span className="font-mono-num text-foreground">${avgRate.toFixed(2)}/km</span></>} />
+        <Stat dot="success" label={<><span className="font-display text-base font-bold text-primary">{loadCount ?? "—"}</span> <span className="text-muted-foreground">loads today</span></>} />
+        <Stat label={<><span className="text-muted-foreground">Avg</span> <span className="font-mono-num text-foreground">{avgRate !== null ? `$${avgRate.toFixed(2)}/km` : "—"}</span></>} />
         <Stat label={<><span className="text-muted-foreground">ZWL/USD:</span> <span className="font-mono-num text-foreground">3,850</span></>} />
         <Stat label={
           <span className={cn("font-mono-num", beitOrange ? "text-[color:var(--zim-yellow)]" : "text-foreground")}>
-            <span className="text-muted-foreground">Beit Bridge:</span> ~{beitWait}h wait
+            <span className="text-muted-foreground">Beit Bridge:</span> {beitWait !== null ? `~${beitWait}h wait` : "—"}
           </span>
         } />
         <button onClick={refresh} className="ml-auto inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground">

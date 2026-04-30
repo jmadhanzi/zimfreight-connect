@@ -14,7 +14,10 @@ export function useAuthBootstrap() {
   const { setAuth, setProfile, setSubscription, setLoading, reset } = useAuthStore();
 
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((_event: string, session: Session | null) => {
+    // Bug fix: renamed to `authListener` to avoid shadowing the inner `sub`
+    // variable inside loadProfile, which previously caused a runtime error
+    // when the cleanup function tried to call sub.subscription.unsubscribe().
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event: string, session: Session | null) => {
       setAuth(session, session?.user ?? null);
       if (session?.user) setTimeout(() => loadProfile(session.user.id), 0);
       else reset();
@@ -32,11 +35,13 @@ export function useAuthBootstrap() {
         db.from("subscriptions").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(1).maybeSingle(),
       ]);
       setProfile(profile as Profile | null);
-      const sub = subscription as Subscription | null;
+      // Bug fix: renamed from `sub` to `currentSub` to avoid shadowing the
+      // outer `authListener` variable and breaking the cleanup function.
+      const currentSub = subscription as Subscription | null;
       if (DEV_BYPASS) {
         // Force Fleet tier in dev so every paywall passes.
         setSubscription({
-          ...(sub ?? {
+          ...(currentSub ?? {
             id: "dev-bypass",
             user_id: userId,
             status: "active",
@@ -50,12 +55,12 @@ export function useAuthBootstrap() {
           status: "active",
         } as Subscription);
       } else {
-        setSubscription(sub);
+        setSubscription(currentSub);
       }
       setLoading(false);
     }
 
-    return () => sub.subscription.unsubscribe();
+    return () => authListener.subscription.unsubscribe();
   }, [setAuth, setProfile, setSubscription, setLoading, reset]);
 }
 
