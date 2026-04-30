@@ -68,12 +68,13 @@ export function BackloadFinder({ origin, destination, returnCount, onFind, class
           )}
           <Button
             size="sm"
+            variant={returnCount > 0 ? "default" : "outline"}
             onClick={onFind}
             className={cn(
               "h-8 text-xs font-bold",
               returnCount > 0
                 ? "bg-[color:var(--success)] text-white hover:bg-[color:var(--success)]/90"
-                : "variant-outline border-[color:var(--success)]/40 text-[color:var(--success)] hover:bg-[color:var(--success)]/10"
+                : "border-[color:var(--success)]/40 text-[color:var(--success)] hover:bg-[color:var(--success)]/10"
             )}
           >
             {returnCount > 0 ? "Find return loads" : "Set alert"}

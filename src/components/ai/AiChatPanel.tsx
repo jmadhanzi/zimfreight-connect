@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { Paperclip, Send, Trash2, MoreVertical } from "lucide-react";
+import { Paperclip, Send, Trash2, MoreVertical, WifiOff } from "lucide-react";
 import { ChatMessage, TypingIndicator } from "./MessageBubble";
 import { QUICK_ACTIONS, QUICK_PROMPTS } from "./groupChatData";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useNetworkStatus } from "@/hooks/useNetworkStatus";
-import { WifiOff } from "lucide-react";
 
 interface Msg { id: string; role: "user" | "assistant"; content: string; created_at: string }
 
@@ -87,9 +87,16 @@ export function AiChatPanel() {
     try {
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-dispatch`;
       const apiMessages = messages.filter((m) => m.id !== "welcome").concat(userMsg).map(({ role, content }) => ({ role, content }));
+      // Fetch the current session token so the edge function (verify_jwt=true) accepts the request.
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
       const resp = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(currentSession?.access_token
+            ? { "Authorization": `Bearer ${currentSession.access_token}` }
+            : {}),
+        },
         body: JSON.stringify({ messages: apiMessages }),
       });
       if (!resp.ok || !resp.body) {

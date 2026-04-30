@@ -1,8 +1,8 @@
 import { type ReactNode, useState } from "react";
 import { Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
-import { PLAN_LEVEL, type PlanTier } from "@/types";
+import { useAuthStore } from "@/stores/authStore";
+import { type PlanTier } from "@/types";
 import { PricingModal } from "./PricingModal";
 import { cn } from "@/lib/utils";
 
@@ -17,10 +17,11 @@ interface PaywallGateProps {
 }
 
 export function PaywallGate({ plan, feature, benefits, children, blur = true, className }: PaywallGateProps) {
-  const { subscription } = useAuth();
+  // Use hasPlan() from the store — it validates status === 'active' AND expires_at,
+  // so pending/expired subscriptions are correctly treated as free tier.
+  const hasPlan = useAuthStore((s) => s.hasPlan);
   const [open, setOpen] = useState(false);
-  const currentPlan: PlanTier = (subscription?.plan as PlanTier) ?? "free";
-  const allowed = PLAN_LEVEL[currentPlan] >= PLAN_LEVEL[plan];
+  const allowed = hasPlan(plan);
 
   if (allowed) return <>{children}</>;
 

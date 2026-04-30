@@ -82,6 +82,8 @@ function LoadBoardPage() {
   const isFree = !user || PLAN_LEVEL[plan] < PLAN_LEVEL.basic;
   const canSeeContacts = !isFree;
   const [activeCorridor, setActiveCorridor] = useState("all");
+  // TODO: Replace with a live RBZ/forex API call once available.
+  // The rate is stored here so it flows consistently to RateIntelligenceBar and ZwlChart.
   const zwlRate = 3850;
 
   const filters: Filters = useMemo(() => ({

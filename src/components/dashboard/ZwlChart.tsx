@@ -32,7 +32,7 @@ export function ZwlChart() {
         </ResponsiveContainer>
       </div>
       <p className="mt-2 text-[10px] uppercase tracking-widest text-muted-foreground">
-        Rates shown in USD. ZWL uses daily official rate.
+        Indicative trend only. Connect RBZ API for live rates.
       </p>
     </div>
   );

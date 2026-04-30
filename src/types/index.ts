@@ -49,7 +49,10 @@ export interface Subscription {
   plan: PlanTier;
   status: string;
   expires_at: string | null;
+  ecocash_ref: string | null;
+  stripe_subscription_id?: string | null;
   created_at: string;
+  updated_at: string;
 }
 
 export const PLAN_LEVEL: Record<PlanTier, number> = {

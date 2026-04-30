@@ -71,7 +71,8 @@ function ProfilePage() {
 
       <div className="mt-4 grid gap-2">
         <ProfileLink to="/dashboard" icon={BarChart3} label="Dashboard" />
-        <ProfileLink to="/dashboard" icon={Bookmark} label="Saved loads" />
+        {/* Fixed: was incorrectly pointing to /dashboard — saved loads live on the board */}
+        <ProfileLink to="/board" icon={Bookmark} label="Saved loads" />
         <ProfileLink to="/pricing" icon={Crown} label={`Plan · ${plan}`} accent />
         <ProfileLink to="/onboarding" icon={Settings} label="Edit profile" />
       </div>
@@ -93,7 +94,17 @@ function Row({ icon: Icon, label, value }: { icon: React.ElementType; label: str
   );
 }
 
-function ProfileLink({ to, icon: Icon, label, accent }: { to: "/dashboard" | "/pricing" | "/onboarding"; icon: React.ElementType; label: string; accent?: boolean }) {
+function ProfileLink({
+  to,
+  icon: Icon,
+  label,
+  accent,
+}: {
+  to: "/dashboard" | "/pricing" | "/onboarding" | "/board";
+  icon: React.ElementType;
+  label: string;
+  accent?: boolean;
+}) {
   return (
     <Link
       to={to}
