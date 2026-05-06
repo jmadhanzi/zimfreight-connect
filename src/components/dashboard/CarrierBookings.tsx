@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Truck, CheckCircle2, AlertTriangle } from "lucide-react";
+import { Truck, CheckCircle2, AlertTriangle, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 import { toast } from "sonner";
 import type { BookingRow } from "@/hooks/useDashboard";
 import { PodUploadButton } from "@/components/bookings/PodUploadButton";
+import { RatingDialog } from "@/components/trust/RatingDialog";
 
 const STATUS_LABEL: Record<string, string> = {
   pending: "Pending",
@@ -34,6 +35,7 @@ export function CarrierBookings({
   onChange: () => void;
 }) {
   const [busy, setBusy] = useState<string | null>(null);
+  const [rateBooking, setRateBooking] = useState<BookingRow | null>(null);
 
   const update = async (id: string, status: string) => {
     setBusy(id);
@@ -106,6 +108,16 @@ export function CarrierBookings({
                 </td>
                 <td className="px-3 py-3">
                   <div className="flex flex-wrap justify-end gap-1.5">
+                    {(b.status === "paid" || b.status === "delivered") && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setRateBooking(b)}
+                        className="rounded-full border-secondary/40 text-secondary hover:bg-secondary/10"
+                      >
+                        <Star className="mr-1 h-3.5 w-3.5" /> Rate broker
+                      </Button>
+                    )}
                     {(b.status === "en_route" ||
                       b.status === "delivered" ||
                       b.status === "payment_pending" ||
@@ -137,6 +149,22 @@ export function CarrierBookings({
           </tbody>
         </table>
       </div>
+      {rateBooking && (
+        <RatingDialog
+          open={!!rateBooking}
+          onOpenChange={(b) => !b && setRateBooking(null)}
+          subjectId={
+            (rateBooking.loads as { poster_id?: string } | undefined)?.poster_id ??
+            `broker_${rateBooking.load_id}`
+          }
+          subjectName={
+            (rateBooking.loads as { poster?: { full_name?: string } } | undefined)?.poster
+              ?.full_name ?? "Broker"
+          }
+          bookingId={rateBooking.id}
+          subjectType="broker"
+        />
+      )}
     </div>
   );
 }

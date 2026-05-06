@@ -36,6 +36,7 @@ import {
 import { RatingStars, VerifiedPayerBadge, PreferredBadge } from "@/components/trust/Badges";
 import { formatDual } from "@/lib/fx";
 import { Heart } from "lucide-react";
+import { EscrowBookButton } from "@/components/bookings/EscrowBookButton";
 
 function humanCacheAge(ms: number) {
   const m = Math.floor(ms / 60_000);
@@ -418,7 +419,26 @@ export function LoadDetailSheet({
           </section>
 
           {/* ACTIONS */}
-          <section className="space-y-2">
+          <section className="space-y-3">
+            {canSeeContacts && user && (
+              <div className="flex w-full items-center justify-center">
+                <EscrowBookButton
+                  load={load}
+                  brokerId={brokerId}
+                  brokerName={
+                    (load as Load & { poster?: { full_name?: string } }).poster?.full_name ??
+                    "Broker"
+                  }
+                />
+              </div>
+            )}
+            <div className="relative my-1 flex items-center gap-2">
+              <span className="h-px flex-1 bg-border" />
+              <span className="font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                or contact directly
+              </span>
+              <span className="h-px flex-1 bg-border" />
+            </div>
             <Button
               onClick={async () => {
                 if (!user) {
@@ -443,9 +463,10 @@ export function LoadDetailSheet({
                 }
               }}
               size="lg"
-              className="w-full bg-secondary text-base font-bold tracking-wide text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+              variant="outline"
+              className="w-full rounded-full text-base font-bold tracking-wide"
             >
-              <Truck className="mr-2 h-4 w-4" /> Book this load
+              <Truck className="mr-2 h-4 w-4" /> Book directly (no escrow)
             </Button>
             {canSeeContacts ? (
               <div className="grid grid-cols-2 gap-2">

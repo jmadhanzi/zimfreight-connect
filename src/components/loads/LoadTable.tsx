@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatUSD, timeAgo, transitProgress, cn } from "@/lib/utils";
+import { usdToZwl } from "@/lib/fx";
 import type { Load, SortKey } from "@/types";
 
 export const SAVED_KEY = "zf:saved_loads";
@@ -264,6 +265,9 @@ function Row({
             ${Number(load.rate_per_km).toFixed(2)}/km
           </div>
         )}
+        <div className="font-mono text-[9px] tabular-nums text-secondary/70">
+          ZWL {usdToZwl(Number(load.rate_usd)).toLocaleString()}
+        </div>
       </td>
       <td className="px-3 py-3">
         {canSeeContacts ? (

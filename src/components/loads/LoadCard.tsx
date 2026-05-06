@@ -10,6 +10,7 @@ import {
   BookmarkCheck,
 } from "lucide-react";
 import { formatUSD, transitProgress, cn } from "@/lib/utils";
+import { usdToZwl } from "@/lib/fx";
 import type { Load } from "@/types";
 
 export const SAVED_KEY = "zf:saved_loads";
@@ -111,6 +112,9 @@ export function LoadCard({ load, onClick, saved, onSave }: LoadCardProps) {
               <span className="font-normal">/km</span>
             </div>
           )}
+          <div className="mt-0.5 font-mono text-[9px] font-semibold tabular-nums text-secondary/70">
+            ZWL {usdToZwl(Number(load.rate_usd)).toLocaleString()}
+          </div>
         </div>
       </div>
 
