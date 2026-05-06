@@ -2,7 +2,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,7 +37,15 @@ const signUpSchema = z.object({
 type SignInValues = z.infer<typeof signInSchema>;
 type SignUpValues = z.infer<typeof signUpSchema>;
 
-export function AuthModal({ open, onOpenChange, defaultMode = "signin" }: { open: boolean; onOpenChange: (b: boolean) => void; defaultMode?: Mode }) {
+export function AuthModal({
+  open,
+  onOpenChange,
+  defaultMode = "signin",
+}: {
+  open: boolean;
+  onOpenChange: (b: boolean) => void;
+  defaultMode?: Mode;
+}) {
   const [mode, setMode] = useState<Mode>(defaultMode);
   const [role, setRole] = useState<UserRole>("carrier");
   const [showPwd, setShowPwd] = useState(false);
@@ -51,7 +65,9 @@ export function AuthModal({ open, onOpenChange, defaultMode = "signin" }: { open
   const handleGoogle = async () => {
     setLoading(true);
     try {
-      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
       if (result.error) throw result.error;
       if (result.redirected) return; // redirecting to Google
     } catch (e) {
@@ -64,13 +80,18 @@ export function AuthModal({ open, onOpenChange, defaultMode = "signin" }: { open
   const onSignIn = async (v: SignInValues) => {
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email: v.email, password: v.password });
+      const { error } = await supabase.auth.signInWithPassword({
+        email: v.email,
+        password: v.password,
+      });
       if (error) throw error;
       toast.success("Welcome back");
       onOpenChange(false);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Sign-in failed");
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onSignUp = async (v: SignUpValues) => {
@@ -90,94 +111,190 @@ export function AuthModal({ open, onOpenChange, defaultMode = "signin" }: { open
       navigate({ to: "/onboarding" });
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Sign-up failed");
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="border-border bg-card sm:max-w-[440px]">
-        <DialogHeader>
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Truck className="h-5 w-5" strokeWidth={2.5} />
+      <DialogContent className="overflow-hidden border-border/70 bg-card p-0 sm:max-w-[440px]">
+        <span
+          aria-hidden
+          className="absolute inset-x-0 top-0 z-10 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+        />
+        <div className="p-6">
+          <DialogHeader>
+            <div className="flex items-center gap-3">
+              <span className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-primary via-primary to-[color-mix(in_oklab,var(--primary)_70%,black)] shadow-[0_2px_0_color-mix(in_oklab,var(--primary)_60%,black),inset_0_1px_0_color-mix(in_oklab,white_25%,transparent)]">
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-5 w-5 text-primary-foreground"
+                  fill="none"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M5 6 H19 L7 18 H19" stroke="currentColor" />
+                  <circle cx="19" cy="6" r="1.6" fill="var(--secondary)" stroke="none" />
+                </svg>
+              </span>
+              <div className="min-w-0 flex-1 text-left">
+                <DialogTitle className="font-display text-xl font-extrabold tracking-[-0.025em]">
+                  {mode === "signin" ? "Welcome back" : "Join ZimFreight"}
+                </DialogTitle>
+                <DialogDescription className="text-xs">
+                  {mode === "signin"
+                    ? "Sign in to Zimbabwe's load board."
+                    : "Find loads, fill your truck, get paid."}
+                </DialogDescription>
+              </div>
             </div>
-            <DialogTitle className="font-display text-2xl font-black uppercase tracking-tight">
-              {mode === "signin" ? "Sign in" : "Join ZimFreight"}
-            </DialogTitle>
+          </DialogHeader>
+
+          {/* Tabs */}
+          <div className="mt-5 grid grid-cols-2 gap-1 rounded-full bg-muted/50 p-1">
+            <button
+              onClick={() => setMode("signup")}
+              className={cn(
+                "rounded-full px-3 py-1.5 text-sm font-bold tracking-wide transition-all",
+                mode === "signup"
+                  ? "bg-card text-foreground shadow-[0_1px_0_color-mix(in_oklab,var(--foreground)_8%,transparent),0_2px_4px_-1px_color-mix(in_oklab,var(--foreground)_10%,transparent)]"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              Sign up
+            </button>
+            <button
+              onClick={() => setMode("signin")}
+              className={cn(
+                "rounded-full px-3 py-1.5 text-sm font-bold tracking-wide transition-all",
+                mode === "signin"
+                  ? "bg-card text-foreground shadow-[0_1px_0_color-mix(in_oklab,var(--foreground)_8%,transparent),0_2px_4px_-1px_color-mix(in_oklab,var(--foreground)_10%,transparent)]"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              Log in
+            </button>
           </div>
-          <DialogDescription>
-            {mode === "signin" ? "Welcome back to Zimbabwe's load board." : "Find loads, fill your truck, get paid."}
-          </DialogDescription>
-        </DialogHeader>
 
-        {/* Tabs */}
-        <div className="grid grid-cols-2 gap-1 rounded-md bg-background/50 p-1">
-          <button onClick={() => setMode("signup")} className={cn("rounded px-3 py-1.5 text-sm font-medium transition-colors", mode === "signup" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground")}>Sign up</button>
-          <button onClick={() => setMode("signin")} className={cn("rounded px-3 py-1.5 text-sm font-medium transition-colors", mode === "signin" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground")}>Log in</button>
+          {mode === "signup" ? (
+            <form onSubmit={signUpForm.handleSubmit(onSignUp)} className="mt-5 space-y-3">
+              {/* Role toggle */}
+              <div className="grid grid-cols-2 gap-2">
+                <RoleButton
+                  active={role === "carrier"}
+                  onClick={() => setRole("carrier")}
+                  icon={<Truck className="h-4 w-4" />}
+                  label="Carrier / Driver"
+                />
+                <RoleButton
+                  active={role === "broker"}
+                  onClick={() => setRole("broker")}
+                  icon={<Package className="h-4 w-4" />}
+                  label="Broker / Shipper"
+                />
+              </div>
+
+              <Field label="Full name" error={signUpForm.formState.errors.full_name?.message}>
+                <Input placeholder="Tendai Moyo" {...signUpForm.register("full_name")} />
+              </Field>
+              <Field
+                label="WhatsApp number"
+                error={signUpForm.formState.errors.phone_whatsapp?.message}
+              >
+                <Input placeholder="+263 77 123 4567" {...signUpForm.register("phone_whatsapp")} />
+              </Field>
+              <Field label="Email" error={signUpForm.formState.errors.email?.message}>
+                <Input
+                  type="email"
+                  placeholder="you@company.co.zw"
+                  {...signUpForm.register("email")}
+                />
+              </Field>
+              <Field label="Password" error={signUpForm.formState.errors.password?.message}>
+                <PasswordInput
+                  show={showPwd}
+                  onToggle={() => setShowPwd(!showPwd)}
+                  {...signUpForm.register("password")}
+                />
+              </Field>
+
+              <Button
+                type="submit"
+                className="w-full rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                disabled={loading}
+              >
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Create account
+              </Button>
+            </form>
+          ) : (
+            <form onSubmit={signInForm.handleSubmit(onSignIn)} className="mt-5 space-y-3">
+              <Field label="Email" error={signInForm.formState.errors.email?.message}>
+                <Input
+                  type="email"
+                  placeholder="you@company.co.zw"
+                  {...signInForm.register("email")}
+                />
+              </Field>
+              <Field label="Password" error={signInForm.formState.errors.password?.message}>
+                <PasswordInput
+                  show={showPwd}
+                  onToggle={() => setShowPwd(!showPwd)}
+                  {...signInForm.register("password")}
+                />
+              </Field>
+              <Button
+                type="submit"
+                className="w-full rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                disabled={loading}
+              >
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Sign in
+              </Button>
+            </form>
+          )}
+
+          {/* Divider */}
+          <div className="relative my-4 flex items-center">
+            <div className="flex-1 border-t border-border" />
+            <span className="px-3 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              or
+            </span>
+            <div className="flex-1 border-t border-border" />
+          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full rounded-full"
+            onClick={handleGoogle}
+            disabled={loading}
+          >
+            <GoogleIcon />
+            Continue with Google
+          </Button>
+
+          <p className="mt-4 text-center text-[11px] text-muted-foreground">
+            By {mode === "signup" ? "signing up" : "signing in"} you agree to our Terms. Your data
+            is stored securely.
+          </p>
         </div>
-
-        {mode === "signup" ? (
-          <form onSubmit={signUpForm.handleSubmit(onSignUp)} className="space-y-3">
-            {/* Role toggle */}
-            <div className="grid grid-cols-2 gap-2">
-              <RoleButton active={role === "carrier"} onClick={() => setRole("carrier")} icon={<Truck className="h-4 w-4" />} label="Carrier / Driver" />
-              <RoleButton active={role === "broker"} onClick={() => setRole("broker")} icon={<Package className="h-4 w-4" />} label="Broker / Shipper" />
-            </div>
-
-            <Field label="Full name" error={signUpForm.formState.errors.full_name?.message}>
-              <Input placeholder="Tendai Moyo" {...signUpForm.register("full_name")} />
-            </Field>
-            <Field label="WhatsApp number" error={signUpForm.formState.errors.phone_whatsapp?.message}>
-              <Input placeholder="+263 77 123 4567" {...signUpForm.register("phone_whatsapp")} />
-            </Field>
-            <Field label="Email" error={signUpForm.formState.errors.email?.message}>
-              <Input type="email" placeholder="you@company.co.zw" {...signUpForm.register("email")} />
-            </Field>
-            <Field label="Password" error={signUpForm.formState.errors.password?.message}>
-              <PasswordInput show={showPwd} onToggle={() => setShowPwd(!showPwd)} {...signUpForm.register("password")} />
-            </Field>
-
-            <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={loading}>
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Create account →
-            </Button>
-          </form>
-        ) : (
-          <form onSubmit={signInForm.handleSubmit(onSignIn)} className="space-y-3">
-            <Field label="Email" error={signInForm.formState.errors.email?.message}>
-              <Input type="email" placeholder="you@company.co.zw" {...signInForm.register("email")} />
-            </Field>
-            <Field label="Password" error={signInForm.formState.errors.password?.message}>
-              <PasswordInput show={showPwd} onToggle={() => setShowPwd(!showPwd)} {...signInForm.register("password")} />
-            </Field>
-            <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={loading}>
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Sign in →
-            </Button>
-          </form>
-        )}
-
-        {/* Divider */}
-        <div className="relative my-1 flex items-center">
-          <div className="flex-1 border-t border-border" />
-          <span className="px-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">or</span>
-          <div className="flex-1 border-t border-border" />
-        </div>
-
-        <Button type="button" variant="outline" className="w-full" onClick={handleGoogle} disabled={loading}>
-          <GoogleIcon />
-          Continue with Google
-        </Button>
-
-        <p className="text-center text-[11px] text-muted-foreground">
-          By {mode === "signup" ? "signing up" : "signing in"} you agree to our Terms. Your data is stored securely.
-        </p>
       </DialogContent>
     </Dialog>
   );
 }
 
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
+function Field({
+  label,
+  error,
+  children,
+}: {
+  label: string;
+  error?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="space-y-1.5">
       <Label>{label}</Label>
@@ -187,25 +304,57 @@ function Field({ label, error, children }: { label: string; error?: string; chil
   );
 }
 
-function PasswordInput({ show, onToggle, ...rest }: { show: boolean; onToggle: () => void } & React.ComponentProps<"input">) {
+function PasswordInput({
+  show,
+  onToggle,
+  ...rest
+}: { show: boolean; onToggle: () => void } & React.ComponentProps<"input">) {
   return (
     <div className="relative">
       <Input type={show ? "text" : "password"} placeholder="••••••••" {...rest} />
-      <button type="button" onClick={onToggle} className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground" aria-label={show ? "Hide password" : "Show password"}>
+      <button
+        type="button"
+        onClick={onToggle}
+        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+        aria-label={show ? "Hide password" : "Show password"}
+      >
         {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
       </button>
     </div>
   );
 }
 
-function RoleButton({ active, onClick, icon, label }: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string }) {
+function RoleButton({
+  active,
+  onClick,
+  icon,
+  label,
+}: {
+  active: boolean;
+  onClick: () => void;
+  icon: React.ReactNode;
+  label: string;
+}) {
   return (
-    <button type="button" onClick={onClick} className={cn(
-      "flex flex-col items-center gap-1 rounded-md border px-3 py-3 text-sm font-medium transition-all",
-      active ? "border-primary bg-primary/10 text-foreground" : "border-border bg-background/40 text-muted-foreground hover:border-primary/40"
-    )}>
-      <span className={cn("flex h-8 w-8 items-center justify-center rounded-full", active ? "bg-primary text-primary-foreground" : "bg-secondary")}>{icon}</span>
-      {label}
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "relative flex flex-col items-center gap-1.5 rounded-xl border p-3 text-xs font-medium transition-all",
+        active
+          ? "border-secondary/50 bg-secondary/[0.06] text-foreground shadow-[0_0_0_1px_color-mix(in_oklab,var(--secondary)_30%,transparent)]"
+          : "border-border bg-card text-muted-foreground hover:border-foreground/15 hover:text-foreground",
+      )}
+    >
+      <span
+        className={cn(
+          "flex h-9 w-9 items-center justify-center rounded-lg transition-colors",
+          active ? "bg-secondary text-secondary-foreground" : "bg-primary/10 text-primary",
+        )}
+      >
+        {icon}
+      </span>
+      <span className="font-display text-[12px] font-bold tracking-tight">{label}</span>
     </button>
   );
 }
@@ -213,10 +362,22 @@ function RoleButton({ active, onClick, icon, label }: { active: boolean; onClick
 function GoogleIcon() {
   return (
     <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
-      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/>
-      <path fill="#FBBC05" d="M5.84 14.1A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.44.34-2.1V7.07H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.83z"/>
-      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.07l3.66 2.83C6.71 7.31 9.14 5.38 12 5.38z"/>
+      <path
+        fill="#4285F4"
+        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.84 14.1A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.44.34-2.1V7.07H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.83z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.07l3.66 2.83C6.71 7.31 9.14 5.38 12 5.38z"
+      />
     </svg>
   );
 }

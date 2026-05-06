@@ -18,7 +18,9 @@ export function ExitIntentPopup() {
     if (Date.now() - last < COOLDOWN_MS) return;
 
     let armed = false;
-    const arm = setTimeout(() => { armed = true; }, 8000); // wait 8s before arming
+    const arm = setTimeout(() => {
+      armed = true;
+    }, 8000); // wait 8s before arming
 
     const onLeave = (e: MouseEvent) => {
       if (!armed) return;
@@ -29,36 +31,61 @@ export function ExitIntentPopup() {
       }
     };
     document.addEventListener("mouseout", onLeave);
-    return () => { clearTimeout(arm); document.removeEventListener("mouseout", onLeave); };
+    return () => {
+      clearTimeout(arm);
+      document.removeEventListener("mouseout", onLeave);
+    };
   }, []);
 
   const claim = async () => {
-    try { await navigator.clipboard.writeText("ZIMFIRST"); } catch {}
+    try {
+      await navigator.clipboard.writeText("ZIMFIRST");
+    } catch {
+      /* clipboard unavailable */
+    }
     toast.success("Code ZIMFIRST copied — apply it at checkout");
     setOpen(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="border-primary/40 bg-card sm:max-w-md">
-        <div className="text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 text-primary">
-            <Gift className="h-7 w-7" />
+      <DialogContent className="overflow-hidden border-secondary/30 bg-card p-0 sm:max-w-md">
+        <span
+          aria-hidden
+          className="absolute inset-x-0 top-0 z-10 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+        />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-secondary/25 blur-3xl"
+        />
+        <div className="relative p-7 text-center">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary/15 text-secondary">
+            <Gift className="h-6 w-6" />
           </div>
-          <h2 className="mt-4 font-display text-3xl font-black uppercase leading-tight tracking-tight">
-            Before you go —
+          <span className="section-kicker mx-auto mt-5 justify-center">Wait!</span>
+          <h2 className="mt-3 font-display text-3xl font-black leading-[1.05] tracking-[-0.04em]">
+            Before you go &mdash;
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             Get your <span className="font-bold text-foreground">first month free</span> with code
           </p>
-          <div className="mx-auto mt-4 inline-block rounded-md border-2 border-dashed border-primary bg-primary/10 px-6 py-3 font-mono text-2xl font-bold tracking-widest text-primary">
+          <div className="mx-auto mt-5 inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-secondary bg-secondary/8 px-6 py-3.5 font-mono text-2xl font-extrabold tracking-[0.2em] text-secondary">
             ZIMFIRST
           </div>
-          <div className="mt-6 flex flex-col gap-2">
-            <Button onClick={claim} size="lg" className="bg-primary font-display text-base font-bold uppercase tracking-wide text-primary-foreground hover:bg-primary/90">
-              Claim Offer
+          <div className="mt-7 flex flex-col gap-2">
+            <Button
+              onClick={claim}
+              size="lg"
+              className="rounded-full bg-secondary text-base font-extrabold tracking-wide text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+            >
+              Claim offer
             </Button>
-            <button onClick={() => setOpen(false)} className="text-xs text-muted-foreground hover:text-foreground">No thanks</button>
+            <button
+              onClick={() => setOpen(false)}
+              className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+            >
+              No thanks
+            </button>
           </div>
         </div>
       </DialogContent>
