@@ -9,18 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrucksRouteImport } from './routes/trucks'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PostRouteImport } from './routes/post'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as MapRouteImport } from './routes/map'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as FuelRouteImport } from './routes/fuel'
+import { Route as ExpensesRouteImport } from './routes/expenses'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BoardRouteImport } from './routes/board'
 import { Route as AiAgentRouteImport } from './routes/ai-agent'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TrucksPostRouteImport } from './routes/trucks.post'
+import { Route as PostBulkRouteImport } from './routes/post.bulk'
+import { Route as ShipmentsIdDocumentsRouteImport } from './routes/shipments.$id.documents'
 
+const TrucksRoute = TrucksRouteImport.update({
+  id: '/trucks',
+  path: '/trucks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -51,6 +62,16 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FuelRoute = FuelRouteImport.update({
+  id: '/fuel',
+  path: '/fuel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExpensesRoute = ExpensesRouteImport.update({
+  id: '/expenses',
+  path: '/expenses',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -76,6 +97,21 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrucksPostRoute = TrucksPostRouteImport.update({
+  id: '/post',
+  path: '/post',
+  getParentRoute: () => TrucksRoute,
+} as any)
+const PostBulkRoute = PostBulkRouteImport.update({
+  id: '/bulk',
+  path: '/bulk',
+  getParentRoute: () => PostRoute,
+} as any)
+const ShipmentsIdDocumentsRoute = ShipmentsIdDocumentsRouteImport.update({
+  id: '/shipments/$id/documents',
+  path: '/shipments/$id/documents',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -83,12 +119,18 @@ export interface FileRoutesByFullPath {
   '/ai-agent': typeof AiAgentRoute
   '/board': typeof BoardRoute
   '/dashboard': typeof DashboardRoute
+  '/expenses': typeof ExpensesRoute
+  '/fuel': typeof FuelRoute
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
   '/onboarding': typeof OnboardingRoute
-  '/post': typeof PostRoute
+  '/post': typeof PostRouteWithChildren
   '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
+  '/trucks': typeof TrucksRouteWithChildren
+  '/post/bulk': typeof PostBulkRoute
+  '/trucks/post': typeof TrucksPostRoute
+  '/shipments/$id/documents': typeof ShipmentsIdDocumentsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -96,12 +138,18 @@ export interface FileRoutesByTo {
   '/ai-agent': typeof AiAgentRoute
   '/board': typeof BoardRoute
   '/dashboard': typeof DashboardRoute
+  '/expenses': typeof ExpensesRoute
+  '/fuel': typeof FuelRoute
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
   '/onboarding': typeof OnboardingRoute
-  '/post': typeof PostRoute
+  '/post': typeof PostRouteWithChildren
   '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
+  '/trucks': typeof TrucksRouteWithChildren
+  '/post/bulk': typeof PostBulkRoute
+  '/trucks/post': typeof TrucksPostRoute
+  '/shipments/$id/documents': typeof ShipmentsIdDocumentsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -110,12 +158,18 @@ export interface FileRoutesById {
   '/ai-agent': typeof AiAgentRoute
   '/board': typeof BoardRoute
   '/dashboard': typeof DashboardRoute
+  '/expenses': typeof ExpensesRoute
+  '/fuel': typeof FuelRoute
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
   '/onboarding': typeof OnboardingRoute
-  '/post': typeof PostRoute
+  '/post': typeof PostRouteWithChildren
   '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
+  '/trucks': typeof TrucksRouteWithChildren
+  '/post/bulk': typeof PostBulkRoute
+  '/trucks/post': typeof TrucksPostRoute
+  '/shipments/$id/documents': typeof ShipmentsIdDocumentsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -125,12 +179,18 @@ export interface FileRouteTypes {
     | '/ai-agent'
     | '/board'
     | '/dashboard'
+    | '/expenses'
+    | '/fuel'
     | '/login'
     | '/map'
     | '/onboarding'
     | '/post'
     | '/pricing'
     | '/profile'
+    | '/trucks'
+    | '/post/bulk'
+    | '/trucks/post'
+    | '/shipments/$id/documents'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -138,12 +198,18 @@ export interface FileRouteTypes {
     | '/ai-agent'
     | '/board'
     | '/dashboard'
+    | '/expenses'
+    | '/fuel'
     | '/login'
     | '/map'
     | '/onboarding'
     | '/post'
     | '/pricing'
     | '/profile'
+    | '/trucks'
+    | '/post/bulk'
+    | '/trucks/post'
+    | '/shipments/$id/documents'
   id:
     | '__root__'
     | '/'
@@ -151,12 +217,18 @@ export interface FileRouteTypes {
     | '/ai-agent'
     | '/board'
     | '/dashboard'
+    | '/expenses'
+    | '/fuel'
     | '/login'
     | '/map'
     | '/onboarding'
     | '/post'
     | '/pricing'
     | '/profile'
+    | '/trucks'
+    | '/post/bulk'
+    | '/trucks/post'
+    | '/shipments/$id/documents'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -165,16 +237,27 @@ export interface RootRouteChildren {
   AiAgentRoute: typeof AiAgentRoute
   BoardRoute: typeof BoardRoute
   DashboardRoute: typeof DashboardRoute
+  ExpensesRoute: typeof ExpensesRoute
+  FuelRoute: typeof FuelRoute
   LoginRoute: typeof LoginRoute
   MapRoute: typeof MapRoute
   OnboardingRoute: typeof OnboardingRoute
-  PostRoute: typeof PostRoute
+  PostRoute: typeof PostRouteWithChildren
   PricingRoute: typeof PricingRoute
   ProfileRoute: typeof ProfileRoute
+  TrucksRoute: typeof TrucksRouteWithChildren
+  ShipmentsIdDocumentsRoute: typeof ShipmentsIdDocumentsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trucks': {
+      id: '/trucks'
+      path: '/trucks'
+      fullPath: '/trucks'
+      preLoaderRoute: typeof TrucksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -217,6 +300,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fuel': {
+      id: '/fuel'
+      path: '/fuel'
+      fullPath: '/fuel'
+      preLoaderRoute: typeof FuelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/expenses': {
+      id: '/expenses'
+      path: '/expenses'
+      fullPath: '/expenses'
+      preLoaderRoute: typeof ExpensesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -252,8 +349,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trucks/post': {
+      id: '/trucks/post'
+      path: '/post'
+      fullPath: '/trucks/post'
+      preLoaderRoute: typeof TrucksPostRouteImport
+      parentRoute: typeof TrucksRoute
+    }
+    '/post/bulk': {
+      id: '/post/bulk'
+      path: '/bulk'
+      fullPath: '/post/bulk'
+      preLoaderRoute: typeof PostBulkRouteImport
+      parentRoute: typeof PostRoute
+    }
+    '/shipments/$id/documents': {
+      id: '/shipments/$id/documents'
+      path: '/shipments/$id/documents'
+      fullPath: '/shipments/$id/documents'
+      preLoaderRoute: typeof ShipmentsIdDocumentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
+
+interface PostRouteChildren {
+  PostBulkRoute: typeof PostBulkRoute
+}
+
+const PostRouteChildren: PostRouteChildren = {
+  PostBulkRoute: PostBulkRoute,
+}
+
+const PostRouteWithChildren = PostRoute._addFileChildren(PostRouteChildren)
+
+interface TrucksRouteChildren {
+  TrucksPostRoute: typeof TrucksPostRoute
+}
+
+const TrucksRouteChildren: TrucksRouteChildren = {
+  TrucksPostRoute: TrucksPostRoute,
+}
+
+const TrucksRouteWithChildren =
+  TrucksRoute._addFileChildren(TrucksRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -261,13 +400,26 @@ const rootRouteChildren: RootRouteChildren = {
   AiAgentRoute: AiAgentRoute,
   BoardRoute: BoardRoute,
   DashboardRoute: DashboardRoute,
+  ExpensesRoute: ExpensesRoute,
+  FuelRoute: FuelRoute,
   LoginRoute: LoginRoute,
   MapRoute: MapRoute,
   OnboardingRoute: OnboardingRoute,
-  PostRoute: PostRoute,
+  PostRoute: PostRouteWithChildren,
   PricingRoute: PricingRoute,
   ProfileRoute: ProfileRoute,
+  TrucksRoute: TrucksRouteWithChildren,
+  ShipmentsIdDocumentsRoute: ShipmentsIdDocumentsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
