@@ -18,6 +18,7 @@ import { LoadDetailSheet } from "@/components/loads/LoadDetailSheet";
 import { MapControls } from "@/components/map/MapControls";
 import { MapStatsBar } from "@/components/map/MapStatsBar";
 import { BorderStatusPanel } from "@/components/map/BorderStatusPanel";
+import { HazardOverlay } from "@/components/map/HazardOverlay";
 import type { Load } from "@/types";
 
 // Lazy-load the heavy Leaflet map to avoid SSR issues
@@ -151,6 +152,9 @@ function MapPage() {
 
           {/* Bottom-centre: stats bar */}
           <MapStatsBar loads={filteredLoads} borders={borders} />
+
+          {/* Bottom-right: hazard overlay + report button */}
+          <HazardOverlay />
         </div>
       </div>
 

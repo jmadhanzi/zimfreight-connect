@@ -30,6 +30,7 @@ import { ZwlChart } from "@/components/dashboard/ZwlChart";
 import { ProfileCompletion } from "@/components/dashboard/ProfileCompletion";
 import { SavedCarriersWidget } from "@/components/dashboard/SavedCarriersWidget";
 import { RecurringLoadsWidget } from "@/components/dashboard/RecurringLoadsWidget";
+import { LocationShareWidget } from "@/components/dashboard/LocationShareWidget";
 import {
   useBorderStatus,
   useBrokerLoads,
@@ -189,10 +190,17 @@ function CarrierSections() {
         </div>
       </div>
 
-      <div>
-        <h3 className="font-display text-xl font-bold tracking-[-0.025em]">Saved loads</h3>
-        <div className="mt-3">
-          <SavedLoadsGrid items={saved} />
+      <div className="grid gap-6 lg:grid-cols-2">
+        <LocationShareWidget />
+        <div className="rounded-2xl border border-border/70 bg-card p-5">
+          <span className="section-kicker">Saved</span>
+          <h3 className="mt-2 font-display text-lg font-extrabold tracking-[-0.025em]">
+            Saved loads
+          </h3>
+          <p className="mt-1 text-xs text-muted-foreground">Loads you bookmarked from the board.</p>
+          <div className="mt-3">
+            <SavedLoadsGrid items={saved} />
+          </div>
         </div>
       </div>
     </section>

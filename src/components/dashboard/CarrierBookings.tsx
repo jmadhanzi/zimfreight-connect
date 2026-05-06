@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 import { toast } from "sonner";
 import type { BookingRow } from "@/hooks/useDashboard";
+import { PodUploadButton } from "@/components/bookings/PodUploadButton";
 
 const STATUS_LABEL: Record<string, string> = {
   pending: "Pending",
@@ -104,13 +105,18 @@ export function CarrierBookings({
                   </span>
                 </td>
                 <td className="px-3 py-3">
-                  <div className="flex justify-end gap-1">
+                  <div className="flex flex-wrap justify-end gap-1.5">
+                    {(b.status === "en_route" ||
+                      b.status === "delivered" ||
+                      b.status === "payment_pending" ||
+                      b.status === "paid") && <PodUploadButton bookingId={b.id} />}
                     {b.status !== "delivered" && b.status !== "paid" && (
                       <Button
                         size="sm"
                         variant="outline"
                         disabled={busy === b.id}
                         onClick={() => update(b.id, "delivered")}
+                        className="rounded-full"
                       >
                         <CheckCircle2 className="mr-1 h-3.5 w-3.5" /> Delivered
                       </Button>
@@ -118,7 +124,7 @@ export function CarrierBookings({
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                      className="rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                       onClick={() => update(b.id, "cancelled")}
                       disabled={busy === b.id}
                     >
