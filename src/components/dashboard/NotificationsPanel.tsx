@@ -27,45 +27,79 @@ export function NotificationBell() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <button className="relative inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground" aria-label="Notifications">
-          <Bell className="h-5 w-5" />
+        <button
+          className="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          aria-label="Notifications"
+        >
+          <Bell className="h-4.5 w-4.5" strokeWidth={2.2} />
           {unread > 0 && (
-            <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-bold text-primary-foreground">
+            <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-secondary px-1 font-mono text-[9px] font-bold text-secondary-foreground shadow-[0_0_0_2px_var(--background)]">
               {unread > 9 ? "9+" : unread}
             </span>
           )}
         </button>
       </SheetTrigger>
-      <SheetContent className="w-full max-w-md">
-        <SheetHeader>
+      <SheetContent className="w-full max-w-md p-0">
+        <span
+          aria-hidden
+          className="block h-1 w-full bg-gradient-to-r from-secondary via-primary to-secondary"
+        />
+        <SheetHeader className="border-b border-border p-5">
           <div className="flex items-center justify-between">
-            <SheetTitle className="font-display text-xl uppercase tracking-tight">Notifications</SheetTitle>
+            <div>
+              <span className="section-kicker">Updates</span>
+              <SheetTitle className="mt-2 font-display text-2xl font-extrabold tracking-[-0.03em]">
+                Notifications
+              </SheetTitle>
+            </div>
             {unread > 0 && (
-              <Button variant="ghost" size="sm" className="text-xs" onClick={markAllRead}>Mark all as read</Button>
+              <Button variant="ghost" size="sm" className="text-xs" onClick={markAllRead}>
+                Mark all read
+              </Button>
             )}
           </div>
         </SheetHeader>
 
         {items.length === 0 ? (
-          <div className="mt-10 text-center text-sm text-muted-foreground">You're all caught up.</div>
+          <div className="px-5 py-12 text-center">
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+              All caught up
+            </p>
+            <p className="mt-1 text-sm text-foreground/70">No new notifications.</p>
+          </div>
         ) : (
-          <ul className="mt-4 divide-y divide-border">
+          <ul className="divide-y divide-border">
             {items.map((n) => {
               const Icon = ICON[n.type] ?? Bell;
               const unreadFlag = !n.read_at;
               return (
                 <li key={n.id}>
-                  <button onClick={() => open(n)} className={`flex w-full gap-3 px-1 py-3 text-left transition-colors hover:bg-secondary/40 ${unreadFlag ? "" : "opacity-70"}`}>
-                    <div className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${unreadFlag ? "bg-primary/15 text-primary" : "bg-secondary text-muted-foreground"}`}>
+                  <button
+                    onClick={() => open(n)}
+                    className={`group flex w-full gap-3 px-5 py-3.5 text-left transition-colors hover:bg-muted/40 ${unreadFlag ? "" : "opacity-65"}`}
+                  >
+                    <div
+                      className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-colors ${
+                        unreadFlag
+                          ? "bg-secondary/15 text-secondary"
+                          : "bg-muted text-muted-foreground"
+                      }`}
+                    >
                       <Icon className="h-4 w-4" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-foreground">{n.title}</span>
-                        {unreadFlag && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
+                        <span className="font-display text-sm font-bold tracking-tight text-foreground">
+                          {n.title}
+                        </span>
+                        {unreadFlag && <span className="h-1.5 w-1.5 rounded-full bg-secondary" />}
                       </div>
-                      {n.body && <div className="mt-0.5 truncate text-xs text-muted-foreground">{n.body}</div>}
-                      <div className="mt-1 text-[10px] uppercase tracking-widest text-muted-foreground">
+                      {n.body && (
+                        <div className="mt-0.5 truncate text-xs text-muted-foreground">
+                          {n.body}
+                        </div>
+                      )}
+                      <div className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/70">
                         {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
                       </div>
                     </div>

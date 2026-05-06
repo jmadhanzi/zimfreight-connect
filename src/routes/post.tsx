@@ -484,16 +484,20 @@ function PostLoadPage() {
 
       {/* Draft prompt */}
       {showDraftPrompt && (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-primary/30 bg-primary/10 p-3 text-sm">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-secondary/30 bg-secondary/[0.06] px-4 py-3 text-sm">
           <span>
             You have an unsaved draft from{" "}
-            <span className="font-semibold text-primary">{draftAge}</span>. Continue?
+            <span className="font-bold text-foreground">{draftAge}</span>. Continue?
           </span>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" onClick={discardDraft}>
+            <Button size="sm" variant="outline" onClick={discardDraft} className="rounded-full">
               Start fresh
             </Button>
-            <Button size="sm" className="bg-primary text-primary-foreground" onClick={loadDraft}>
+            <Button
+              size="sm"
+              className="rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
+              onClick={loadDraft}
+            >
               Yes, continue
             </Button>
           </div>
@@ -509,7 +513,7 @@ function PostLoadPage() {
         {/* Nav */}
         <div className="mt-6 flex items-center justify-between gap-3 md:static fixed inset-x-0 bottom-16 z-30 border-t border-border bg-background/95 px-4 py-3 backdrop-blur md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
           {step > 0 ? (
-            <Button type="button" variant="outline" onClick={back}>
+            <Button type="button" variant="outline" onClick={back} className="rounded-full">
               <ArrowLeft className="mr-1.5 h-4 w-4" /> Back
             </Button>
           ) : (
@@ -519,7 +523,7 @@ function PostLoadPage() {
             <Button
               type="button"
               onClick={next}
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
+              className="rounded-full bg-secondary px-6 font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
             >
               Continue <ArrowRight className="ml-1.5 h-4 w-4" />
             </Button>
@@ -527,7 +531,7 @@ function PostLoadPage() {
             <Button
               type="submit"
               disabled={submitting}
-              className="bg-primary px-6 text-base font-bold text-primary-foreground hover:bg-primary/90"
+              className="rounded-full bg-secondary px-8 text-base font-extrabold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
             >
               {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               <Truck className="mr-2 h-4 w-4" /> Post load now
@@ -620,8 +624,13 @@ function StepRoute({ form }: StepFormProps) {
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
       {/* LEFT */}
-      <div className="space-y-4 rounded-lg border border-border bg-card p-5">
-        <div className="grid gap-4 md:grid-cols-2">
+      <div className="rounded-2xl border border-border/70 bg-card p-6">
+        <span className="section-kicker">Where</span>
+        <h2 className="mt-2 font-display text-xl font-extrabold tracking-[-0.025em]">
+          Route &amp; pickup
+        </h2>
+        <p className="mt-1 text-xs text-muted-foreground">Tell us where the load needs to go.</p>
+        <div className="mt-5 grid gap-4 md:grid-cols-2">
           <Field label="Origin" error={errs.origin?.message}>
             <CityCombobox
               value={origin}
@@ -649,68 +658,82 @@ function StepRoute({ form }: StepFormProps) {
       </div>
 
       {/* RIGHT — Live preview */}
-      <aside className="space-y-3 rounded-lg border border-primary/20 bg-gradient-to-b from-primary/5 to-card p-5">
-        <div className="font-mono text-[10px] uppercase tracking-widest text-primary">
-          Live route preview
+      <aside className="relative space-y-3 overflow-hidden rounded-2xl border border-secondary/25 bg-gradient-to-br from-secondary/[0.06] via-card to-card p-5">
+        <span
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+        />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-secondary/15 blur-2xl"
+        />
+        <div className="relative flex items-center gap-2">
+          <span className="dot-live" />
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-foreground">
+            Live route preview
+          </span>
         </div>
         {intel ? (
-          <>
-            <div className="font-display text-2xl font-black uppercase leading-tight">
-              {origin} → {destination}
+          <div className="relative space-y-3">
+            <div className="font-display text-2xl font-extrabold leading-tight tracking-[-0.025em]">
+              {origin} <ArrowRight className="inline h-5 w-5 text-secondary" /> {destination}
             </div>
             <div className="flex flex-wrap items-center gap-1.5">
-              <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary">
-                via {intel.highway}
-              </Badge>
-              <Badge variant="outline">{intel.distance} km</Badge>
-              <Badge variant="outline">
-                <Clock className="mr-1 h-3 w-3" /> ~{Math.round((intel.distance / 80) * 10) / 10}h
-                drive
-              </Badge>
+              <span className="glass-chip glass-chip-amber uppercase">via {intel.highway}</span>
+              <span className="glass-chip uppercase">{intel.distance} km</span>
+              <span className="glass-chip uppercase">
+                <Clock className="h-3 w-3" /> ~{Math.round((intel.distance / 80) * 10) / 10}h
+              </span>
             </div>
-            <div className="rounded-md border border-border bg-background/50 p-3">
-              <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            <div className="rounded-xl border border-border bg-background/50 p-3">
+              <div className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                 Market rate
               </div>
-              <div className="mt-0.5 font-display text-2xl font-black text-primary">
-                {formatUSD(intel.low)} – {formatUSD(intel.high)}
+              <div className="mt-1 font-display text-2xl font-black tracking-[-0.03em] text-foreground">
+                {formatUSD(intel.low)} <span className="text-muted-foreground">–</span>{" "}
+                {formatUSD(intel.high)}
               </div>
               <div className="font-mono-num text-xs text-muted-foreground">
                 ≈ ${(intel.avg / intel.distance).toFixed(2)}/km average
               </div>
             </div>
-            <div className="rounded-md border border-border bg-background/50 p-3">
-              <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            <div className="rounded-xl border border-border bg-background/50 p-3">
+              <div className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                 <Fuel className="h-3 w-3" /> Fuel estimate
               </div>
-              <div className="font-mono-num text-sm text-foreground">
+              <div className="mt-1 font-mono-num text-sm font-semibold text-foreground">
                 ~{Math.round(intel.distance * 0.1)}L diesel (~${Math.round(intel.distance * 0.16)})
               </div>
             </div>
             {cross && (
-              <div className="rounded-md border border-destructive/40 bg-destructive/10 p-3 text-destructive">
-                <div className="flex items-center gap-1.5 text-xs font-bold uppercase">
+              <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-destructive">
+                <div className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em]">
                   <AlertTriangle className="h-3.5 w-3.5" /> Cross-border
                 </div>
-                <div className="mt-0.5 text-xs">
+                <div className="mt-1 text-xs">
                   ZIMRA documents required. Carriers must be ZIMRA-registered.
                 </div>
               </div>
             )}
             {(origin === "Beitbridge" || destination === "Beitbridge") && (
-              <div className="rounded-md border border-[color:var(--zim-yellow)]/40 bg-[color:var(--zim-yellow)]/10 p-3">
-                <div className="font-mono text-[10px] uppercase tracking-widest text-[color:var(--zim-yellow)]">
+              <div className="rounded-xl border border-[color:var(--zim-yellow)]/30 bg-[color:var(--zim-yellow)]/10 p-3">
+                <div className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[color-mix(in_oklab,var(--zim-yellow)_70%,var(--foreground))]">
                   Beit Bridge wait
                 </div>
-                <div className="font-mono-num text-sm text-foreground">
+                <div className="mt-1 font-mono-num text-sm font-semibold text-foreground">
                   ~2.5 hours · last updated 2 min ago
                 </div>
               </div>
             )}
-          </>
+          </div>
         ) : (
-          <div className="rounded-md border border-dashed border-border p-6 text-center text-xs text-muted-foreground">
-            Pick origin and destination to see live route intelligence.
+          <div className="relative rounded-xl border border-dashed border-border bg-background/30 p-6 text-center">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+              Pick a route
+            </p>
+            <p className="mt-1 text-xs text-foreground/70">
+              Choose origin and destination to see live route intelligence.
+            </p>
           </div>
         )}
       </aside>
@@ -724,96 +747,118 @@ function StepCargo({ form }: StepFormProps) {
   const errs = form.formState.errors;
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-      <div className="space-y-5 rounded-lg border border-border bg-card p-5">
-        <div>
-          <Label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            Load type
-          </Label>
-          <IconGrid
-            value={form.watch("load_type")}
-            onChange={(v) => form.setValue("load_type", v, { shouldValidate: true })}
-            options={LOAD_TYPES_RICH}
-          />
-          {errs.load_type && (
-            <p className="mt-1 text-xs text-destructive">{errs.load_type.message}</p>
-          )}
-        </div>
-        <div>
-          <Label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            Equipment required
-          </Label>
-          <IconGrid
-            value={form.watch("equipment_required")}
-            onChange={(v) => form.setValue("equipment_required", v, { shouldValidate: true })}
-            options={EQUIPMENT_RICH}
-          />
-          {errs.equipment_required && (
-            <p className="mt-1 text-xs text-destructive">{errs.equipment_required.message}</p>
-          )}
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <Field label="Weight (tonnes)" error={errs.weight_tonnes?.message}>
-            <Controller
-              control={form.control}
-              name="weight_tonnes"
-              render={({ field }) => (
-                <div className="space-y-2">
-                  <Input
-                    type="number"
-                    step="0.5"
-                    min={0.5}
-                    max={60}
-                    value={(field.value as number | string | undefined) ?? ""}
-                    onChange={(e) =>
-                      field.onChange(e.target.value === "" ? "" : Number(e.target.value))
-                    }
+      <div className="rounded-2xl border border-border/70 bg-card p-6">
+        <span className="section-kicker">What</span>
+        <h2 className="mt-2 font-display text-xl font-extrabold tracking-[-0.025em]">
+          Cargo &amp; equipment
+        </h2>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Pick the closest match so the right carriers find you.
+        </p>
+        <div className="mt-5 space-y-5">
+          <div>
+            <Label className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+              Load type
+            </Label>
+            <IconGrid
+              value={form.watch("load_type")}
+              onChange={(v) => form.setValue("load_type", v, { shouldValidate: true })}
+              options={LOAD_TYPES_RICH}
+            />
+            {errs.load_type && (
+              <p className="mt-1 text-xs text-destructive">{errs.load_type.message}</p>
+            )}
+          </div>
+          <div>
+            <Label className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+              Equipment required
+            </Label>
+            <IconGrid
+              value={form.watch("equipment_required")}
+              onChange={(v) => form.setValue("equipment_required", v, { shouldValidate: true })}
+              options={EQUIPMENT_RICH}
+            />
+            {errs.equipment_required && (
+              <p className="mt-1 text-xs text-destructive">{errs.equipment_required.message}</p>
+            )}
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <Field label="Weight (tonnes)" error={errs.weight_tonnes?.message}>
+              <Controller
+                control={form.control}
+                name="weight_tonnes"
+                render={({ field }) => (
+                  <div className="space-y-2">
+                    <Input
+                      type="number"
+                      step="0.5"
+                      min={0.5}
+                      max={60}
+                      value={(field.value as number | string | undefined) ?? ""}
+                      onChange={(e) =>
+                        field.onChange(e.target.value === "" ? "" : Number(e.target.value))
+                      }
+                    />
+                    <Slider
+                      min={0.5}
+                      max={60}
+                      step={0.5}
+                      value={[Number(field.value) || 0.5]}
+                      onValueChange={([v]) => field.onChange(v)}
+                    />
+                  </div>
+                )}
+              />
+            </Field>
+            <Field label="Number of loads" error={errs.num_loads?.message}>
+              <Controller
+                control={form.control}
+                name="num_loads"
+                render={({ field }) => (
+                  <Stepper2
+                    value={Number(field.value) || 1}
+                    onChange={field.onChange}
+                    min={1}
+                    max={50}
                   />
-                  <Slider
-                    min={0.5}
-                    max={60}
-                    step={0.5}
-                    value={[Number(field.value) || 0.5]}
-                    onValueChange={([v]) => field.onChange(v)}
-                  />
-                </div>
-              )}
-            />
-          </Field>
-          <Field label="Number of loads" error={errs.num_loads?.message}>
-            <Controller
-              control={form.control}
-              name="num_loads"
-              render={({ field }) => (
-                <Stepper2
-                  value={Number(field.value) || 1}
-                  onChange={field.onChange}
-                  min={1}
-                  max={50}
-                />
-              )}
-            />
-          </Field>
-          <Field label="Commodity value (USD, optional)" className="md:col-span-2">
-            <Input
-              type="number"
-              min={0}
-              placeholder="e.g. 24000"
-              {...form.register("commodity_value")}
-            />
-          </Field>
+                )}
+              />
+            </Field>
+            <Field label="Commodity value (USD, optional)" className="md:col-span-2">
+              <Input
+                type="number"
+                min={0}
+                placeholder="e.g. 24000"
+                {...form.register("commodity_value")}
+              />
+            </Field>
+          </div>
         </div>
       </div>
-      <aside className="space-y-3 rounded-lg border border-primary/20 bg-gradient-to-b from-primary/5 to-card p-5">
-        <div className="font-mono text-[10px] uppercase tracking-widest text-primary">
-          Cargo tips
+      <aside className="relative space-y-3 overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.04] via-card to-card p-5">
+        <span
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-primary/60 via-primary to-primary/60"
+        />
+        <div className="relative">
+          <span className="section-kicker">Cargo tips</span>
         </div>
-        <ul className="space-y-2 text-xs text-muted-foreground">
-          <li>• Pick the closest match — carriers filter by load type and equipment.</li>
-          <li>
-            • Multi-load postings (2+) get a "fleet" badge and reach owner-operators with multiple
-            trucks.
+        <ul className="relative space-y-2.5 text-xs text-muted-foreground">
+          <li className="flex items-start gap-2">
+            <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-primary" />
+            <span>Pick the closest match — carriers filter by load type and equipment.</span>
           </li>
-          <li>• Commodity value is private. Used only for insurance estimates.</li>
+          <li className="flex items-start gap-2">
+            <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-primary" />
+            <span>
+              Multi-load postings (2+) get a &ldquo;fleet&rdquo; badge and reach owner-operators
+              with multiple trucks.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-primary" />
+            <span>Commodity value is private. Used only for insurance estimates.</span>
+          </li>
         </ul>
       </aside>
     </div>
@@ -835,109 +880,136 @@ function StepRateDate({ form }: StepFormProps) {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
-      <div className="space-y-5 rounded-lg border border-border bg-card p-5">
-        <div className="grid gap-4 md:grid-cols-2">
-          <Field label="Pickup date" error={errs.pickup_date?.message}>
-            <Controller
-              control={form.control}
-              name="pickup_date"
-              render={({ field }) => (
-                <DateField value={field.value} onChange={field.onChange} minDate={new Date()} />
-              )}
-            />
-          </Field>
-          <Field label="Delivery deadline" error={errs.delivery_deadline?.message}>
-            <Controller
-              control={form.control}
-              name="delivery_deadline"
-              render={({ field }) => (
-                <DateField
-                  value={field.value}
-                  onChange={field.onChange}
-                  minDate={pickup ? new Date(pickup) : new Date()}
-                />
-              )}
-            />
-          </Field>
-        </div>
-        <label className="flex items-center justify-between rounded-md border border-border bg-background/40 px-3 py-2.5">
-          <span className="text-sm">
-            Flexible dates <span className="text-muted-foreground">(±1 day)</span>
-          </span>
-          <Controller
-            control={form.control}
-            name="flexible_dates"
-            render={({ field }) => (
-              <Switch checked={!!field.value} onCheckedChange={field.onChange} />
-            )}
-          />
-        </label>
-
-        <div>
-          <Label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            Payment terms
-          </Label>
-          <div className="mt-2 grid grid-cols-2 gap-1.5">
-            {PAYMENT_OPTIONS.map((p) => {
-              const active = form.watch("payment_terms") === p.value;
-              return (
-                <button
-                  key={p.value}
-                  type="button"
-                  onClick={() => form.setValue("payment_terms", p.value, { shouldValidate: true })}
-                  className={cn(
-                    "flex items-center gap-1.5 rounded-md border px-2.5 py-2 text-left text-xs transition",
-                    active
-                      ? "border-primary bg-primary/10 text-foreground"
-                      : "border-border bg-background/40 hover:border-primary/40",
-                  )}
-                >
-                  <span>{p.icon}</span>
-                  <span className="leading-tight">{p.label}</span>
-                </button>
-              );
-            })}
+      <div className="rounded-2xl border border-border/70 bg-card p-6">
+        <span className="section-kicker">When &amp; how</span>
+        <h2 className="mt-2 font-display text-xl font-extrabold tracking-[-0.025em]">
+          Schedule &amp; payment
+        </h2>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Set your dates and how you want to be paid.
+        </p>
+        <div className="mt-5 space-y-5">
+          <div className="grid gap-4 md:grid-cols-2">
+            <Field label="Pickup date" error={errs.pickup_date?.message}>
+              <Controller
+                control={form.control}
+                name="pickup_date"
+                render={({ field }) => (
+                  <DateField value={field.value} onChange={field.onChange} minDate={new Date()} />
+                )}
+              />
+            </Field>
+            <Field label="Delivery deadline" error={errs.delivery_deadline?.message}>
+              <Controller
+                control={form.control}
+                name="delivery_deadline"
+                render={({ field }) => (
+                  <DateField
+                    value={field.value}
+                    onChange={field.onChange}
+                    minDate={pickup ? new Date(pickup) : new Date()}
+                  />
+                )}
+              />
+            </Field>
           </div>
-          {errs.payment_terms && (
-            <p className="mt-1 text-xs text-destructive">{errs.payment_terms.message}</p>
-          )}
-        </div>
+          <label className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3 transition-colors hover:bg-muted/30">
+            <span className="text-sm">
+              <span className="font-semibold text-foreground">Flexible dates</span>{" "}
+              <span className="text-muted-foreground">(±1 day)</span>
+            </span>
+            <Controller
+              control={form.control}
+              name="flexible_dates"
+              render={({ field }) => (
+                <Switch checked={!!field.value} onCheckedChange={field.onChange} />
+              )}
+            />
+          </label>
 
-        <label className="flex cursor-pointer items-start justify-between gap-3 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2.5">
-          <span className="text-sm">
-            <span className="flex items-center gap-1.5 font-bold text-destructive">
-              <Flame className="h-3.5 w-3.5" /> Mark as URGENT
-            </span>
-            <span className="text-xs text-muted-foreground">
-              Boost visibility — $5 extra · pinned to top
-            </span>
-          </span>
-          <Controller
-            control={form.control}
-            name="is_urgent"
-            render={({ field }) => (
-              <Switch checked={!!field.value} onCheckedChange={field.onChange} />
+          <div>
+            <Label className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+              Payment terms
+            </Label>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              {PAYMENT_OPTIONS.map((p) => {
+                const active = form.watch("payment_terms") === p.value;
+                return (
+                  <button
+                    key={p.value}
+                    type="button"
+                    onClick={() =>
+                      form.setValue("payment_terms", p.value, { shouldValidate: true })
+                    }
+                    className={cn(
+                      "relative flex items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-xs transition-all",
+                      active
+                        ? "border-secondary/50 bg-secondary/[0.06] text-foreground shadow-[0_0_0_1px_color-mix(in_oklab,var(--secondary)_30%,transparent)]"
+                        : "border-border bg-card hover:border-foreground/15 hover:bg-muted/40",
+                    )}
+                  >
+                    <span className="text-base leading-none">{p.icon}</span>
+                    <span className="font-medium leading-tight">{p.label}</span>
+                    {active && (
+                      <span
+                        aria-hidden
+                        className="absolute right-2 top-2 flex h-3 w-3 items-center justify-center rounded-full bg-secondary text-secondary-foreground"
+                      >
+                        <Check className="h-2 w-2" strokeWidth={4} />
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            {errs.payment_terms && (
+              <p className="mt-1 text-xs text-destructive">{errs.payment_terms.message}</p>
             )}
-          />
-        </label>
+          </div>
 
-        <Field label="Special notes">
-          <Textarea
-            rows={3}
-            maxLength={500}
-            placeholder="Any handling instructions, paperwork, or contact preferences"
-            {...form.register("notes")}
-          />
-        </Field>
+          <label className="flex cursor-pointer items-start justify-between gap-3 rounded-xl border border-destructive/30 bg-destructive/[0.05] px-4 py-3">
+            <span className="text-sm">
+              <span className="flex items-center gap-1.5 font-display font-bold text-destructive">
+                <Flame className="h-3.5 w-3.5" /> Mark as URGENT
+              </span>
+              <span className="mt-0.5 block text-xs text-muted-foreground">
+                Boost visibility — $5 extra &middot; pinned to top
+              </span>
+            </span>
+            <Controller
+              control={form.control}
+              name="is_urgent"
+              render={({ field }) => (
+                <Switch checked={!!field.value} onCheckedChange={field.onChange} />
+              )}
+            />
+          </label>
+
+          <Field label="Special notes">
+            <Textarea
+              rows={3}
+              maxLength={500}
+              placeholder="Any handling instructions, paperwork, or contact preferences"
+              {...form.register("notes")}
+            />
+          </Field>
+        </div>
       </div>
 
-      <aside className="space-y-4 rounded-lg border border-primary/20 bg-gradient-to-b from-primary/5 to-card p-5">
-        <div>
-          <div className="font-mono text-[10px] uppercase tracking-widest text-primary">
-            Set your rate
-          </div>
-          <div className="relative mt-1">
-            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-display text-xl font-bold text-muted-foreground">
+      <aside className="relative space-y-4 overflow-hidden rounded-2xl border border-secondary/25 bg-gradient-to-br from-secondary/[0.06] via-card to-card p-5">
+        <span
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+        />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-secondary/15 blur-2xl"
+        />
+
+        <div className="relative">
+          <span className="section-kicker">Set your rate</span>
+          <div className="relative mt-3">
+            <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 font-mono text-2xl font-bold text-muted-foreground">
               $
             </span>
             <Input
@@ -945,7 +1017,7 @@ function StepRateDate({ form }: StepFormProps) {
               step={50}
               min={50}
               placeholder="1200"
-              className="h-14 pl-8 font-display !text-2xl font-black text-primary"
+              className="h-16 pl-9 font-display !text-3xl font-black tracking-[-0.025em] text-foreground"
               {...form.register("rate_usd")}
             />
           </div>
@@ -955,13 +1027,13 @@ function StepRateDate({ form }: StepFormProps) {
         </div>
 
         {intel && (
-          <>
+          <div className="relative space-y-3">
             <MarketGauge zone={zone} />
-            <div className="rounded-md border border-border bg-background/50 p-3">
-              <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                Market rates · last 30 days
+            <div className="rounded-xl border border-border bg-background/50 p-3">
+              <div className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                Market rates &middot; last 30 days
               </div>
-              <div className="mt-1 grid grid-cols-3 gap-2 text-center">
+              <div className="mt-2 grid grid-cols-3 gap-2 text-center">
                 <Stat label="Low" value={formatUSD(intel.low)} />
                 <Stat label="Avg" value={formatUSD(intel.avg)} accent />
                 <Stat label="High" value={formatUSD(intel.high)} />
@@ -974,10 +1046,10 @@ function StepRateDate({ form }: StepFormProps) {
                 onClick={() =>
                   form.setValue("rate_usd", Math.round(intel.avg * 0.96), { shouldValidate: true })
                 }
-                className="flex w-full items-center justify-between rounded-md border border-[color:var(--success)]/30 bg-[color:var(--success)]/10 px-3 py-2 text-left text-sm hover:bg-[color:var(--success)]/15"
+                className="flex w-full items-center justify-between rounded-xl border border-[color:var(--success)]/30 bg-[color:var(--success)]/[0.06] px-3 py-2.5 text-left text-sm transition-colors hover:bg-[color:var(--success)]/12"
               >
-                <span>
-                  <Sparkles className="mr-1.5 inline h-3.5 w-3.5 text-[color:var(--success)]" />{" "}
+                <span className="flex items-center gap-1.5 font-medium">
+                  <Sparkles className="h-3.5 w-3.5 text-[color:var(--success)]" />
                   Faster booking
                 </span>
                 <span className="font-display font-bold text-[color:var(--success)]">
@@ -989,18 +1061,18 @@ function StepRateDate({ form }: StepFormProps) {
                 onClick={() =>
                   form.setValue("rate_usd", Math.round(intel.high * 0.95), { shouldValidate: true })
                 }
-                className="flex w-full items-center justify-between rounded-md border border-[color:var(--zim-yellow)]/30 bg-[color:var(--zim-yellow)]/10 px-3 py-2 text-left text-sm hover:bg-[color:var(--zim-yellow)]/15"
+                className="flex w-full items-center justify-between rounded-xl border border-[color:var(--zim-yellow)]/30 bg-[color:var(--zim-yellow)]/[0.06] px-3 py-2.5 text-left text-sm transition-colors hover:bg-[color:var(--zim-yellow)]/12"
               >
-                <span>
-                  <Flame className="mr-1.5 inline h-3.5 w-3.5 text-[color:var(--zim-yellow)]" />{" "}
+                <span className="flex items-center gap-1.5 font-medium">
+                  <Flame className="h-3.5 w-3.5 text-[color:var(--zim-yellow)]" />
                   Attract urgent bookings
                 </span>
-                <span className="font-display font-bold text-[color:var(--zim-yellow)]">
+                <span className="font-display font-bold text-[color-mix(in_oklab,var(--zim-yellow)_70%,var(--foreground))]">
                   {formatUSD(Math.round(intel.high * 0.95))}
                 </span>
               </button>
             </div>
-          </>
+          </div>
         )}
       </aside>
     </div>
@@ -1018,18 +1090,23 @@ function StepReview({ form, onEdit }: StepFormProps & { onEdit: (step: number) =
     <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
       <div className="space-y-5">
         {/* Review summary */}
-        <div className="rounded-lg border border-primary/30 bg-primary/5 p-5">
-          <div className="flex items-center justify-between gap-3">
-            <div className="font-mono text-[10px] uppercase tracking-widest text-primary">
-              Review your load
-            </div>
-            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-              Tap a section to edit
+        <div className="relative overflow-hidden rounded-2xl border border-secondary/30 bg-gradient-to-br from-secondary/[0.06] via-card to-card p-6">
+          <span
+            aria-hidden
+            className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+          />
+          <div className="relative flex items-center justify-between gap-3">
+            <span className="section-kicker">Review</span>
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Tap any row to edit
             </span>
           </div>
-          <div className="mt-3 space-y-2">
+          <h2 className="relative mt-2 font-display text-xl font-extrabold tracking-[-0.025em]">
+            Final check before posting
+          </h2>
+          <div className="relative mt-5 space-y-2">
             <ReviewRow label="Route" onEdit={() => onEdit(0)}>
-              <span className="font-display text-base font-black">
+              <span className="font-display text-base font-extrabold tracking-tight">
                 {v.origin || "—"} → {v.destination || "—"}
               </span>
               {intel?.distance && (
@@ -1039,7 +1116,7 @@ function StepReview({ form, onEdit }: StepFormProps & { onEdit: (step: number) =
               )}
             </ReviewRow>
             <ReviewRow label="Cargo" onEdit={() => onEdit(1)}>
-              <span>{v.load_type || "—"}</span>
+              <span className="font-medium">{v.load_type || "—"}</span>
               <span className="text-muted-foreground"> · {v.equipment_required || "—"}</span>
               <span className="text-muted-foreground">
                 {" "}
@@ -1047,36 +1124,36 @@ function StepReview({ form, onEdit }: StepFormProps & { onEdit: (step: number) =
               </span>
             </ReviewRow>
             <ReviewRow label="Rate" onEdit={() => onEdit(2)}>
-              <span className="font-display text-base font-black text-primary">
+              <span className="font-display text-base font-extrabold tracking-tight text-foreground">
                 {v.rate_usd ? formatUSD(Number(v.rate_usd)) : "—"}
               </span>
               <span className="text-muted-foreground"> · {v.payment_terms || "—"}</span>
               {v.is_urgent && (
-                <Badge className="ml-2 border-0 bg-destructive text-[10px] uppercase text-destructive-foreground">
-                  Urgent
-                </Badge>
+                <span className="glass-chip glass-chip-danger ml-2 uppercase">
+                  <Flame className="h-3 w-3" /> Urgent
+                </span>
               )}
             </ReviewRow>
             <ReviewRow label="Pickup" onEdit={() => onEdit(2)}>
-              <span>{v.pickup_date || "—"}</span>
+              <span className="font-medium">{v.pickup_date || "—"}</span>
               {v.delivery_deadline && (
                 <span className="text-muted-foreground"> → {v.delivery_deadline}</span>
               )}
-              {v.flexible_dates && (
-                <Badge variant="outline" className="ml-2 text-[10px]">
-                  Flex ±1d
-                </Badge>
-              )}
+              {v.flexible_dates && <span className="glass-chip ml-2 uppercase">Flex ±1d</span>}
             </ReviewRow>
           </div>
         </div>
 
         {/* Contact + distribution */}
-        <div className="space-y-5 rounded-lg border border-border bg-card p-5">
-          <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            Contact details
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-2xl border border-border/70 bg-card p-6">
+          <span className="section-kicker">Reach</span>
+          <h2 className="mt-2 font-display text-xl font-extrabold tracking-[-0.025em]">
+            Contact &amp; distribution
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Where carriers will reach you, and how widely we share your post.
+          </p>
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
             <Field label="Company name" error={errs.company_name?.message}>
               <Input maxLength={120} {...form.register("company_name")} />
             </Field>
@@ -1094,8 +1171,8 @@ function StepReview({ form, onEdit }: StepFormProps & { onEdit: (step: number) =
             </Field>
           </div>
 
-          <div className="space-y-2">
-            <Label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          <div className="mt-6 space-y-2">
+            <Label className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
               Distribution
             </Label>
             <ShareRow
@@ -1138,33 +1215,41 @@ function StepReview({ form, onEdit }: StepFormProps & { onEdit: (step: number) =
         </div>
       </div>
 
-      <aside className="space-y-3 rounded-lg border border-primary/20 bg-gradient-to-b from-primary/5 to-card p-5">
-        <div className="font-mono text-[10px] uppercase tracking-widest text-primary">
-          Load preview
+      <aside className="relative space-y-3 overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.04] via-card to-card p-5">
+        <span
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-primary/60 via-primary to-primary/60"
+        />
+        <div className="relative">
+          <span className="section-kicker">Preview</span>
+          <p className="mt-1 text-[11px] text-muted-foreground">
+            How carriers will see your load on the board.
+          </p>
         </div>
-        <div className="rounded-md border border-border bg-background/60 p-3">
-          <div className="font-display text-lg font-black uppercase leading-tight">
-            {v.origin || "—"} → {v.destination || "—"}
+        <div className="relative rounded-xl border border-border bg-background/60 p-4">
+          <div className="flex items-center gap-1.5 font-display text-base font-extrabold leading-tight tracking-[-0.025em]">
+            <span className="truncate">{v.origin || "—"}</span>
+            <ArrowRight className="h-3.5 w-3.5 shrink-0 text-secondary" />
+            <span className="truncate">{v.destination || "—"}</span>
           </div>
-          <div className="mt-0.5 flex flex-wrap items-center gap-1 font-mono text-[10px] text-muted-foreground">
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
             {intel?.highway && (
-              <span className="rounded bg-card px-1.5 py-0.5 text-foreground/80">
+              <span className="rounded-full bg-card px-2 py-0.5 font-mono text-[10px] font-semibold tracking-[0.04em] text-foreground/70">
                 {intel.highway}
               </span>
             )}
-            {intel?.distance && <span>{intel.distance}km</span>}
+            {intel?.distance && (
+              <span className="font-mono text-[10px] font-semibold text-muted-foreground">
+                {intel.distance}km
+              </span>
+            )}
             {v.is_urgent && (
-              <Badge className="border-0 bg-destructive text-[10px] uppercase text-destructive-foreground">
-                Urgent
-              </Badge>
+              <span className="glass-chip glass-chip-danger uppercase">
+                <Flame className="h-3 w-3" /> Urgent
+              </span>
             )}
             {isCrossBorder(v.origin, v.destination) && (
-              <Badge
-                variant="outline"
-                className="border-[color:var(--info)]/40 text-[color:var(--info)]"
-              >
-                Border
-              </Badge>
+              <span className="glass-chip glass-chip-info uppercase">Border</span>
             )}
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
@@ -1179,9 +1264,9 @@ function StepReview({ form, onEdit }: StepFormProps & { onEdit: (step: number) =
             <Cell label="Rate" value={v.rate_usd ? formatUSD(Number(v.rate_usd)) : "—"} accent />
           </div>
         </div>
-        <div className="rounded-md border border-[color:var(--success)]/30 bg-[color:var(--success)]/10 p-3 text-xs text-foreground">
-          <ShieldCheck className="mr-1 inline h-3.5 w-3.5 text-[color:var(--success)]" /> Your
-          contact details are only revealed to verified Basic+ carriers.
+        <div className="relative rounded-xl border border-[color:var(--success)]/25 bg-[color:var(--success)]/[0.06] p-3 text-xs text-foreground">
+          <ShieldCheck className="mr-1.5 inline h-3.5 w-3.5 text-[color:var(--success)]" />
+          Your contact details are only revealed to verified Basic+ carriers.
         </div>
       </aside>
     </div>
@@ -1218,27 +1303,41 @@ function SuccessScreen({
   const waHref = `https://wa.me/?text=${waMsg}`;
 
   return (
-    <div className="mx-auto max-w-xl px-4 py-16 text-center">
-      <div className="mx-auto flex h-16 w-16 animate-[zoomIn_400ms_ease-out] items-center justify-center rounded-full bg-[color:var(--success)]/15 text-[color:var(--success)]">
-        <Check className="h-8 w-8" />
+    <div className="mx-auto max-w-xl px-4 py-16 text-center md:py-20">
+      <div className="relative mx-auto h-20 w-20">
+        <span
+          aria-hidden
+          className="absolute inset-0 -z-10 animate-pulse rounded-full bg-[color:var(--success)]/20 blur-2xl"
+        />
+        <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-[color:var(--success)] text-white shadow-[0_8px_24px_-6px_color-mix(in_oklab,var(--success)_50%,transparent)]">
+          <Check className="h-9 w-9" strokeWidth={2.8} />
+        </div>
       </div>
-      <h1 className="mt-4 font-display text-3xl font-black uppercase tracking-tight md:text-4xl">
-        Your load is live! <PartyPopper className="inline h-7 w-7 text-[color:var(--zim-yellow)]" />
+      <span className="section-kicker mx-auto mt-7 justify-center">Posted</span>
+      <h1 className="mt-3 font-display text-4xl font-black tracking-[-0.04em] md:text-5xl">
+        Your load is <span className="text-secondary">live</span>
+        <PartyPopper className="ml-2 inline h-7 w-7 text-[color:var(--zim-yellow)]" />
       </h1>
-      <p className="mt-2 text-sm text-muted-foreground">
-        Load ID: <span className="font-mono-num text-foreground">{code}</span>
+      <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+        Load ID <span className="text-foreground">{code}</span>
       </p>
-      <div className="mt-6 rounded-lg border border-primary/20 bg-primary/5 p-5">
-        <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+      <div className="relative mt-7 overflow-hidden rounded-2xl border border-secondary/25 bg-gradient-to-br from-secondary/[0.06] via-card to-card p-6">
+        <span
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+        />
+        <div className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
           Live impressions
         </div>
-        <div className="font-display text-4xl font-black tabular-nums text-primary">{views}</div>
-        <div className="text-xs text-muted-foreground">carriers have seen your load</div>
+        <div className="mt-2 font-display text-5xl font-black leading-none tracking-[-0.04em] tabular-nums text-foreground">
+          {views}
+        </div>
+        <div className="mt-2 text-xs text-muted-foreground">carriers have seen your load</div>
       </div>
-      <div className="mt-6 flex flex-wrap justify-center gap-2">
+      <div className="mt-7 flex flex-wrap justify-center gap-2">
         <Button
           asChild
-          className="bg-[color:var(--success)] text-background hover:bg-[color:var(--success)]/90"
+          className="rounded-full bg-[color:var(--success)] text-white hover:bg-[color-mix(in_oklab,var(--success)_85%,black)]"
         >
           <a href={waHref} target="_blank" rel="noreferrer">
             <Share2 className="mr-1.5 h-4 w-4" /> Share on WhatsApp
@@ -1246,6 +1345,7 @@ function SuccessScreen({
         </Button>
         <Button
           variant="outline"
+          className="rounded-full"
           onClick={() => {
             navigator.clipboard.writeText(code);
             toast.success("Load ID copied");
@@ -1254,16 +1354,19 @@ function SuccessScreen({
           <Copy className="mr-1.5 h-4 w-4" /> Copy ID
         </Button>
       </div>
-      <div className="mt-4 flex justify-center gap-4 text-sm">
+      <div className="mt-5 flex justify-center gap-5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em]">
         <Link
           to="/board"
           search={{ load: loadId } as never}
-          className="text-primary underline-offset-2 hover:underline"
+          className="text-secondary transition-colors hover:text-secondary/80"
         >
           View your load →
         </Link>
-        <button onClick={onPostAnother} className="text-primary underline-offset-2 hover:underline">
-          Post another load →
+        <button
+          onClick={onPostAnother}
+          className="text-secondary transition-colors hover:text-secondary/80"
+        >
+          Post another →
         </button>
       </div>
     </div>
@@ -1403,7 +1506,7 @@ function IconGrid({
   options: { value: string; icon: string; label: string }[];
 }) {
   return (
-    <div className="mt-2 grid grid-cols-3 gap-1.5 sm:grid-cols-4">
+    <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
       {options.map((o) => {
         const active = value === o.value;
         return (
@@ -1412,17 +1515,25 @@ function IconGrid({
             type="button"
             onClick={() => onChange(o.value)}
             className={cn(
-              "flex flex-col items-center justify-center gap-1 rounded-md border p-2.5 text-center transition",
+              "group relative flex flex-col items-center justify-center gap-1.5 overflow-hidden rounded-xl border p-3 text-center transition-all",
               active
-                ? "border-primary bg-primary/10"
-                : "border-border bg-background/40 hover:border-primary/40",
+                ? "border-secondary/50 bg-secondary/[0.06] shadow-[0_0_0_1px_color-mix(in_oklab,var(--secondary)_30%,transparent)]"
+                : "border-border bg-card hover:border-foreground/15 hover:bg-muted/40",
             )}
           >
-            <span className="text-xl leading-none">{o.icon}</span>
+            {active && (
+              <span
+                aria-hidden
+                className="absolute right-1.5 top-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-secondary text-secondary-foreground"
+              >
+                <Check className="h-2.5 w-2.5" strokeWidth={3.5} />
+              </span>
+            )}
+            <span className="text-2xl leading-none">{o.icon}</span>
             <span
               className={cn(
-                "text-[11px] leading-tight",
-                active ? "font-bold text-foreground" : "text-muted-foreground",
+                "font-display text-[11px] leading-tight tracking-tight",
+                active ? "font-bold text-foreground" : "font-medium text-muted-foreground",
               )}
             >
               {o.label}
@@ -1446,21 +1557,21 @@ function Stepper2({
   max: number;
 }) {
   return (
-    <div className="inline-flex h-10 items-stretch overflow-hidden rounded-md border border-border bg-background/40">
+    <div className="inline-flex h-10 items-stretch overflow-hidden rounded-full border border-border bg-card">
       <button
         type="button"
         onClick={() => onChange(Math.max(min, value - 1))}
-        className="w-10 text-lg hover:bg-background"
+        className="flex w-10 items-center justify-center text-lg font-bold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
       >
         −
       </button>
-      <div className="flex w-14 items-center justify-center font-display text-lg font-bold">
+      <div className="flex w-14 items-center justify-center border-x border-border font-display text-lg font-extrabold tracking-tight text-foreground">
         {value}
       </div>
       <button
         type="button"
         onClick={() => onChange(Math.min(max, value + 1))}
-        className="w-10 text-lg hover:bg-background"
+        className="flex w-10 items-center justify-center text-lg font-bold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
       >
         +
       </button>
@@ -1553,17 +1664,17 @@ function Stat({ label, value, accent }: { label: string; value: string; accent?:
   return (
     <div
       className={cn(
-        "rounded-md border border-border bg-card/50 p-2",
-        accent && "border-primary/30 bg-primary/5",
+        "rounded-lg border border-border bg-card/60 p-2",
+        accent && "border-secondary/35 bg-secondary/[0.06]",
       )}
     >
-      <div className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
+      <div className="font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
         {label}
       </div>
       <div
         className={cn(
-          "font-display text-base font-bold",
-          accent ? "text-primary" : "text-foreground",
+          "mt-0.5 font-display text-base font-extrabold tracking-tight",
+          accent ? "text-secondary" : "text-foreground",
         )}
       >
         {value}
@@ -1574,14 +1685,16 @@ function Stat({ label, value, accent }: { label: string; value: string; accent?:
 
 function Cell({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
   return (
-    <div className="rounded border border-border/60 bg-card/40 p-2">
-      <div className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
+    <div className="rounded-lg border border-border/60 bg-card/50 p-2.5">
+      <div className="font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
         {label}
       </div>
       <div
         className={cn(
-          "truncate text-sm",
-          accent ? "font-display text-base font-black text-primary" : "text-foreground",
+          "mt-0.5 truncate text-sm",
+          accent
+            ? "font-display text-base font-extrabold tracking-tight text-foreground"
+            : "text-foreground",
         )}
       >
         {value}
@@ -1606,8 +1719,8 @@ function ShareRow({
   return (
     <label
       className={cn(
-        "flex items-start gap-3 rounded-md border border-border bg-background/40 px-3 py-2.5",
-        disabled && "opacity-70",
+        "flex items-start gap-3 rounded-xl border border-border bg-card px-3.5 py-2.5 transition-colors",
+        disabled ? "opacity-65" : "hover:bg-muted/40",
       )}
     >
       <Controller
@@ -1623,8 +1736,12 @@ function ShareRow({
         )}
       />
       <div className="flex-1 leading-tight">
-        <div className="text-sm">{label}</div>
-        {sub && <div className="text-[11px] text-muted-foreground">{sub}</div>}
+        <div className="text-sm font-medium text-foreground">{label}</div>
+        {sub && (
+          <div className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+            {sub}
+          </div>
+        )}
       </div>
     </label>
   );
@@ -1653,16 +1770,16 @@ function ReviewRow({
     <button
       type="button"
       onClick={onEdit}
-      className="group flex w-full items-center justify-between gap-3 rounded-md border border-border bg-background/40 px-3 py-2.5 text-left transition hover:border-primary/40 hover:bg-background/60"
+      className="group flex w-full items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 text-left transition-colors hover:border-foreground/15 hover:bg-muted/30"
     >
       <div className="min-w-0 flex-1">
-        <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+        <div className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
           {label}
         </div>
-        <div className="mt-0.5 text-sm">{children}</div>
+        <div className="mt-1 text-sm">{children}</div>
       </div>
-      <span className="font-mono text-[10px] uppercase tracking-widest text-primary opacity-0 transition group-hover:opacity-100">
-        Edit
+      <span className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-secondary opacity-0 transition-opacity group-hover:opacity-100">
+        Edit <ArrowRight className="h-3 w-3" />
       </span>
     </button>
   );

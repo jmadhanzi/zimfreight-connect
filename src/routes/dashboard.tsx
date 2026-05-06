@@ -89,7 +89,7 @@ function DashboardPage() {
       <div className="mt-5">
         <QuickActions />
       </div>
-      <div className="mt-4 overflow-hidden rounded-xl border border-border">
+      <div className="mt-4">
         <TickerSection />
       </div>
 
