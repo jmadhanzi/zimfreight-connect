@@ -1,7 +1,21 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Lock, Phone, MessageCircle, ArrowRight, Bot, Share2, Bookmark, BookmarkCheck, ShieldCheck, Fuel, Clock, MapPin } from "lucide-react";
+import {
+  Lock,
+  Phone,
+  MessageCircle,
+  ArrowRight,
+  Bot,
+  Share2,
+  Bookmark,
+  BookmarkCheck,
+  ShieldCheck,
+  Fuel,
+  Clock,
+  MapPin,
+  Truck,
+} from "lucide-react";
 import { formatUSD, cn } from "@/lib/utils";
 import type { Load } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
@@ -31,7 +45,14 @@ interface Props {
   onToggleSave: (id: string) => void;
 }
 
-export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved, onToggleSave }: Props) {
+export function LoadDetailSheet({
+  load,
+  onClose,
+  onRequestAuth,
+  onUpgrade,
+  saved,
+  onToggleSave,
+}: Props) {
   const { user, subscription } = useAuth();
   const plan = subscription?.plan ?? "free";
   const canSeeContacts = !!user && (plan === "basic" || plan === "pro" || plan === "fleet");
@@ -46,20 +67,40 @@ export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved
     recordLoadView(load.id);
     (async () => {
       const cached = await getCachedRate(load.origin, load.destination);
-      if (cached) { setMarketRate(Number(cached.rate.avg_rate_per_km)); setRateCachedAt(cached.cachedAt); }
+      if (cached) {
+        setMarketRate(Number(cached.rate.avg_rate_per_km));
+        setRateCachedAt(cached.cachedAt);
+      }
       if (typeof navigator !== "undefined" && !navigator.onLine) return;
-      const { data } = await db.from("route_rates").select("*").eq("origin", load.origin).eq("destination", load.destination).maybeSingle();
+      const { data } = await db
+        .from("route_rates")
+        .select("*")
+        .eq("origin", load.origin)
+        .eq("destination", load.destination)
+        .maybeSingle();
       const rate = data as RouteRate | null;
-      if (rate) { setMarketRate(Number(rate.avg_rate_per_km)); setRateCachedAt(null); void cacheRate(load.origin, load.destination, rate); }
+      if (rate) {
+        setMarketRate(Number(rate.avg_rate_per_km));
+        setRateCachedAt(null);
+        void cacheRate(load.origin, load.destination, rate);
+      }
     })();
     if (load.is_border_crossing) {
       if (typeof navigator !== "undefined" && !navigator.onLine) return;
-      db.from("border_status").select("*").eq("border_name", "Beitbridge").maybeSingle()
+      db.from("border_status")
+        .select("*")
+        .eq("border_name", "Beitbridge")
+        .maybeSingle()
         .then(({ data }: { data: BorderStatus | null }) => setBeit(data));
     }
   }, [load, online]);
 
-  if (!load) return <Sheet open={false} onOpenChange={(o) => !o && onClose()}><SheetContent /></Sheet>;
+  if (!load)
+    return (
+      <Sheet open={false} onOpenChange={(o) => !o && onClose()}>
+        <SheetContent />
+      </Sheet>
+    );
 
   const fuelLitres = load.distance_km ? Math.round(load.distance_km * 0.4) : null;
   const fuelCost = fuelLitres ? Math.round(fuelLitres * 1.6) : null;
@@ -74,46 +115,91 @@ export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved
   })();
 
   const share = async () => {
-    const url = typeof window !== "undefined" ? `${window.location.origin}/board?load=${load.id}` : "";
+    const url =
+      typeof window !== "undefined" ? `${window.location.origin}/board?load=${load.id}` : "";
     try {
-      if (navigator.share) await navigator.share({ title: `${load.origin} → ${load.destination}`, url });
-      else { await navigator.clipboard.writeText(url); toast.success("Link copied"); }
-    } catch {}
+      if (navigator.share)
+        await navigator.share({ title: `${load.origin} → ${load.destination}`, url });
+      else {
+        await navigator.clipboard.writeText(url);
+        toast.success("Link copied");
+      }
+    } catch {
+      /* user cancelled share */
+    }
   };
 
   return (
     <Sheet open={!!load} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent side="right" className="w-full overflow-y-auto border-border bg-card p-0 sm:max-w-[440px]">
+      <SheetContent
+        side="right"
+        className="w-full overflow-y-auto border-border bg-card p-0 sm:max-w-[440px]"
+      >
+        {/* top accent strip */}
+        <span
+          aria-hidden
+          className="block h-1 w-full bg-gradient-to-r from-secondary via-primary to-secondary"
+        />
         <SheetHeader className="border-b border-border p-5">
-          <SheetTitle className="font-display text-2xl font-black tracking-tight">
-            {load.origin} <ArrowRight className="inline h-5 w-5 text-primary" /> {load.destination}
+          <span className="section-kicker">Load detail</span>
+          <SheetTitle className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
+            {load.origin} <ArrowRight className="inline h-5 w-5 text-secondary" />{" "}
+            {load.destination}
           </SheetTitle>
           <div className="flex flex-wrap gap-1.5 pt-1">
-            {load.is_urgent && <Badge className="border-0 bg-destructive text-[10px] font-bold uppercase text-destructive-foreground">Urgent</Badge>}
-            {load.is_border_crossing && <Badge className="border-0 bg-[color-mix(in_oklab,var(--info)_20%,transparent)] text-[10px] font-bold uppercase text-[color:var(--info)]">Border</Badge>}
-            {load.zimra_required && <Badge className="border-0 bg-[color-mix(in_oklab,var(--gold)_20%,transparent)] text-[10px] font-bold uppercase text-primary">ZIMRA</Badge>}
+            {load.is_urgent && (
+              <Badge className="border-0 bg-destructive text-[10px] font-bold uppercase tracking-[0.1em] text-destructive-foreground">
+                Urgent
+              </Badge>
+            )}
+            {load.is_border_crossing && (
+              <Badge className="border-0 bg-[color-mix(in_oklab,var(--info)_20%,transparent)] text-[10px] font-bold uppercase tracking-[0.1em] text-[color:var(--info)]">
+                Border
+              </Badge>
+            )}
+            {load.zimra_required && (
+              <Badge className="border-0 bg-[color-mix(in_oklab,var(--gold)_20%,transparent)] text-[10px] font-bold uppercase tracking-[0.1em] text-primary">
+                ZIMRA
+              </Badge>
+            )}
           </div>
         </SheetHeader>
 
         <div className="space-y-5 p-5">
           {/* RATE SUMMARY */}
           <section>
-            <div className="font-display text-4xl font-black text-primary">{formatUSD(load.rate_usd)}</div>
-            <div className="font-mono text-xs text-muted-foreground">
-              {load.rate_per_km && <>${Number(load.rate_per_km).toFixed(2)}/km · </>}{load.distance_km}km
+            <div className="font-display text-[2.75rem] font-black leading-none tracking-[-0.04em] text-foreground">
+              {formatUSD(load.rate_usd)}
+            </div>
+            <div className="mt-1 flex items-center gap-2 font-mono text-xs text-muted-foreground">
+              {load.rate_per_km && (
+                <span className="font-semibold text-foreground/70">
+                  ${Number(load.rate_per_km).toFixed(2)}/km
+                </span>
+              )}
+              {load.rate_per_km && load.distance_km && <span className="text-border">·</span>}
+              {load.distance_km && <span>{load.distance_km}km</span>}
             </div>
             {ratePos && marketRate && (
-              <div className="mt-3 rounded-md border border-border bg-background/40 p-3">
-                <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest">
+              <div className="mt-3 rounded-xl border border-border bg-background/40 p-3">
+                <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.16em]">
                   <span className={cn("text-muted-foreground", rateCachedAt && "text-orange-400")}>
                     Market avg ${marketRate.toFixed(2)}
-                    {rateCachedAt && <span className="ml-1.5 normal-case tracking-normal">· cached {humanCacheAge(Date.now() - rateCachedAt)}</span>}
+                    {rateCachedAt && (
+                      <span className="ml-1.5 normal-case tracking-normal">
+                        · cached {humanCacheAge(Date.now() - rateCachedAt)}
+                      </span>
+                    )}
                   </span>
-                  <span className={cn(
-                    ratePos.tone === "success" && "text-[color:var(--success)]",
-                    ratePos.tone === "destructive" && "text-destructive",
-                    ratePos.tone === "primary" && "text-primary",
-                  )}>{ratePos.label}</span>
+                  <span
+                    className={cn(
+                      ratePos.tone === "success" && "text-[color:var(--success)]",
+                      ratePos.tone === "destructive" && "text-destructive",
+                      ratePos.tone === "primary" && "text-primary",
+                    )}
+                  >
+                    {ratePos.label}
+                  </span>
                 </div>
                 <div className="relative mt-2 h-1.5 overflow-hidden rounded-full bg-background">
                   <div className="absolute inset-y-0 left-0 w-1/2 bg-destructive/60" />
@@ -133,42 +219,65 @@ export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved
             <Cell label="Pickup date" value={load.pickup_date ?? "—"} />
             <Cell label="Delivery by" value={load.delivery_deadline ?? "—"} />
             <Cell label="Payment" value={load.payment_terms ?? "—"} />
-            <Cell label="Commodity value" value={load.commodity_value ? formatUSD(Number(load.commodity_value)) : "—"} />
+            <Cell
+              label="Commodity value"
+              value={load.commodity_value ? formatUSD(Number(load.commodity_value)) : "—"}
+            />
           </section>
 
           {/* BROKER */}
           <section className="rounded-lg border border-border bg-background/40 p-4">
-            <h4 className="font-display text-xs font-bold uppercase tracking-widest text-muted-foreground">Broker Profile</h4>
+            <h4 className="font-display text-xs font-bold uppercase tracking-widest text-muted-foreground">
+              Broker Profile
+            </h4>
             {canSeeContacts ? (
               <div className="mt-2">
                 <div className="flex items-center gap-3">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/15 font-display text-lg font-black text-primary ring-2 ring-primary/20">
-                    {((load as Load & { poster?: { full_name?: string } }).poster?.full_name ?? "B")[0].toUpperCase()}
+                    {((load as Load & { poster?: { full_name?: string } }).poster?.full_name ??
+                      "B")[0].toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-bold text-foreground">
-                      {(load as Load & { poster?: { full_name?: string } }).poster?.full_name ?? "Verified Broker"}
+                      {(load as Load & { poster?: { full_name?: string } }).poster?.full_name ??
+                        "Verified Broker"}
                     </div>
                     <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
-                      <span className="inline-flex items-center gap-1 text-[11px] text-[color:var(--success)]"><ShieldCheck className="h-3 w-3" /> Verified</span>
+                      <span className="inline-flex items-center gap-1 text-[11px] text-[color:var(--success)]">
+                        <ShieldCheck className="h-3 w-3" /> Verified
+                      </span>
                       {load.zimra_required && (
-                        <span className="inline-flex items-center gap-1 text-[11px] text-[color:var(--zim-yellow)]"><ShieldCheck className="h-3 w-3" /> ZIMRA Reg.</span>
+                        <span className="inline-flex items-center gap-1 text-[11px] text-[color:var(--zim-yellow)]">
+                          <ShieldCheck className="h-3 w-3" /> ZIMRA Reg.
+                        </span>
                       )}
                     </div>
                   </div>
                 </div>
                 <div className="mt-3 grid grid-cols-3 gap-2 text-center">
                   <div className="rounded-md bg-background/60 px-2 py-2.5">
-                    <div className="font-mono-num text-base font-black text-foreground">&mdash;</div>
-                    <div className="font-mono text-[9px] uppercase text-muted-foreground">Loads posted</div>
+                    <div className="font-mono-num text-base font-black text-foreground">
+                      &mdash;
+                    </div>
+                    <div className="font-mono text-[9px] uppercase text-muted-foreground">
+                      Loads posted
+                    </div>
                   </div>
                   <div className="rounded-md bg-background/60 px-2 py-2.5">
-                    <div className="font-mono-num text-base font-black text-foreground">{load.payment_terms ?? "—"}</div>
-                    <div className="font-mono text-[9px] uppercase text-muted-foreground">Payment terms</div>
+                    <div className="font-mono-num text-base font-black text-foreground">
+                      {load.payment_terms ?? "—"}
+                    </div>
+                    <div className="font-mono text-[9px] uppercase text-muted-foreground">
+                      Payment terms
+                    </div>
                   </div>
                   <div className="rounded-md bg-background/60 px-2 py-2.5">
-                    <div className="font-mono-num text-base font-black text-[color:var(--success)]">Good</div>
-                    <div className="font-mono text-[9px] uppercase text-muted-foreground">Credit rating</div>
+                    <div className="font-mono-num text-base font-black text-[color:var(--success)]">
+                      Good
+                    </div>
+                    <div className="font-mono text-[9px] uppercase text-muted-foreground">
+                      Credit rating
+                    </div>
                   </div>
                 </div>
               </div>
@@ -177,11 +286,22 @@ export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved
                 <div className="flex items-start gap-2">
                   <Lock className="mt-0.5 h-4 w-4 text-primary" />
                   <div className="flex-1 text-xs text-muted-foreground">
-                    <span className="font-bold text-foreground">Broker details locked.</span> Upgrade to Basic to see ratings, payment terms, and ZIMRA status.
+                    <span className="font-bold text-foreground">Broker details locked.</span>{" "}
+                    Upgrade to Basic to see ratings, payment terms, and ZIMRA status.
                   </div>
                 </div>
-                <Button size="sm" onClick={() => { if (!user) { onClose(); onRequestAuth(); } else { onUpgrade(); } }}
-                  className="mt-2 w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    if (!user) {
+                      onClose();
+                      onRequestAuth();
+                    } else {
+                      onUpgrade();
+                    }
+                  }}
+                  className="mt-2 w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                >
                   {user ? "View plans →" : "Sign in →"}
                 </Button>
               </div>
@@ -190,12 +310,34 @@ export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved
 
           {/* ROUTE INFO */}
           <section className="rounded-lg border border-border bg-background/40 p-4">
-            <h4 className="font-display text-xs font-bold uppercase tracking-widest text-muted-foreground">Route info</h4>
+            <h4 className="font-display text-xs font-bold uppercase tracking-widest text-muted-foreground">
+              Route info
+            </h4>
             <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
-              <RouteFact icon={<MapPin className="h-3.5 w-3.5" />} label="Highway" value={load.highway ?? "—"} />
-              <RouteFact icon={<Clock className="h-3.5 w-3.5" />} label="Drive time" value={driveHours ? `~${driveHours}h` : "—"} />
-              <RouteFact icon={<Fuel className="h-3.5 w-3.5" />} label="Fuel est." value={fuelLitres ? `~${fuelLitres}L (~$${fuelCost})` : "—"} />
-              <RouteFact icon={<MapPin className="h-3.5 w-3.5" />} label="Tolls" value={load.distance_km && load.distance_km > 200 ? `${Math.ceil(load.distance_km / 150)} gates` : "—"} />
+              <RouteFact
+                icon={<MapPin className="h-3.5 w-3.5" />}
+                label="Highway"
+                value={load.highway ?? "—"}
+              />
+              <RouteFact
+                icon={<Clock className="h-3.5 w-3.5" />}
+                label="Drive time"
+                value={driveHours ? `~${driveHours}h` : "—"}
+              />
+              <RouteFact
+                icon={<Fuel className="h-3.5 w-3.5" />}
+                label="Fuel est."
+                value={fuelLitres ? `~${fuelLitres}L (~$${fuelCost})` : "—"}
+              />
+              <RouteFact
+                icon={<MapPin className="h-3.5 w-3.5" />}
+                label="Tolls"
+                value={
+                  load.distance_km && load.distance_km > 200
+                    ? `${Math.ceil(load.distance_km / 150)} gates`
+                    : "—"
+                }
+              />
             </div>
             {load.is_border_crossing && (
               <div className="mt-3 rounded-md border border-[color:var(--info)]/30 bg-[color:var(--info)]/5 p-3 text-xs">
@@ -206,18 +348,36 @@ export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved
                   <li>• Transit bond / carnet</li>
                   <li>• Vehicle TIP &amp; driver passport</li>
                 </ul>
-                {beit && <div className="mt-2 font-mono text-[11px] text-muted-foreground">Beitbridge wait: <span className="text-[color:var(--zim-yellow)]">~{Number(beit.wait_hours).toFixed(1)}h</span></div>}
+                {beit && (
+                  <div className="mt-2 font-mono text-[11px] text-muted-foreground">
+                    Beitbridge wait:{" "}
+                    <span className="text-[color:var(--zim-yellow)]">
+                      ~{Number(beit.wait_hours).toFixed(1)}h
+                    </span>
+                  </div>
+                )}
               </div>
             )}
-            {load.notes && <p className="mt-3 rounded-md bg-background/60 p-3 text-xs text-muted-foreground">{load.notes}</p>}
+            {load.notes && (
+              <p className="mt-3 rounded-md bg-background/60 p-3 text-xs text-muted-foreground">
+                {load.notes}
+              </p>
+            )}
           </section>
 
           {/* ACTIONS */}
           <section className="space-y-2">
             <Button
               onClick={async () => {
-                if (!user) { onClose(); onRequestAuth(); return; }
-                if (!canSeeContacts) { onUpgrade(); return; }
+                if (!user) {
+                  onClose();
+                  onRequestAuth();
+                  return;
+                }
+                if (!canSeeContacts) {
+                  onUpgrade();
+                  return;
+                }
                 try {
                   const { error } = await db.from("bookings").insert({
                     load_id: load.id,
@@ -230,30 +390,67 @@ export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved
                   toast.error(e instanceof Error ? e.message : "Failed to send booking request");
                 }
               }}
-              size="lg" className="w-full bg-primary text-base font-bold uppercase tracking-wide text-primary-foreground hover:bg-primary/90">
-              🚛 Book this load
+              size="lg"
+              className="w-full bg-secondary text-base font-bold tracking-wide text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+            >
+              <Truck className="mr-2 h-4 w-4" /> Book this load
             </Button>
             {canSeeContacts ? (
               <div className="grid grid-cols-2 gap-2">
-                <Button variant="outline" asChild className="border-[color:var(--success)]/40 text-[color:var(--success)] hover:bg-[color:var(--success)]/10">
-                  <a href={`https://wa.me/${(load as Load & { poster?: { phone_whatsapp?: string | null } }).poster?.phone_whatsapp?.replace(/\D/g, "") ?? ""}`} target="_blank" rel="noopener noreferrer">
+                <Button
+                  variant="outline"
+                  asChild
+                  className="border-[color:var(--success)]/40 text-[color:var(--success)] hover:bg-[color:var(--success)]/10"
+                >
+                  <a
+                    href={`https://wa.me/${(load as Load & { poster?: { phone_whatsapp?: string | null } }).poster?.phone_whatsapp?.replace(/\D/g, "") ?? ""}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <MessageCircle className="mr-1.5 h-4 w-4" /> WhatsApp
                   </a>
                 </Button>
                 <Button variant="outline" asChild>
-                  <a href={`tel:${(load as Load & { poster?: { phone_whatsapp?: string | null } }).poster?.phone_whatsapp ?? ""}`}>
+                  <a
+                    href={`tel:${(load as Load & { poster?: { phone_whatsapp?: string | null } }).poster?.phone_whatsapp ?? ""}`}
+                  >
                     <Phone className="mr-1.5 h-4 w-4" /> Call
                   </a>
                 </Button>
               </div>
             ) : (
-              <Button variant="outline" onClick={onUpgrade} className="w-full border-border text-muted-foreground"><Lock className="mr-1.5 h-4 w-4" /> Contact locked — Upgrade</Button>
+              <Button
+                variant="outline"
+                onClick={onUpgrade}
+                className="w-full border-border text-muted-foreground"
+              >
+                <Lock className="mr-1.5 h-4 w-4" /> Contact locked — Upgrade
+              </Button>
             )}
             <div className="grid grid-cols-3 gap-2">
-              <Button variant="ghost" onClick={share} className="text-xs"><Share2 className="mr-1 h-3.5 w-3.5" /> Share</Button>
-              <Button variant="ghost" onClick={() => { if (!isPro) onUpgrade(); else toast.info("AI agent opening…"); }} className="text-xs"><Bot className="mr-1 h-3.5 w-3.5" /> {isPro ? "Ask AI" : "AI (Pro)"}</Button>
+              <Button variant="ghost" onClick={share} className="text-xs">
+                <Share2 className="mr-1 h-3.5 w-3.5" /> Share
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  if (!isPro) onUpgrade();
+                  else toast.info("AI agent opening…");
+                }}
+                className="text-xs"
+              >
+                <Bot className="mr-1 h-3.5 w-3.5" /> {isPro ? "Ask AI" : "AI (Pro)"}
+              </Button>
               <Button variant="ghost" onClick={() => onToggleSave(load.id)} className="text-xs">
-                {saved ? <><BookmarkCheck className="mr-1 h-3.5 w-3.5 text-primary" /> Saved</> : <><Bookmark className="mr-1 h-3.5 w-3.5" /> Save</>}
+                {saved ? (
+                  <>
+                    <BookmarkCheck className="mr-1 h-3.5 w-3.5 text-primary" /> Saved
+                  </>
+                ) : (
+                  <>
+                    <Bookmark className="mr-1 h-3.5 w-3.5" /> Save
+                  </>
+                )}
               </Button>
             </div>
           </section>
@@ -266,12 +463,22 @@ export function LoadDetailSheet({ load, onClose, onRequestAuth, onUpgrade, saved
 function Cell({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-md border border-border bg-background/40 px-3 py-2">
-      <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</div>
+      <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+        {label}
+      </div>
       <div className="text-foreground">{value}</div>
     </div>
   );
 }
-function RouteFact({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+function RouteFact({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
   return (
     <div className="flex items-center gap-2 rounded-md bg-background/60 px-2 py-1.5">
       <span className="text-muted-foreground">{icon}</span>
