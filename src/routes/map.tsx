@@ -19,11 +19,10 @@ import { MapControls } from "@/components/map/MapControls";
 import { MapStatsBar } from "@/components/map/MapStatsBar";
 import { BorderStatusPanel } from "@/components/map/BorderStatusPanel";
 import type { Load } from "@/types";
-import { useAuth } from "@/hooks/useAuth";
 
 // Lazy-load the heavy Leaflet map to avoid SSR issues
 const FreightMap = lazy(() =>
-  import("@/components/map/FreightMap").then((m) => ({ default: m.FreightMap }))
+  import("@/components/map/FreightMap").then((m) => ({ default: m.FreightMap })),
 );
 
 export const Route = createFileRoute("/map")({
@@ -43,7 +42,6 @@ export const Route = createFileRoute("/map")({
 function MapPage() {
   const { loads, loading: loadsLoading } = useLoads();
   const borders = useBorderStatus();
-  const { user, subscription } = useAuth();
 
   // Layer toggles
   const [showLoads, setShowLoads] = useState(true);
@@ -74,28 +72,35 @@ function MapPage() {
   // Filtered load count for the controls panel
   const filteredLoads = loads.filter((l) => {
     if (filterOrigin && l.origin.toLowerCase() !== filterOrigin.toLowerCase()) return false;
-    if (filterDestination && l.destination.toLowerCase() !== filterDestination.toLowerCase()) return false;
+    if (filterDestination && l.destination.toLowerCase() !== filterDestination.toLowerCase())
+      return false;
     return true;
   });
 
   return (
     <div className="relative flex h-[calc(100vh-4rem)] w-full flex-col overflow-hidden bg-background">
       {/* Page title bar */}
-      <div className="flex shrink-0 items-center gap-3 border-b border-border bg-card/80 px-4 py-2.5 backdrop-blur">
-        <MapIcon className="h-4 w-4 text-primary" />
-        <h1 className="font-display text-sm font-bold uppercase tracking-tight text-foreground">
+      <div className="flex shrink-0 items-center gap-3 border-b border-border bg-card/85 px-4 py-2.5 backdrop-blur-xl">
+        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <MapIcon className="h-3.5 w-3.5" strokeWidth={2.4} />
+        </span>
+        <h1 className="font-display text-sm font-extrabold tracking-[-0.02em] text-foreground">
           Freight Map
         </h1>
-        <span className="font-mono text-xs text-muted-foreground">
+        <span className="hidden font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground sm:inline">
           Zimbabwe &amp; SADC corridors
         </span>
-        {loadsLoading && (
+        {loadsLoading ? (
           <Loader2 className="ml-auto h-3.5 w-3.5 animate-spin text-muted-foreground" />
-        )}
-        {!loadsLoading && (
-          <span className="ml-auto font-mono text-xs text-muted-foreground">
-            {loads.length} loads · {borders.length} crossings
-          </span>
+        ) : (
+          <div className="ml-auto flex items-center gap-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            <span className="flex items-center gap-1.5">
+              <span className="dot-live" />
+              <span className="text-foreground">{loads.length}</span> loads
+            </span>
+            <span className="hidden h-3 w-px bg-border sm:block" />
+            <span className="hidden sm:inline">{borders.length} crossings</span>
+          </div>
         )}
       </div>
 

@@ -20,7 +20,8 @@ export function StatsBar() {
     ]);
     if (typeof count === "number") setLoadCount(count);
     if (rates && rates.length) {
-      const avg = rates.reduce((s: number, r: RouteRate) => s + Number(r.avg_rate_per_km), 0) / rates.length;
+      const avg =
+        rates.reduce((s: number, r: RouteRate) => s + Number(r.avg_rate_per_km), 0) / rates.length;
       setAvgRate(Math.round(avg * 100) / 100);
     }
     const b = (borders ?? []).find((x: BorderStatus) => x.border_name === "Beitbridge");
@@ -32,7 +33,6 @@ export function StatsBar() {
     refresh();
     const t = setInterval(refresh, 60_000);
     return () => clearInterval(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const beitWait = beit?.wait_hours ?? null;
@@ -41,18 +41,63 @@ export function StatsBar() {
   return (
     <div className="sticky top-0 z-30 border-b border-border bg-[color:var(--bg-secondary)]/95 backdrop-blur supports-[backdrop-filter]:bg-[color:var(--bg-secondary)]/85">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-2.5 text-xs md:px-6">
-        <Stat dot="success" label={<><span className="font-display text-[15px] font-extrabold tracking-tight text-foreground">{loadCount ?? "—"}</span> <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">loads today</span></>} />
+        <Stat
+          dot="success"
+          label={
+            <>
+              <span className="font-display text-[15px] font-extrabold tracking-tight text-foreground">
+                {loadCount ?? "—"}
+              </span>{" "}
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                loads today
+              </span>
+            </>
+          }
+        />
         <span className="hidden h-3 w-px bg-border md:inline-block" />
-        <Stat label={<><span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Avg</span> <span className="font-mono-num text-foreground">{avgRate !== null ? `$${avgRate.toFixed(2)}/km` : "—"}</span></>} />
+        <Stat
+          label={
+            <>
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                Avg
+              </span>{" "}
+              <span className="font-mono-num text-foreground">
+                {avgRate !== null ? `$${avgRate.toFixed(2)}/km` : "—"}
+              </span>
+            </>
+          }
+        />
         <span className="hidden h-3 w-px bg-border md:inline-block" />
-        <Stat label={<><span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">ZWL/USD</span> <span className="font-mono-num text-foreground">3,850</span></>} />
+        <Stat
+          label={
+            <>
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                ZWL/USD
+              </span>{" "}
+              <span className="font-mono-num text-foreground">3,850</span>
+            </>
+          }
+        />
         <span className="hidden h-3 w-px bg-border md:inline-block" />
-        <Stat label={
-          <span className={cn("font-mono-num", beitOrange ? "text-[color:var(--zim-yellow)]" : "text-foreground")}>
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Beit Bridge</span> {beitWait !== null ? `~${beitWait}h wait` : "—"}
-          </span>
-        } />
-        <button onClick={refresh} className="ml-auto inline-flex items-center gap-1.5 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:bg-card hover:text-foreground">
+        <Stat
+          label={
+            <span
+              className={cn(
+                "font-mono-num",
+                beitOrange ? "text-[color:var(--zim-yellow)]" : "text-foreground",
+              )}
+            >
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                Beit Bridge
+              </span>{" "}
+              {beitWait !== null ? `~${beitWait}h wait` : "—"}
+            </span>
+          }
+        />
+        <button
+          onClick={refresh}
+          className="ml-auto inline-flex items-center gap-1.5 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
+        >
           <RefreshCw className="h-3 w-3" />
           <span suppressHydrationWarning>Updated {updated ? fmtAgo(updated) : "—"}</span>
         </button>

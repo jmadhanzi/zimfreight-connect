@@ -53,7 +53,9 @@ export function SwipeableLoadCard({
     setDx(0);
     startX.current = null;
     startY.current = null;
-    setTimeout(() => { moved.current = false; }, 50);
+    setTimeout(() => {
+      moved.current = false;
+    }, 50);
   };
 
   const handleClick = () => {
@@ -66,11 +68,11 @@ export function SwipeableLoadCard({
   const intensity = Math.min(1, Math.abs(dx) / THRESHOLD);
 
   return (
-    <div className="relative overflow-hidden rounded-lg">
+    <div className="relative overflow-hidden rounded-2xl">
       {/* Save action (revealed when swiping right) */}
       <div
         className={cn(
-          "pointer-events-none absolute inset-y-0 left-0 flex w-1/2 items-center justify-start gap-2 px-5 text-sm font-bold uppercase tracking-wider transition-opacity",
+          "pointer-events-none absolute inset-y-0 left-0 flex w-1/2 items-center justify-start gap-2 px-5 font-mono text-xs font-bold uppercase tracking-[0.16em] transition-opacity",
           "bg-[color:var(--success)]/15 text-[color:var(--success)]",
         )}
         style={{ opacity: revealRight ? intensity : 0 }}
@@ -80,7 +82,7 @@ export function SwipeableLoadCard({
       </div>
       {/* Hide action (revealed when swiping left) */}
       <div
-        className="pointer-events-none absolute inset-y-0 right-0 flex w-1/2 items-center justify-end gap-2 bg-destructive/15 px-5 text-sm font-bold uppercase tracking-wider text-destructive"
+        className="pointer-events-none absolute inset-y-0 right-0 flex w-1/2 items-center justify-end gap-2 bg-destructive/15 px-5 font-mono text-xs font-bold uppercase tracking-[0.16em] text-destructive"
         style={{ opacity: revealLeft ? intensity : 0 }}
       >
         <span>Hide</span>
@@ -92,8 +94,12 @@ export function SwipeableLoadCard({
         onPointerUp={finish}
         onPointerCancel={finish}
         onPointerLeave={finish}
-        style={{ transform: `translateX(${dx}px)`, transition: dragging.current ? "none" : "transform 200ms ease-out", touchAction: "pan-y" }}
-        className="relative bg-background"
+        style={{
+          transform: `translateX(${dx}px)`,
+          transition: dragging.current ? "none" : "transform 200ms ease-out",
+          touchAction: "pan-y",
+        }}
+        className="relative"
       >
         <LoadCard load={load} onClick={handleClick} />
       </div>

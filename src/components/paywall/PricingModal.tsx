@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,13 +26,58 @@ interface Plan {
 }
 
 const PLANS: Plan[] = [
-  { tier: "free", name: "Free", monthly: 0, features: ["5 loads/day", "Browse only", "No broker contacts"] },
-  { tier: "basic", name: "Basic", monthly: 19, highlight: true, features: ["50 loads/day", "All broker contacts", "WhatsApp alerts", "Rate analytics", "Post 10 loads/mo"] },
-  { tier: "pro", name: "Pro", monthly: 49, features: ["Unlimited loads", "WhatsApp AI agent", "Priority listing", "Rate forecasting", "Post 50 loads/mo"] },
-  { tier: "fleet", name: "Fleet", monthly: 99, features: ["Everything in Pro", "25 driver seats", "Bulk posting", "API access", "Dedicated support"] },
+  {
+    tier: "free",
+    name: "Free",
+    monthly: 0,
+    features: ["5 loads/day", "Browse only", "No broker contacts"],
+  },
+  {
+    tier: "basic",
+    name: "Basic",
+    monthly: 19,
+    highlight: true,
+    features: [
+      "50 loads/day",
+      "All broker contacts",
+      "WhatsApp alerts",
+      "Rate analytics",
+      "Post 10 loads/mo",
+    ],
+  },
+  {
+    tier: "pro",
+    name: "Pro",
+    monthly: 49,
+    features: [
+      "Unlimited loads",
+      "WhatsApp AI agent",
+      "Priority listing",
+      "Rate forecasting",
+      "Post 50 loads/mo",
+    ],
+  },
+  {
+    tier: "fleet",
+    name: "Fleet",
+    monthly: 99,
+    features: [
+      "Everything in Pro",
+      "25 driver seats",
+      "Bulk posting",
+      "API access",
+      "Dedicated support",
+    ],
+  },
 ];
 
-export function PricingModal({ open, onOpenChange }: { open: boolean; onOpenChange: (b: boolean) => void }) {
+export function PricingModal({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (b: boolean) => void;
+}) {
   const [annual, setAnnual] = useState(false);
   const { user } = useAuth();
   const [ecocashOpen, setEcocashOpen] = useState(false);
@@ -35,8 +86,14 @@ export function PricingModal({ open, onOpenChange }: { open: boolean; onOpenChan
   const [submitting, setSubmitting] = useState(false);
 
   const submitEcoCash = async () => {
-    if (!user) { toast.error("Sign in to record payment"); return; }
-    if (!ref.trim()) { toast.error("Enter your EcoCash reference"); return; }
+    if (!user) {
+      toast.error("Sign in to record payment");
+      return;
+    }
+    if (!ref.trim()) {
+      toast.error("Enter your EcoCash reference");
+      return;
+    }
     setSubmitting(true);
     try {
       const { error } = await db.from("subscriptions").insert({
@@ -51,81 +108,177 @@ export function PricingModal({ open, onOpenChange }: { open: boolean; onOpenChan
       setEcocashOpen(false);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Failed to record payment");
-    } finally { setSubmitting(false); }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto border-border bg-card sm:max-w-3xl">
-        <DialogHeader>
-          <DialogTitle className="font-display text-3xl font-black uppercase tracking-tight">Choose your plan</DialogTitle>
-          <DialogDescription>14-day money back. Cancel anytime. Pay with USD card or EcoCash.</DialogDescription>
-        </DialogHeader>
+      <DialogContent className="max-h-[90vh] overflow-y-auto overflow-x-hidden border-border/70 bg-card p-0 sm:max-w-3xl">
+        <span
+          aria-hidden
+          className="sticky top-0 z-10 block h-1 w-full bg-gradient-to-r from-secondary via-primary to-secondary"
+        />
+        <div className="p-6 md:p-8">
+          <DialogHeader className="text-center">
+            <span className="section-kicker mx-auto justify-center">Pricing</span>
+            <DialogTitle className="mt-2 font-display text-3xl font-black tracking-[-0.04em] md:text-4xl">
+              Choose your plan
+            </DialogTitle>
+            <DialogDescription>
+              14-day money back. Cancel anytime. Pay with USD card or EcoCash.
+            </DialogDescription>
+          </DialogHeader>
 
-        <div className="flex items-center justify-center gap-3 text-sm">
-          <span className={cn(!annual && "text-foreground", annual && "text-muted-foreground")}>Monthly</span>
-          <Switch checked={annual} onCheckedChange={setAnnual} />
-          <span className={cn(annual && "text-foreground", !annual && "text-muted-foreground")}>Annual <span className="ml-1 rounded bg-primary/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary">Save 20%</span></span>
-        </div>
+          <div className="mt-5 flex items-center justify-center gap-3 text-sm">
+            <span
+              className={cn(
+                "font-semibold transition-colors",
+                !annual ? "text-foreground" : "text-muted-foreground",
+              )}
+            >
+              Monthly
+            </span>
+            <Switch checked={annual} onCheckedChange={setAnnual} />
+            <span
+              className={cn(
+                "flex items-center gap-2 font-semibold transition-colors",
+                annual ? "text-foreground" : "text-muted-foreground",
+              )}
+            >
+              Annual
+              <span className="rounded-full bg-secondary/20 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-secondary">
+                Save 20%
+              </span>
+            </span>
+          </div>
 
-        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-          {PLANS.map((p) => {
-            const price = annual ? Math.round(p.monthly * 12 * 0.8) : p.monthly;
-            const suffix = p.monthly === 0 ? "" : annual ? "/yr" : "/mo";
-            return (
-              <div key={p.tier} className={cn(
-                "relative flex flex-col rounded-lg border p-4",
-                p.highlight ? "border-primary bg-gradient-to-b from-primary/15 to-card" : "border-border bg-background/40"
-              )}>
-                {p.highlight && (
-                  <span className="absolute -top-2 left-1/2 -translate-x-1/2 rounded-full bg-primary px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-primary-foreground">Most popular</span>
-                )}
-                <h4 className="font-display text-xl font-black uppercase tracking-tight">{p.name}</h4>
-                <div className="mt-2 flex items-baseline gap-1">
-                  <span className="font-display text-3xl font-black">${price}</span>
-                  <span className="text-xs text-muted-foreground">{suffix}</span>
-                </div>
-                <ul className="mt-3 flex-1 space-y-1.5 text-xs">
-                  {p.features.map((f) => (
-                    <li key={f} className="flex gap-1.5"><Check className="h-3.5 w-3.5 shrink-0 text-primary" /><span>{f}</span></li>
-                  ))}
-                </ul>
-                <Button
-                  size="sm"
-                  disabled={p.tier === "free"}
-                  onClick={() => { setSelectedTier(p.tier); setEcocashOpen(true); }}
-                  className={cn("mt-4 w-full", p.highlight ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-secondary text-foreground hover:bg-secondary/80")}
+          <div className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+            {PLANS.map((p) => {
+              const price = annual ? Math.round(p.monthly * 12 * 0.8) : p.monthly;
+              const suffix = p.monthly === 0 ? "" : annual ? "/yr" : "/mo";
+              return (
+                <div
+                  key={p.tier}
+                  className={cn(
+                    "relative flex flex-col overflow-hidden rounded-2xl border p-5 transition-all",
+                    p.highlight
+                      ? "border-secondary/40 bg-card shadow-[0_0_0_1px_color-mix(in_oklab,var(--secondary)_30%,transparent)]"
+                      : "border-border/70 bg-card",
+                  )}
                 >
-                  {p.tier === "free" ? "Current" : `Choose ${p.name}`}
+                  {p.highlight && (
+                    <span
+                      aria-hidden
+                      className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+                    />
+                  )}
+                  {p.highlight && (
+                    <span className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 rounded-full bg-secondary px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-secondary-foreground shadow-[0_4px_12px_-2px_color-mix(in_oklab,var(--secondary)_60%,transparent)]">
+                      ★ Most popular
+                    </span>
+                  )}
+                  <h4 className="font-display text-2xl font-extrabold tracking-[-0.025em]">
+                    {p.name}
+                  </h4>
+                  <div className="mt-2 flex items-baseline gap-1">
+                    <span className="font-mono text-base font-bold text-muted-foreground">$</span>
+                    <span
+                      className={cn(
+                        "font-display text-4xl font-black leading-none tracking-[-0.035em]",
+                        p.highlight ? "text-secondary" : "text-foreground",
+                      )}
+                    >
+                      {price}
+                    </span>
+                    <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                      {suffix}
+                    </span>
+                  </div>
+                  <ul className="mt-4 flex-1 space-y-2 text-xs">
+                    {p.features.map((f) => (
+                      <li key={f} className="flex items-start gap-2">
+                        <span
+                          className={cn(
+                            "mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full",
+                            p.highlight
+                              ? "bg-secondary/20 text-secondary"
+                              : "bg-primary/10 text-primary",
+                          )}
+                        >
+                          <Check className="h-2.5 w-2.5" strokeWidth={3.5} />
+                        </span>
+                        <span className="text-foreground/85">{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Button
+                    size="sm"
+                    disabled={p.tier === "free"}
+                    onClick={() => {
+                      setSelectedTier(p.tier);
+                      setEcocashOpen(true);
+                    }}
+                    className={cn(
+                      "mt-5 w-full rounded-full font-bold",
+                      p.highlight
+                        ? "bg-secondary text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                        : "bg-primary text-primary-foreground hover:bg-primary/90",
+                    )}
+                  >
+                    {p.tier === "free" ? "Current" : `Choose ${p.name}`}
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+
+          <button
+            onClick={() => setEcocashOpen(!ecocashOpen)}
+            className="mt-6 block w-full text-center font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-secondary transition-colors hover:text-secondary/80"
+          >
+            {ecocashOpen ? "Hide" : "Show"} EcoCash / InnBucks instructions
+          </button>
+
+          {ecocashOpen && (
+            <div className="mt-4 overflow-hidden rounded-2xl border border-[color:var(--success)]/25 bg-gradient-to-br from-[color:var(--success)]/[0.05] via-card to-card p-5 text-sm">
+              <span className="section-kicker">Pay via mobile</span>
+              <p className="mt-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                EcoCash USSD
+              </p>
+              <p className="mt-1 font-mono text-base font-semibold text-foreground">
+                *151*4*ZimFreight*
+                <span className="text-secondary">{selectedTier.toUpperCase()}</span>#
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                Send the amount above to ZimFreight, then enter the EcoCash reference below. We
+                activate within 1 hour.
+              </p>
+              <div className="mt-4 space-y-2">
+                <Label>EcoCash reference</Label>
+                <Input
+                  value={ref}
+                  onChange={(e) => setRef(e.target.value)}
+                  placeholder="EC-12345678"
+                />
+                <Button
+                  onClick={submitEcoCash}
+                  disabled={submitting}
+                  className="w-full rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                >
+                  {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Verify payment
                 </Button>
               </div>
-            );
-          })}
-        </div>
-
-        <button onClick={() => setEcocashOpen(!ecocashOpen)} className="text-center text-sm font-medium text-primary hover:underline">
-          {ecocashOpen ? "Hide" : "Show"} EcoCash / InnBucks instructions
-        </button>
-
-        {ecocashOpen && (
-          <div className="rounded-md border border-primary/30 bg-primary/5 p-4 text-sm">
-            <p className="font-mono text-xs text-muted-foreground">EcoCash USSD</p>
-            <p className="mt-1 font-mono text-base text-foreground">*151*4*ZimFreight*{selectedTier.toUpperCase()}#</p>
-            <p className="mt-2 text-xs text-muted-foreground">Send the amount above to ZimFreight, then enter the EcoCash reference below. We activate within 1 hour.</p>
-            <div className="mt-3 space-y-2">
-              <Label>EcoCash reference</Label>
-              <Input value={ref} onChange={(e) => setRef(e.target.value)} placeholder="EC-12345678" />
-              <Button onClick={submitEcoCash} disabled={submitting} className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Verify payment
-              </Button>
             </div>
-          </div>
-        )}
+          )}
 
-        <p className="text-center text-[11px] text-muted-foreground">
-          🔒 Secure payment · 14-day money back · Cancel anytime · No setup fee
-        </p>
+          <p className="mt-6 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            🔒 Secure payment &middot; 14-day money back &middot; Cancel anytime &middot; No setup
+            fee
+          </p>
+        </div>
       </DialogContent>
     </Dialog>
   );

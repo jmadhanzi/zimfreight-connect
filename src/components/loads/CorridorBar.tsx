@@ -16,15 +16,27 @@ export interface Corridor {
 }
 
 export const ZIM_CORRIDORS: Corridor[] = [
-  { id: "all",       origin: "all",       destination: "all",       label: "All Routes",        flag: "🇿🇼" },
-  { id: "hre-bul",   origin: "Harare",    destination: "Bulawayo",  label: "Hre → Bul",         flag: "🏙" },
-  { id: "hre-beit",  origin: "Harare",    destination: "Beitbridge",label: "Hre → Beit",        flag: "🌉" },
-  { id: "bul-beit",  origin: "Bulawayo",  destination: "Beitbridge",label: "Bul → Beit",        flag: "🛣" },
-  { id: "hre-mut",   origin: "Harare",    destination: "Mutare",    label: "Hre → Mut",         flag: "⛰" },
-  { id: "hre-kwe",   origin: "Harare",    destination: "Kwekwe",    label: "Hre → Kwe",         flag: "⚙" },
-  { id: "beit-jnb",  origin: "Beitbridge",destination: "Johannesburg", label: "Beit → JNB",    flag: "🇿🇦" },
-  { id: "hre-lun",   origin: "Harare",    destination: "Lusaka",    label: "Hre → Lusaka",      flag: "🇿🇲" },
-  { id: "hre-blr",   origin: "Harare",    destination: "Blantyre",  label: "Hre → Blantyre",    flag: "🇲🇼" },
+  { id: "all", origin: "all", destination: "all", label: "All Routes", flag: "🇿🇼" },
+  { id: "hre-bul", origin: "Harare", destination: "Bulawayo", label: "Hre → Bul", flag: "🏙" },
+  { id: "hre-beit", origin: "Harare", destination: "Beitbridge", label: "Hre → Beit", flag: "🌉" },
+  {
+    id: "bul-beit",
+    origin: "Bulawayo",
+    destination: "Beitbridge",
+    label: "Bul → Beit",
+    flag: "🛣",
+  },
+  { id: "hre-mut", origin: "Harare", destination: "Mutare", label: "Hre → Mut", flag: "⛰" },
+  { id: "hre-kwe", origin: "Harare", destination: "Kwekwe", label: "Hre → Kwe", flag: "⚙" },
+  {
+    id: "beit-jnb",
+    origin: "Beitbridge",
+    destination: "Johannesburg",
+    label: "Beit → JNB",
+    flag: "🇿🇦",
+  },
+  { id: "hre-lun", origin: "Harare", destination: "Lusaka", label: "Hre → Lusaka", flag: "🇿🇲" },
+  { id: "hre-blr", origin: "Harare", destination: "Blantyre", label: "Hre → Blantyre", flag: "🇲🇼" },
 ];
 
 interface CorridorBarProps {
@@ -39,15 +51,12 @@ export function CorridorBar({ active, onSelect, resultCount, loading }: Corridor
     <div className="border-b border-border bg-[color:var(--bg-secondary)]">
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <div className="flex items-center gap-2 overflow-x-auto py-2.5 scrollbar-none">
-          {ZIM_CORRIDORS.map(c => (
+          {ZIM_CORRIDORS.map((c) => (
             <button
               key={c.id}
               type="button"
               onClick={() => onSelect(c)}
-              className={cn(
-                "corridor-chip shrink-0",
-                active === c.id && "active",
-              )}
+              className={cn("corridor-chip shrink-0", active === c.id && "active")}
             >
               {c.flag && <span className="text-[13px]">{c.flag}</span>}
               {c.id === "all" ? (
@@ -63,11 +72,12 @@ export function CorridorBar({ active, onSelect, resultCount, loading }: Corridor
           ))}
 
           {/* Result count + loading indicator */}
-          <div className="ml-auto flex shrink-0 items-center gap-2 pl-4 text-xs text-muted-foreground">
-            {loading && <RefreshCw className="h-3 w-3 animate-spin" />}
+          <div className="ml-auto flex shrink-0 items-center gap-2 pl-4">
+            {loading && <RefreshCw className="h-3 w-3 animate-spin text-muted-foreground" />}
             {resultCount !== undefined && (
-              <span className="font-mono tabular-nums">
-                {resultCount.toLocaleString()} load{resultCount === 1 ? "" : "s"}
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] tabular-nums text-muted-foreground">
+                <span className="text-foreground">{resultCount.toLocaleString()}</span> load
+                {resultCount === 1 ? "" : "s"}
               </span>
             )}
           </div>

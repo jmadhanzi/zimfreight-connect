@@ -29,39 +29,64 @@ export function RateIntelligenceBar({
 }: RateIntelligenceBarProps) {
   if (!avgRatePerKm) return null;
 
-  const TrendIcon = marketTrend === "up" ? TrendingUp : marketTrend === "down" ? TrendingDown : Minus;
+  const TrendIcon =
+    marketTrend === "up" ? TrendingUp : marketTrend === "down" ? TrendingDown : Minus;
   const trendColor =
     marketTrend === "up"
       ? "text-[color:var(--success)]"
       : marketTrend === "down"
-      ? "text-destructive"
-      : "text-muted-foreground";
+        ? "text-destructive"
+        : "text-muted-foreground";
 
   const zwlPerKm = (avgRatePerKm * zwlRate).toFixed(0);
 
   return (
     <TooltipProvider delayDuration={200}>
-      <div className={cn("flex flex-wrap items-center gap-x-6 gap-y-1.5 rounded-lg border border-border bg-card px-4 py-2.5 text-xs", className)}>
+      <div
+        className={cn(
+          "flex flex-wrap items-center gap-x-6 gap-y-1.5 rounded-2xl border border-border/70 bg-card px-4 py-3 text-xs",
+          className,
+        )}
+      >
         {/* Label */}
-        <div className="flex items-center gap-1.5 text-muted-foreground">
-          <span className="font-mono uppercase tracking-widest">Market Rate</span>
+        <div className="flex items-center gap-2">
+          <span className="dot-live" />
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-foreground">
+            Market Rate
+          </span>
           {corridor !== "all" && (
-            <span className="font-semibold text-foreground">{corridor}</span>
+            <span className="font-display text-sm font-bold tracking-tight text-foreground">
+              {corridor}
+            </span>
           )}
         </div>
 
         {/* USD rate */}
-        <div className="flex items-center gap-1.5">
-          <span className="font-mono-num text-base font-bold text-foreground">
-            ${avgRatePerKm.toFixed(2)}/km
+        <div className="flex items-center gap-2">
+          <span className="font-display text-base font-extrabold tracking-[-0.02em] tabular-nums text-foreground">
+            ${avgRatePerKm.toFixed(2)}
+            <span className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+              /km
+            </span>
           </span>
-          <span className={cn("flex items-center gap-0.5 font-mono font-bold", trendColor)}>
-            <TrendIcon className="h-3.5 w-3.5" />
-            {trendPct > 0 ? "+" : ""}{trendPct.toFixed(1)}%
+          <span
+            className={cn(
+              "inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 font-mono text-[10px] font-bold tabular-nums",
+              trendColor,
+              marketTrend === "up"
+                ? "bg-[color-mix(in_oklab,var(--success)_12%,transparent)]"
+                : marketTrend === "down"
+                  ? "bg-destructive/12"
+                  : "bg-muted",
+            )}
+          >
+            <TrendIcon className="h-3 w-3" strokeWidth={3} />
+            {trendPct > 0 ? "+" : ""}
+            {trendPct.toFixed(1)}%
           </span>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Info className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
+              <Info className="h-3.5 w-3.5 cursor-help text-muted-foreground hover:text-foreground" />
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[220px] text-[11px]">
               30-day rolling average from all completed loads on this corridor. Updated daily.
@@ -70,23 +95,24 @@ export function RateIntelligenceBar({
         </div>
 
         {/* ZWL equivalent */}
-        <div className="flex items-center gap-1.5 text-muted-foreground">
-          <span className="font-mono uppercase tracking-widest">ZWL equiv.</span>
-          <span className="font-mono-num font-bold text-foreground">ZWL {Number(zwlPerKm).toLocaleString()}/km</span>
-          <span className="text-muted-foreground">@ {zwlRate.toLocaleString()}</span>
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+            ZWL equiv.
+          </span>
+          <span className="font-mono-num font-bold text-foreground">
+            ZWL {Number(zwlPerKm).toLocaleString()}
+            <span className="font-medium text-muted-foreground">/km</span>
+          </span>
+          <span className="font-mono text-[10px] text-muted-foreground">
+            @ {zwlRate.toLocaleString()}
+          </span>
         </div>
 
         {/* Rate guidance */}
         <div className="ml-auto flex items-center gap-1.5">
-          <span className="inline-flex items-center gap-1 rounded-full bg-[color:var(--success)]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-[color:var(--success)]">
-            Above market
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-[color:var(--zim-yellow)]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-[color:var(--zim-yellow)]">
-            At market
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-destructive">
-            Below market
-          </span>
+          <span className="glass-chip glass-chip-success uppercase">Above market</span>
+          <span className="glass-chip glass-chip-amber uppercase">At market</span>
+          <span className="glass-chip glass-chip-danger uppercase">Below market</span>
         </div>
       </div>
     </TooltipProvider>

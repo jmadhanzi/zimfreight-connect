@@ -43,54 +43,104 @@ interface Props {
   filterDestination: string;
 }
 
-/** Build a circular SVG div-icon for city load clusters */
+/** Design-system colors (computed equivalents of the OKLCH tokens) */
+const COLORS = {
+  primary: "#0f1c3f", // navy — origin clusters
+  secondary: "#f5b041", // amber — destination clusters and rate accents
+  destructive: "#dc4727", // red — urgent loads
+  info: "#2e6fbf", // blue — cross-border
+  success: "#3aa35d", // green — verified
+};
+
+/** Build a circular SVG div-icon for city load clusters with halo bloom */
 function cityIcon(count: number, isOrigin: boolean) {
-  const color = isOrigin ? "#1e3a8a" : "#d97706";
+  const color = isOrigin ? COLORS.primary : COLORS.secondary;
   const size = count > 10 ? 38 : count > 4 ? 32 : 26;
+  const haloSize = size + 18;
   const html = `
-    <div style="
-      width:${size}px;height:${size}px;
-      border-radius:50%;
-      background:${color};
-      border:2.5px solid #fff;
-      box-shadow:0 2px 8px rgba(0,0,0,0.35);
-      display:flex;align-items:center;justify-content:center;
-      color:#fff;font-size:${size > 30 ? 13 : 11}px;font-weight:800;
-      font-family:'Manrope',system-ui,sans-serif;
-    ">${count}</div>`;
-  return L.divIcon({ html, className: "", iconSize: [size, size], iconAnchor: [size / 2, size / 2] });
+    <div style="position:relative;width:${haloSize}px;height:${haloSize}px;display:flex;align-items:center;justify-content:center;">
+      <div style="
+        position:absolute;inset:0;
+        border-radius:50%;
+        background:${color};
+        opacity:0.18;
+        filter:blur(6px);
+      "></div>
+      <div style="
+        position:relative;
+        width:${size}px;height:${size}px;
+        border-radius:50%;
+        background:${color};
+        border:2.5px solid #fff;
+        box-shadow:0 2px 10px rgba(0,0,0,0.30), 0 0 0 1px ${color}33;
+        display:flex;align-items:center;justify-content:center;
+        color:#fff;font-size:${size > 30 ? 13 : 11}px;font-weight:800;
+        font-family:'Bricolage Grotesque','Plus Jakarta Sans',system-ui,sans-serif;
+        letter-spacing:-0.02em;
+      ">${count}</div>
+    </div>`;
+  return L.divIcon({
+    html,
+    className: "",
+    iconSize: [haloSize, haloSize],
+    iconAnchor: [haloSize / 2, haloSize / 2],
+  });
 }
 
 /** Build a border crossing marker icon */
 function borderIcon(waitHours: number) {
   const color = borderWaitColor(waitHours);
   const html = `
-    <div style="
-      width:34px;height:34px;
-      border-radius:6px;
-      background:${color};
-      border:2.5px solid #fff;
-      box-shadow:0 2px 8px rgba(0,0,0,0.40);
-      display:flex;align-items:center;justify-content:center;
-      color:#fff;font-size:10px;font-weight:800;
-      font-family:'JetBrains Mono',ui-monospace,monospace;
-      flex-direction:column;gap:0;
-    ">
-      <span style="font-size:9px;line-height:1">⏱</span>
-      <span style="line-height:1.2">${borderWaitLabel(waitHours)}</span>
+    <div style="position:relative;width:50px;height:50px;display:flex;align-items:center;justify-content:center;">
+      <div style="
+        position:absolute;inset:0;
+        border-radius:50%;
+        background:${color};
+        opacity:0.20;
+        filter:blur(8px);
+      "></div>
+      <div style="
+        position:relative;
+        width:34px;height:34px;
+        border-radius:8px;
+        background:${color};
+        border:2.5px solid #fff;
+        box-shadow:0 2px 10px rgba(0,0,0,0.35), 0 0 0 1px ${color}33;
+        display:flex;align-items:center;justify-content:center;
+        color:#fff;font-size:10px;font-weight:800;
+        font-family:'JetBrains Mono',ui-monospace,monospace;
+        flex-direction:column;gap:0;
+      ">
+        <span style="font-size:9px;line-height:1;opacity:0.9">⏱</span>
+        <span style="line-height:1.2;font-variant-numeric:tabular-nums">${borderWaitLabel(waitHours)}</span>
+      </div>
     </div>`;
-  return L.divIcon({ html, className: "", iconSize: [34, 34], iconAnchor: [17, 17] });
+  return L.divIcon({ html, className: "", iconSize: [50, 50], iconAnchor: [25, 25] });
 }
 
 /** Build a small dot icon for individual load pins */
 function loadDotIcon(isUrgent: boolean, isBorder: boolean) {
-  const color = isUrgent ? "#ef4444" : isBorder ? "#3b82f6" : "#1e3a8a";
+  const color = isUrgent ? COLORS.destructive : isBorder ? COLORS.info : COLORS.secondary;
   const html = `<div style="
-    width:10px;height:10px;border-radius:50%;
-    background:${color};border:2px solid #fff;
-    box-shadow:0 1px 4px rgba(0,0,0,0.4);
-  "></div>`;
-  return L.divIcon({ html, className: "", iconSize: [10, 10], iconAnchor: [5, 5] });
+    position:relative;
+    width:14px;height:14px;
+  ">
+    <div style="
+      position:absolute;inset:-3px;
+      border-radius:50%;
+      background:${color};
+      opacity:0.25;
+      filter:blur(3px);
+    "></div>
+    <div style="
+      position:relative;
+      width:10px;height:10px;border-radius:50%;
+      background:${color};border:2px solid #fff;
+      box-shadow:0 1px 4px rgba(0,0,0,0.35);
+      margin:2px;
+    "></div>
+  </div>`;
+  return L.divIcon({ html, className: "", iconSize: [14, 14], iconAnchor: [7, 7] });
 }
 
 export function FreightMap({
@@ -125,15 +175,12 @@ export function FreightMap({
     });
 
     // Dark-style OpenStreetMap tiles (Carto Dark Matter — free, no key)
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-      {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: "abcd",
-        maxZoom: 20,
-      }
-    ).addTo(map);
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: "abcd",
+      maxZoom: 20,
+    }).addTo(map);
 
     // Fit to Zimbabwe bounds
     map.fitBounds(ZIM_BOUNDS, { padding: [20, 20] });
@@ -187,7 +234,8 @@ export function FreightMap({
     // Filter loads
     const filtered = loads.filter((l) => {
       if (filterOrigin && l.origin.toLowerCase() !== filterOrigin.toLowerCase()) return false;
-      if (filterDestination && l.destination.toLowerCase() !== filterDestination.toLowerCase()) return false;
+      if (filterDestination && l.destination.toLowerCase() !== filterDestination.toLowerCase())
+        return false;
       return true;
     });
 
@@ -211,7 +259,11 @@ export function FreightMap({
       const dCoord = getCityCoords(load.destination);
       if (!oCoord || !dCoord) return;
 
-      const color = load.is_urgent ? "#ef4444" : load.is_border_crossing ? "#3b82f6" : "#d97706";
+      const color = load.is_urgent
+        ? COLORS.destructive
+        : load.is_border_crossing
+          ? COLORS.info
+          : COLORS.secondary;
       const line = L.polyline(
         [
           [oCoord.lat, oCoord.lng],
@@ -222,17 +274,17 @@ export function FreightMap({
           weight: load.is_urgent ? 2.5 : 1.5,
           opacity: 0.55,
           dashArray: load.is_border_crossing ? "6 4" : undefined,
-        }
+        },
       );
 
       line.on("click", () => onSelectLoad(load));
       line.bindTooltip(
-        `<div style="font-family:'Manrope',sans-serif;font-size:12px;font-weight:700">
+        `<div style="font-family:'Plus Jakarta Sans','Bricolage Grotesque',system-ui,sans-serif;font-size:12px;font-weight:700">
           ${load.origin} → ${load.destination}<br/>
-          <span style="color:#d97706">${formatUSD(load.rate_usd)}</span>
+          <span style="color:${COLORS.secondary}">${formatUSD(load.rate_usd)}</span>
           ${load.distance_km ? ` · ${load.distance_km}km` : ""}
         </div>`,
-        { sticky: true, className: "zf-tooltip" }
+        { sticky: true, className: "zf-tooltip" },
       );
       line.addTo(lg.routes);
     });
@@ -286,7 +338,7 @@ export function FreightMap({
     borders.forEach((border) => {
       // Prefer DB coordinates (from migration), fall back to static lookup
       const staticCoord = BORDER_COORDS.find(
-        (b) => b.name.toLowerCase() === border.border_name.toLowerCase()
+        (b) => b.name.toLowerCase() === border.border_name.toLowerCase(),
       );
       const lat = border.lat != null ? Number(border.lat) : staticCoord?.lat;
       const lng = border.lng != null ? Number(border.lng) : staticCoord?.lng;
@@ -300,7 +352,7 @@ export function FreightMap({
 
       const statusColor = borderWaitColor(Number(border.wait_hours));
       const popupHtml = `
-        <div style="font-family:'Manrope',sans-serif;min-width:200px">
+        <div style="font-family:'Plus Jakarta Sans','Bricolage Grotesque',system-ui,sans-serif;min-width:200px">
           <div style="font-size:14px;font-weight:800;margin-bottom:6px">
             🛂 ${border.border_name}
           </div>
@@ -338,24 +390,31 @@ export function FreightMap({
     const map = leafletMap.current;
     const lg = layerGroups.current;
     if (!map || !lg) return;
-    if (showLoads) { if (!map.hasLayer(lg.loads)) map.addLayer(lg.loads); if (!map.hasLayer(lg.routes)) map.addLayer(lg.routes); }
-    else { map.removeLayer(lg.loads); map.removeLayer(lg.routes); }
+    if (showLoads) {
+      if (!map.hasLayer(lg.loads)) map.addLayer(lg.loads);
+      if (!map.hasLayer(lg.routes)) map.addLayer(lg.routes);
+    } else {
+      map.removeLayer(lg.loads);
+      map.removeLayer(lg.routes);
+    }
   }, [showLoads]);
 
   useEffect(() => {
     const map = leafletMap.current;
     const lg = layerGroups.current;
     if (!map || !lg) return;
-    if (showBorders) { if (!map.hasLayer(lg.borders)) map.addLayer(lg.borders); }
-    else map.removeLayer(lg.borders);
+    if (showBorders) {
+      if (!map.hasLayer(lg.borders)) map.addLayer(lg.borders);
+    } else map.removeLayer(lg.borders);
   }, [showBorders]);
 
   useEffect(() => {
     const map = leafletMap.current;
     const lg = layerGroups.current;
     if (!map || !lg) return;
-    if (showCorridors) { if (!map.hasLayer(lg.corridors)) map.addLayer(lg.corridors); }
-    else map.removeLayer(lg.corridors);
+    if (showCorridors) {
+      if (!map.hasLayer(lg.corridors)) map.addLayer(lg.corridors);
+    } else map.removeLayer(lg.corridors);
   }, [showCorridors]);
 
   return (
@@ -363,43 +422,62 @@ export function FreightMap({
       {/* Leaflet popup / tooltip custom styles injected inline */}
       <style>{`
         .zf-tooltip {
-          background: rgba(15,15,25,0.92) !important;
-          border: 1px solid rgba(255,255,255,0.12) !important;
+          background: rgba(15,15,25,0.94) !important;
+          border: 1px solid rgba(255,255,255,0.10) !important;
           color: #f0f0f0 !important;
-          border-radius: 8px !important;
-          font-family: 'Manrope', system-ui, sans-serif !important;
+          border-radius: 10px !important;
+          font-family: 'Plus Jakarta Sans','Bricolage Grotesque',system-ui,sans-serif !important;
           font-size: 12px !important;
-          padding: 6px 10px !important;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
+          padding: 7px 11px !important;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.55), 0 0 0 1px rgba(245,176,65,0.06) !important;
+          backdrop-filter: blur(8px) !important;
         }
         .zf-tooltip::before { display: none !important; }
         .zf-popup .leaflet-popup-content-wrapper {
-          background: #12131e !important;
-          border: 1px solid rgba(255,255,255,0.1) !important;
-          border-radius: 12px !important;
+          background: linear-gradient(180deg, #161728 0%, #11121d 100%) !important;
+          border: 1px solid rgba(255,255,255,0.08) !important;
+          border-radius: 14px !important;
           color: #e8e8f0 !important;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
+          box-shadow: 0 16px 48px rgba(0,0,0,0.65), 0 0 0 1px rgba(245,176,65,0.05) !important;
           padding: 0 !important;
+          overflow: hidden;
+        }
+        .zf-popup .leaflet-popup-content-wrapper::before {
+          content: "";
+          position: absolute;
+          inset-inline: 0;
+          top: 0;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, rgba(245,176,65,0.55), transparent);
+          pointer-events: none;
         }
         .zf-popup .leaflet-popup-content {
-          margin: 14px 16px !important;
+          margin: 16px 18px !important;
+          position: relative;
         }
         .zf-popup .leaflet-popup-tip-container { display: none !important; }
         .zf-popup .leaflet-popup-close-button {
           color: #888 !important;
           font-size: 18px !important;
-          top: 8px !important;
-          right: 10px !important;
+          top: 10px !important;
+          right: 12px !important;
+          transition: color 0.15s ease !important;
         }
+        .zf-popup .leaflet-popup-close-button:hover { color: #e8e8f0 !important; }
         .leaflet-control-zoom a {
-          background: #12131e !important;
+          background: rgba(18,19,30,0.92) !important;
           color: #e8e8f0 !important;
-          border-color: rgba(255,255,255,0.12) !important;
+          border-color: rgba(255,255,255,0.10) !important;
+          backdrop-filter: blur(8px) !important;
         }
+        .leaflet-control-zoom a:hover { background: rgba(28,29,42,0.98) !important; }
         .leaflet-control-attribution {
-          background: rgba(15,15,25,0.75) !important;
+          background: rgba(15,15,25,0.78) !important;
           color: #666 !important;
           font-size: 9px !important;
+          font-family: 'JetBrains Mono', ui-monospace, monospace !important;
+          padding: 2px 6px !important;
+          backdrop-filter: blur(4px) !important;
         }
         .leaflet-control-attribution a { color: #888 !important; }
       `}</style>
@@ -430,21 +508,24 @@ function buildCityPopup(city: string, loads: Load[], role: "origin" | "destinati
           </div>
         </div>
         <div style="text-align:right">
-          <div style="font-size:13px;font-weight:800;color:#d97706">${formatUSD(l.rate_usd)}</div>
-          ${l.is_urgent ? '<div style="font-size:9px;color:#ef4444;font-weight:700">URGENT</div>' : ""}
+          <div style="font-size:13px;font-weight:800;color:${COLORS.secondary};font-family:'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:-0.01em">${formatUSD(l.rate_usd)}</div>
+          ${l.is_urgent ? `<div style="font-size:9px;color:${COLORS.destructive};font-weight:700;letter-spacing:0.08em">URGENT</div>` : ""}
         </div>
-      </div>`
+      </div>`,
     )
     .join("");
 
-  const more = loads.length > 5 ? `<div style="font-size:10px;color:#888;margin-top:6px">+${loads.length - 5} more loads</div>` : "";
+  const more =
+    loads.length > 5
+      ? `<div style="font-size:10px;color:#888;margin-top:6px">+${loads.length - 5} more loads</div>`
+      : "";
 
   return `
-    <div style="font-family:'Manrope',sans-serif;min-width:220px">
-      <div style="font-size:13px;font-weight:800;color:#e8e8f0;margin-bottom:4px">
-        📍 ${city}
+    <div style="font-family:'Plus Jakarta Sans','Bricolage Grotesque',system-ui,sans-serif;min-width:220px">
+      <div style="font-size:14px;font-weight:800;color:#e8e8f0;margin-bottom:4px;letter-spacing:-0.01em">
+        ${city}
       </div>
-      <div style="font-size:10px;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em">
+      <div style="font-size:10px;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.16em;font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:600">
         ${roleLabel} ${city} · ${loads.length} load${loads.length !== 1 ? "s" : ""}
       </div>
       ${items}
