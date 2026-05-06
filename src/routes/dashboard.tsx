@@ -28,6 +28,8 @@ import { BorderStatusGrid } from "@/components/dashboard/BorderStatusGrid";
 import { RoutePopularityChart } from "@/components/dashboard/RoutePopularityChart";
 import { ZwlChart } from "@/components/dashboard/ZwlChart";
 import { ProfileCompletion } from "@/components/dashboard/ProfileCompletion";
+import { SavedCarriersWidget } from "@/components/dashboard/SavedCarriersWidget";
+import { RecurringLoadsWidget } from "@/components/dashboard/RecurringLoadsWidget";
 import {
   useBorderStatus,
   useBrokerLoads,
@@ -259,6 +261,11 @@ function BrokerSections() {
             }}
           />
         </div>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <RecurringLoadsWidget />
+        <SavedCarriersWidget />
       </div>
     </section>
   );

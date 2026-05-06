@@ -19,13 +19,23 @@ import {
 import { formatUSD, cn } from "@/lib/utils";
 import type { Load } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { db } from "@/lib/db";
 import type { BorderStatus, RouteRate } from "@/types";
 import { toast } from "sonner";
 import { recordLoadView } from "@/components/conversion/SoftGateModal";
 import { cacheRate, getCachedRate } from "@/lib/offlineDb";
 import { useNetworkStatus } from "@/hooks/useNetworkStatus";
+import {
+  aggregateRatings,
+  getRatings,
+  isPreferredCarrier,
+  addPreferredCarrier,
+  removePreferredCarrier,
+} from "@/lib/trust";
+import { RatingStars, VerifiedPayerBadge, PreferredBadge } from "@/components/trust/Badges";
+import { formatDual } from "@/lib/fx";
+import { Heart } from "lucide-react";
 
 function humanCacheAge(ms: number) {
   const m = Math.floor(ms / 60_000);
@@ -95,6 +105,20 @@ export function LoadDetailSheet({
     }
   }, [load, online]);
 
+  // Trust signals (hooks must run before the early return)
+  const brokerId =
+    (load as (Load & { poster_id?: string; broker_id?: string }) | null)?.poster_id ??
+    (load as (Load & { broker_id?: string }) | null)?.broker_id ??
+    (load ? `broker_${load.id}` : "broker_unknown");
+  const brokerAgg = useMemo(() => aggregateRatings(brokerId, getRatings()), [brokerId]);
+  const [preferred, setPreferred] = useState(false);
+  useEffect(() => {
+    setPreferred(isPreferredCarrier(brokerId));
+    const refresh = () => setPreferred(isPreferredCarrier(brokerId));
+    window.addEventListener("zf:preferred-changed", refresh);
+    return () => window.removeEventListener("zf:preferred-changed", refresh);
+  }, [brokerId]);
+
   if (!load)
     return (
       <Sheet open={false} onOpenChange={(o) => !o && onClose()}>
@@ -113,6 +137,9 @@ export function LoadDetailSheet({
     if (diff < -0.05) return { tone: "destructive" as const, label: "BELOW MARKET" };
     return { tone: "primary" as const, label: "AT MARKET" };
   })();
+
+  // Dual currency display
+  const rateDual = formatDual(Number(load.rate_usd));
 
   const share = async () => {
     const url =
@@ -171,7 +198,7 @@ export function LoadDetailSheet({
             <div className="font-display text-[2.75rem] font-black leading-none tracking-[-0.04em] text-foreground">
               {formatUSD(load.rate_usd)}
             </div>
-            <div className="mt-1 flex items-center gap-2 font-mono text-xs text-muted-foreground">
+            <div className="mt-1 flex flex-wrap items-center gap-2 font-mono text-xs text-muted-foreground">
               {load.rate_per_km && (
                 <span className="font-semibold text-foreground/70">
                   ${Number(load.rate_per_km).toFixed(2)}/km
@@ -179,6 +206,8 @@ export function LoadDetailSheet({
               )}
               {load.rate_per_km && load.distance_km && <span className="text-border">·</span>}
               {load.distance_km && <span>{load.distance_km}km</span>}
+              <span className="text-border">·</span>
+              <span className="font-semibold text-secondary/85">{rateDual.zwl}</span>
             </div>
             {ratePos && marketRate && (
               <div className="mt-3 rounded-xl border border-border bg-background/40 p-3">
@@ -226,68 +255,91 @@ export function LoadDetailSheet({
           </section>
 
           {/* BROKER */}
-          <section className="rounded-lg border border-border bg-background/40 p-4">
-            <h4 className="font-display text-xs font-bold uppercase tracking-widest text-muted-foreground">
-              Broker Profile
-            </h4>
+          <section className="rounded-2xl border border-border/70 bg-card p-4">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                Broker profile
+              </span>
+              {canSeeContacts && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (preferred) {
+                      removePreferredCarrier(brokerId);
+                      toast.success("Removed from preferred network");
+                    } else {
+                      addPreferredCarrier({
+                        carrierId: brokerId,
+                        name:
+                          (load as Load & { poster?: { full_name?: string } }).poster?.full_name ??
+                          "Verified Broker",
+                      });
+                      toast.success("Added to preferred network");
+                    }
+                  }}
+                  className={cn(
+                    "inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] transition-colors",
+                    preferred
+                      ? "bg-destructive/12 text-destructive"
+                      : "border border-border bg-card text-muted-foreground hover:border-foreground/15 hover:text-foreground",
+                  )}
+                  aria-label={preferred ? "Remove from preferred" : "Add to preferred"}
+                >
+                  <Heart
+                    className={cn("h-3 w-3", preferred && "fill-current")}
+                    strokeWidth={preferred ? 0 : 2}
+                  />
+                  {preferred ? "Preferred" : "Save broker"}
+                </button>
+              )}
+            </div>
+
             {canSeeContacts ? (
-              <div className="mt-2">
+              <div className="mt-3">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/15 font-display text-lg font-black text-primary ring-2 ring-primary/20">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10 font-display text-lg font-black text-primary">
                     {((load as Load & { poster?: { full_name?: string } }).poster?.full_name ??
                       "B")[0].toUpperCase()}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-bold text-foreground">
+                  <div className="min-w-0 flex-1">
+                    <div className="font-display text-base font-extrabold tracking-tight text-foreground">
                       {(load as Load & { poster?: { full_name?: string } }).poster?.full_name ??
                         "Verified Broker"}
                     </div>
-                    <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
-                      <span className="inline-flex items-center gap-1 text-[11px] text-[color:var(--success)]">
-                        <ShieldCheck className="h-3 w-3" /> Verified
-                      </span>
+                    <div className="mt-1 flex flex-wrap items-center gap-2">
+                      <RatingStars agg={brokerAgg} size="sm" />
+                      <VerifiedPayerBadge agg={brokerAgg} />
+                      {preferred && <PreferredBadge />}
                       {load.zimra_required && (
-                        <span className="inline-flex items-center gap-1 text-[11px] text-[color:var(--zim-yellow)]">
-                          <ShieldCheck className="h-3 w-3" /> ZIMRA Reg.
+                        <span className="inline-flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-secondary">
+                          <ShieldCheck className="h-3 w-3" /> ZIMRA
                         </span>
                       )}
                     </div>
                   </div>
                 </div>
-                <div className="mt-3 grid grid-cols-3 gap-2 text-center">
-                  <div className="rounded-md bg-background/60 px-2 py-2.5">
-                    <div className="font-mono-num text-base font-black text-foreground">
-                      &mdash;
-                    </div>
-                    <div className="font-mono text-[9px] uppercase text-muted-foreground">
-                      Loads posted
-                    </div>
-                  </div>
-                  <div className="rounded-md bg-background/60 px-2 py-2.5">
-                    <div className="font-mono-num text-base font-black text-foreground">
-                      {load.payment_terms ?? "—"}
-                    </div>
-                    <div className="font-mono text-[9px] uppercase text-muted-foreground">
-                      Payment terms
-                    </div>
-                  </div>
-                  <div className="rounded-md bg-background/60 px-2 py-2.5">
-                    <div className="font-mono-num text-base font-black text-[color:var(--success)]">
-                      Good
-                    </div>
-                    <div className="font-mono text-[9px] uppercase text-muted-foreground">
-                      Credit rating
-                    </div>
-                  </div>
+                <div className="mt-3 grid grid-cols-3 gap-2">
+                  <BrokerStat
+                    value={brokerAgg.count > 0 ? String(brokerAgg.count) : "—"}
+                    label="Bookings"
+                  />
+                  <BrokerStat value={load.payment_terms ?? "—"} label="Payment terms" />
+                  <BrokerStat
+                    value={
+                      brokerAgg.paidOnTimePct !== undefined ? `${brokerAgg.paidOnTimePct}%` : "—"
+                    }
+                    label="Paid on time"
+                    tone={(brokerAgg.paidOnTimePct ?? 0) >= 90 ? "success" : undefined}
+                  />
                 </div>
               </div>
             ) : (
-              <div className="mt-2 rounded-md border border-primary/30 bg-primary/5 p-3">
+              <div className="mt-3 rounded-xl border border-secondary/30 bg-secondary/[0.06] p-3">
                 <div className="flex items-start gap-2">
-                  <Lock className="mt-0.5 h-4 w-4 text-primary" />
+                  <Lock className="mt-0.5 h-4 w-4 text-secondary" />
                   <div className="flex-1 text-xs text-muted-foreground">
                     <span className="font-bold text-foreground">Broker details locked.</span>{" "}
-                    Upgrade to Basic to see ratings, payment terms, and ZIMRA status.
+                    Upgrade to Basic to see ratings, payment history, and ZIMRA status.
                   </div>
                 </div>
                 <Button
@@ -300,7 +352,7 @@ export function LoadDetailSheet({
                       onUpgrade();
                     }
                   }}
-                  className="mt-2 w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                  className="mt-3 w-full rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
                 >
                   {user ? "View plans →" : "Sign in →"}
                 </Button>
@@ -485,6 +537,24 @@ function RouteFact({
       <div className="min-w-0">
         <div className="font-mono text-[9px] uppercase text-muted-foreground">{label}</div>
         <div className="truncate text-foreground">{value}</div>
+      </div>
+    </div>
+  );
+}
+
+function BrokerStat({ value, label, tone }: { value: string; label: string; tone?: "success" }) {
+  return (
+    <div className="rounded-xl bg-[var(--bg-secondary)] px-3 py-2.5 text-center">
+      <div
+        className={cn(
+          "font-display text-base font-extrabold leading-none tracking-tight tabular-nums",
+          tone === "success" ? "text-[color:var(--success)]" : "text-foreground",
+        )}
+      >
+        {value}
+      </div>
+      <div className="mt-1 font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+        {label}
       </div>
     </div>
   );
