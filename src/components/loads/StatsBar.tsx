@@ -39,17 +39,20 @@ export function StatsBar() {
   const beitOrange = beitWait !== null && beitWait > 2;
 
   return (
-    <div className="sticky top-0 z-30 border-b border-border bg-[color:var(--bg-secondary)]/95 backdrop-blur supports-[backdrop-filter]:bg-[color:var(--bg-secondary)]/80">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-2 text-xs md:px-6">
-        <Stat dot="success" label={<><span className="font-display text-base font-bold text-primary">{loadCount ?? "—"}</span> <span className="text-muted-foreground">loads today</span></>} />
-        <Stat label={<><span className="text-muted-foreground">Avg</span> <span className="font-mono-num text-foreground">{avgRate !== null ? `$${avgRate.toFixed(2)}/km` : "—"}</span></>} />
-        <Stat label={<><span className="text-muted-foreground">ZWL/USD:</span> <span className="font-mono-num text-foreground">3,850</span></>} />
+    <div className="sticky top-0 z-30 border-b border-border bg-[color:var(--bg-secondary)]/95 backdrop-blur supports-[backdrop-filter]:bg-[color:var(--bg-secondary)]/85">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-2.5 text-xs md:px-6">
+        <Stat dot="success" label={<><span className="font-display text-[15px] font-extrabold tracking-tight text-foreground">{loadCount ?? "—"}</span> <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">loads today</span></>} />
+        <span className="hidden h-3 w-px bg-border md:inline-block" />
+        <Stat label={<><span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Avg</span> <span className="font-mono-num text-foreground">{avgRate !== null ? `$${avgRate.toFixed(2)}/km` : "—"}</span></>} />
+        <span className="hidden h-3 w-px bg-border md:inline-block" />
+        <Stat label={<><span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">ZWL/USD</span> <span className="font-mono-num text-foreground">3,850</span></>} />
+        <span className="hidden h-3 w-px bg-border md:inline-block" />
         <Stat label={
           <span className={cn("font-mono-num", beitOrange ? "text-[color:var(--zim-yellow)]" : "text-foreground")}>
-            <span className="text-muted-foreground">Beit Bridge:</span> {beitWait !== null ? `~${beitWait}h wait` : "—"}
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Beit Bridge</span> {beitWait !== null ? `~${beitWait}h wait` : "—"}
           </span>
         } />
-        <button onClick={refresh} className="ml-auto inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground">
+        <button onClick={refresh} className="ml-auto inline-flex items-center gap-1.5 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:bg-card hover:text-foreground">
           <RefreshCw className="h-3 w-3" />
           <span suppressHydrationWarning>Updated {updated ? fmtAgo(updated) : "—"}</span>
         </button>
@@ -60,8 +63,8 @@ export function StatsBar() {
 
 function Stat({ label, dot }: { label: React.ReactNode; dot?: "success" }) {
   return (
-    <div className="inline-flex items-center gap-1.5">
-      {dot === "success" && <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--success)] opacity-75" /><span className="relative inline-flex h-2 w-2 rounded-full bg-[color:var(--success)]" /></span>}
+    <div className="inline-flex items-center gap-2">
+      {dot === "success" && <span className="dot-live" />}
       {label}
     </div>
   );

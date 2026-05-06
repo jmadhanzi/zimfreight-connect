@@ -46,8 +46,8 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --font-display: "Manrope", system-ui, sans-serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
@@ -140,37 +140,157 @@
 
 @layer base {
   * { border-color: var(--color-border); }
-  html, body { background-color: var(--color-background); color: var(--color-foreground); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-  h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); letter-spacing: -0.025em; font-weight: 800; }
+  html, body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  /* Bricolage Grotesque has a width axis — we leverage it for tighter tracking */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-variation-settings: "wdth" 92;
+    letter-spacing: -0.028em;
+    font-weight: 800;
+  }
+  h1 { font-variation-settings: "wdth" 88; letter-spacing: -0.04em; }
   html { scroll-behavior: smooth; }
   :focus-visible { outline: 2px solid var(--color-ring); outline-offset: 2px; }
+  ::selection { background: color-mix(in oklab, var(--secondary) 35%, transparent); color: var(--foreground); }
 }
 
 @utility font-display { font-family: var(--font-display); }
 @utility font-mono-num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 
-/* ── GRADIENTS ── */
-.kinetic-gradient { background: linear-gradient(135deg, #000a1e 0%, #002147 55%, #003366 100%); }
+/* Display variants — narrower / wider via variable axis */
+@utility font-display-compressed { font-family: var(--font-display); font-variation-settings: "wdth" 78, "opsz" 96; letter-spacing: -0.045em; }
+@utility font-display-wide { font-family: var(--font-display); font-variation-settings: "wdth" 100, "opsz" 96; letter-spacing: -0.02em; }
+
+/* ── BACKGROUND TEXTURES ── */
+.kinetic-gradient {
+  background:
+    radial-gradient(ellipse 70% 80% at 75% 25%, rgba(253, 175, 0, 0.18), transparent 60%),
+    radial-gradient(ellipse 55% 65% at 15% 85%, rgba(110, 160, 255, 0.10), transparent 60%),
+    linear-gradient(135deg, #000a1e 0%, #001738 55%, #002b5c 100%);
+}
+.subtle-grain {
+  position: relative;
+}
+.subtle-grain::after {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.dot-grid {
+  background-image: radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--foreground) 10%, transparent) 1px, transparent 0);
+  background-size: 22px 22px;
+}
 .glass-panel { background: rgba(255,255,255,0.06); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-.hover-lift { transition: transform 0.18s ease, box-shadow 0.18s ease; }
-.hover-lift:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.06); }
+
+/* ── INTERACTIONS ── */
+.hover-lift { transition: transform 0.22s cubic-bezier(0.2, 0.6, 0.2, 1), box-shadow 0.22s cubic-bezier(0.2, 0.6, 0.2, 1), border-color 0.22s; }
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 1px 0 color-mix(in oklab, var(--foreground) 5%, transparent),
+    0 12px 28px -10px color-mix(in oklab, var(--foreground) 22%, transparent);
+}
+.hover-glow {
+  position: relative;
+  isolation: isolate;
+}
+.hover-glow::before {
+  content: "";
+  position: absolute; inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, color-mix(in oklab, var(--secondary) 60%, transparent), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+.hover-glow:hover::before { opacity: 1; }
+
+/* Buttons that want a soft amber glow under */
+.btn-amber-glow {
+  box-shadow:
+    0 1px 0 color-mix(in oklab, var(--secondary) 70%, white),
+    0 8px 22px -8px color-mix(in oklab, var(--secondary) 60%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--secondary) 30%, transparent);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.btn-amber-glow:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 1px 0 color-mix(in oklab, var(--secondary) 70%, white),
+    0 12px 30px -10px color-mix(in oklab, var(--secondary) 70%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--secondary) 45%, transparent);
+}
+.btn-amber-glow:active { transform: translateY(0); }
 
 /* ── ANIMATIONS ── */
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .animate-marquee { animation: marquee 40s linear infinite; }
-@keyframes float-up { 0% { transform: translateY(20px); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-340px); opacity: 0; } }
+@keyframes float-up {
+  0% { transform: translateY(20px); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-340px); opacity: 0; }
+}
 .animate-float-up { animation: float-up 8s linear infinite; }
 @keyframes fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-.animate-fade-up { animation: fade-up 0.55s ease-out both; }
+.animate-fade-up { animation: fade-up 0.55s cubic-bezier(0.2, 0.6, 0.2, 1) both; }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 .animate-fade-in { animation: fade-in 0.4s ease-out both; }
 @keyframes slide-in-right { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: translateX(0); } }
 .animate-slide-in-right { animation: slide-in-right 0.35s ease-out both; }
-.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.55s ease-out, transform 0.55s ease-out; }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s cubic-bezier(0.2, 0.6, 0.2, 1), transform 0.65s cubic-bezier(0.2, 0.6, 0.2, 1); }
 .reveal.in-view { opacity: 1; transform: translateY(0); }
 
+/* shimmer for "Live" pills and dots */
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--success) 65%, transparent); }
+  50% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--success) 0%, transparent); }
+}
+.dot-live {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 999px;
+  background: var(--success);
+  animation: pulse-dot 2.2s ease-in-out infinite;
+}
+
+/* sweep — for "fresh load" indicator */
+@keyframes sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+.sweep::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 0%, color-mix(in oklab, white 35%, transparent) 50%, transparent 100%);
+  animation: sweep 2.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
 /* ── ZIMBABWE FLAG ── */
-.zim-flag-strip { height: 3px; background: linear-gradient(to right, var(--zim-green) 0%, var(--zim-green) 14%, var(--zim-yellow) 14%, var(--zim-yellow) 28%, var(--zim-red) 28%, var(--zim-red) 42%, #000 42%, #000 58%, var(--zim-red) 58%, var(--zim-red) 72%, var(--zim-yellow) 72%, var(--zim-yellow) 86%, var(--zim-green) 86%, var(--zim-green) 100%); }
+.zim-flag-strip {
+  height: 3px;
+  background: linear-gradient(to right,
+    var(--zim-green) 0% 14%,
+    var(--zim-yellow) 14% 28%,
+    var(--zim-red) 28% 42%,
+    #000 42% 58%,
+    var(--zim-red) 58% 72%,
+    var(--zim-yellow) 72% 86%,
+    var(--zim-green) 86% 100%
+  );
+}
 
 /* ── TRANSIT BAR ── */
 .transit-bar { position: relative; height: 2px; background: color-mix(in oklab, var(--secondary) 12%, transparent); overflow: hidden; border-radius: 999px; }
@@ -197,12 +317,37 @@
 .age-badge-stale { background: color-mix(in oklab, var(--destructive) 12%, transparent); color: var(--destructive); border: 1px solid color-mix(in oklab, var(--destructive) 25%, transparent); }
 
 /* ── CORRIDOR QUICK-FILTER CHIPS ── */
-.corridor-chip { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; border: 1px solid var(--color-border); background: var(--color-card); color: var(--color-foreground); cursor: pointer; transition: border-color 0.15s, background-color 0.15s, color 0.15s; white-space: nowrap; }
-.corridor-chip:hover { border-color: color-mix(in oklab, var(--primary) 50%, transparent); background: color-mix(in oklab, var(--primary) 6%, transparent); color: var(--primary); }
+.corridor-chip { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; border: 1px solid var(--color-border); background: var(--color-card); color: var(--color-foreground); cursor: pointer; transition: border-color 0.15s, background-color 0.15s, color 0.15s, transform 0.15s; white-space: nowrap; }
+.corridor-chip:hover { border-color: color-mix(in oklab, var(--primary) 50%, transparent); background: color-mix(in oklab, var(--primary) 6%, transparent); color: var(--primary); transform: translateY(-1px); }
 .corridor-chip.active { border-color: var(--primary); background: color-mix(in oklab, var(--primary) 10%, transparent); color: var(--primary); }
 
 /* ── BACKLOAD BANNER ── */
 .backload-banner { border-radius: var(--radius-lg); border: 1px solid color-mix(in oklab, var(--success) 30%, transparent); background: color-mix(in oklab, var(--success) 5%, transparent); padding: 0.75rem 1rem; }
+
+/* ── SECTION KICKER ── */
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+.section-kicker::before {
+  content: "";
+  width: 26px;
+  height: 1.5px;
+  background: linear-gradient(90deg, var(--secondary), var(--primary));
+  border-radius: 999px;
+}
+
+/* ── MAP BLOOM (better than crude orange circles) ── */
+.map-bloom {
+  filter: drop-shadow(0 0 18px color-mix(in oklab, var(--secondary) 50%, transparent));
+}
 
 /* ── SCROLLBAR ── */
 .scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }

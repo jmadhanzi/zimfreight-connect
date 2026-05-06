@@ -2,7 +2,19 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
-import { ArrowRight, Lock, MapPin, Check, ShieldCheck } from "lucide-react";
+import {
+  ArrowRight,
+  Lock,
+  MapPin,
+  Check,
+  ShieldCheck,
+  Truck as TruckIcon,
+  BarChart3,
+  MessageCircle,
+  Stamp,
+  WifiOff,
+  BadgeCheck,
+} from "lucide-react";
 import { StickyLandingCta } from "@/components/conversion/StickyLandingCta";
 import heroBg from "@/assets/hero-zim-highway.jpg";
 import logoMoyo from "@/assets/partners/moyo.svg?url";
@@ -16,9 +28,17 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "ZimFreight — Find Freight. Fill Your Truck. Get Paid." },
-      { name: "description", content: "Zimbabwe's smartest load board. 800+ daily loads, real-time rates, WhatsApp AI dispatch. From Harare to Beitbridge and beyond." },
+      {
+        name: "description",
+        content:
+          "Zimbabwe's smartest load board. 800+ daily loads, real-time rates, WhatsApp AI dispatch. From Harare to Beitbridge and beyond.",
+      },
       { property: "og:title", content: "ZimFreight — Zimbabwe's #1 Truck Load Board" },
-      { property: "og:description", content: "800+ daily loads. WhatsApp AI dispatch. EcoCash & USD payments. Built for Zimbabwean truckers." },
+      {
+        property: "og:description",
+        content:
+          "800+ daily loads. WhatsApp AI dispatch. EcoCash & USD payments. Built for Zimbabwean truckers.",
+      },
     ],
   }),
   component: LandingPage,
@@ -34,7 +54,7 @@ function useReveal() {
     const items = el.querySelectorAll<HTMLElement>(".reveal");
     const io = new IntersectionObserver(
       (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add("in-view")),
-      { threshold: 0.15 }
+      { threshold: 0.15 },
     );
     items.forEach((i) => io.observe(i));
     return () => io.disconnect();
@@ -42,26 +62,52 @@ function useReveal() {
   return ref;
 }
 
-function CountUp({ to, suffix = "", prefix = "", decimals = 0 }: { to: number; suffix?: string; prefix?: string; decimals?: number }) {
+function CountUp({
+  to,
+  suffix = "",
+  prefix = "",
+  decimals = 0,
+}: {
+  to: number;
+  suffix?: string;
+  prefix?: string;
+  decimals?: number;
+}) {
   const [n, setN] = useState(0);
   const ref = useRef<HTMLSpanElement | null>(null);
   useEffect(() => {
-    const el = ref.current; if (!el) return;
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (!e.isIntersecting) return;
-        const start = performance.now(); const dur = 1400;
-        const tick = (t: number) => {
-          const p = Math.min(1, (t - start) / dur);
-          setN(to * (1 - Math.pow(1 - p, 3)));
-          if (p < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick); io.disconnect();
-      });
-    }, { threshold: 0.4 });
-    io.observe(el); return () => io.disconnect();
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          const start = performance.now();
+          const dur = 1400;
+          const tick = (t: number) => {
+            const p = Math.min(1, (t - start) / dur);
+            setN(to * (1 - Math.pow(1 - p, 3)));
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+          io.disconnect();
+        });
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, [to]);
-  return <span ref={ref}>{prefix}{n.toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals })}{suffix}</span>;
+  return (
+    <span ref={ref}>
+      {prefix}
+      {n.toLocaleString(undefined, {
+        maximumFractionDigits: decimals,
+        minimumFractionDigits: decimals,
+      })}
+      {suffix}
+    </span>
+  );
 }
 
 /* ───────────── floating hero cards ───────────── */
@@ -89,9 +135,13 @@ function FloatingCards() {
               <ArrowRight className="h-3 w-3 text-primary" />
               <span className="font-display text-sm font-bold">{l.d}</span>
             </div>
-            <span className="font-mono-num text-sm font-bold text-primary">${l.r.toLocaleString()}</span>
+            <span className="font-mono-num text-sm font-bold text-primary">
+              ${l.r.toLocaleString()}
+            </span>
           </div>
-          <div className="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{l.t}</div>
+          <div className="mt-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            {l.t}
+          </div>
         </div>
       ))}
     </div>
@@ -111,7 +161,13 @@ function ZimMap() {
     { name: "Vic Falls", x: 100, y: 180 },
   ];
   const routes: Array<[number, number]> = [
-    [0, 1], [0, 2], [0, 3], [0, 4], [1, 4], [1, 5], [3, 0],
+    [0, 1],
+    [0, 2],
+    [0, 3],
+    [0, 4],
+    [1, 4],
+    [1, 5],
+    [3, 0],
   ];
   return (
     <svg viewBox="0 0 540 460" className="h-full w-full">
@@ -124,17 +180,35 @@ function ZimMap() {
       </defs>
       <path
         d="M70 140 L120 70 L260 50 L380 70 L470 130 L490 220 L460 320 L380 400 L280 430 L180 410 L100 360 L60 280 Z"
-        fill="var(--bg-secondary)" stroke="var(--primary)" strokeOpacity="0.35" strokeWidth="1.5"
+        fill="var(--bg-secondary)"
+        stroke="var(--primary)"
+        strokeOpacity="0.35"
+        strokeWidth="1.5"
       />
       {routes.map(([a, b], i) => (
-        <line key={i} x1={cities[a].x} y1={cities[a].y} x2={cities[b].x} y2={cities[b].y}
-              stroke="url(#route)" strokeWidth="2" strokeDasharray="5 5" />
+        <line
+          key={i}
+          x1={cities[a].x}
+          y1={cities[a].y}
+          x2={cities[b].x}
+          y2={cities[b].y}
+          stroke="url(#route)"
+          strokeWidth="2"
+          strokeDasharray="5 5"
+        />
       ))}
       {cities.map((c) => (
         <g key={c.name}>
           <circle cx={c.x} cy={c.y} r="14" fill="var(--primary)" fillOpacity="0.15" />
           <circle cx={c.x} cy={c.y} r="5" fill="var(--primary)" />
-          <text x={c.x + 12} y={c.y + 4} fill="var(--foreground)" fontSize="13" fontFamily="Barlow Condensed" fontWeight="700">
+          <text
+            x={c.x + 12}
+            y={c.y + 4}
+            fill="var(--foreground)"
+            fontSize="13"
+            fontFamily="Barlow Condensed"
+            fontWeight="700"
+          >
             {c.name.toUpperCase()}
           </text>
         </g>
@@ -182,81 +256,195 @@ function LandingPage() {
           <div className="md:col-span-7 lg:col-span-7">
             <div className="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-3 py-1 text-secondary backdrop-blur">
               <ShieldCheck className="h-3.5 w-3.5" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.2em]">Zimbabwe's #1 Digital Logistics Hub</span>
+              <span className="text-[11px] font-bold uppercase tracking-[0.2em]">
+                Zimbabwe&rsquo;s #1 Digital Logistics Hub
+              </span>
             </div>
 
-            <h1 className="mt-6 font-display text-5xl font-extrabold leading-[1.05] tracking-tighter text-white md:text-7xl lg:text-[80px]">
-              Zimbabwe's #1 <br />
-              <span className="text-secondary">Load Board</span>
+            <h1 className="mt-7 font-display text-5xl font-extrabold leading-[0.95] tracking-[-0.045em] text-white md:text-7xl lg:text-[88px]">
+              Zimbabwe&rsquo;s #1
+              <br />
+              <span className="relative inline-block text-secondary">
+                Load Board
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute -bottom-2 left-0 right-0 h-2 rounded-full bg-gradient-to-r from-secondary/0 via-secondary/60 to-secondary/0 blur-md md:-bottom-3 md:h-3"
+                />
+              </span>
             </h1>
 
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/70 md:text-xl">
-              Connecting verified carriers with premium cargo across the SADC region.
-              Move more, earn more, and scale your fleet with real-time intelligence.
+            <p className="mt-7 max-w-xl text-lg leading-relaxed text-white/75 md:text-xl">
+              Connecting verified carriers with premium cargo across the SADC region. Move more,
+              earn more, and scale your fleet with real-time intelligence.
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <Button asChild size="lg" className="rounded-full bg-secondary px-10 py-6 text-base font-extrabold text-secondary-foreground shadow-2xl shadow-secondary/30 hover:bg-secondary/90">
-                <Link to="/board" search={{ q: "", origin: "all", destination: "all", loadType: "all", equipment: "all", pickup: "", minRate: 0, maxDistance: 2000, border: false, zimra: false, urgent: false, minWeight: 0, maxWeight: 40, payment: "all", sort: "newest", load: undefined }}>Find Loads <ArrowRight className="ml-2 h-5 w-5" /></Link>
+              <Button
+                asChild
+                size="lg"
+                className="rounded-full bg-secondary px-10 py-6 text-base font-extrabold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+              >
+                <Link
+                  to="/board"
+                  search={{
+                    q: "",
+                    origin: "all",
+                    destination: "all",
+                    loadType: "all",
+                    equipment: "all",
+                    pickup: "",
+                    minRate: 0,
+                    maxDistance: 2000,
+                    border: false,
+                    zimra: false,
+                    urgent: false,
+                    minWeight: 0,
+                    maxWeight: 40,
+                    payment: "all",
+                    sort: "newest",
+                    load: undefined,
+                  }}
+                >
+                  Find Loads <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="rounded-full border-white/20 bg-transparent px-10 py-6 text-base font-extrabold text-white hover:bg-white/10 hover:text-white">
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="rounded-full border-white/20 bg-white/5 px-10 py-6 text-base font-extrabold text-white backdrop-blur transition-colors hover:border-white/40 hover:bg-white/10 hover:text-white"
+              >
                 <Link to="/post">Post Load</Link>
               </Button>
             </div>
 
             {/* Inline stat duo */}
             <div className="mt-12 grid max-w-md grid-cols-2 gap-8">
-              <div>
-                <div className="font-display text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+              <div className="border-l border-white/15 pl-4">
+                <div className="font-display text-4xl font-extrabold tracking-[-0.03em] text-white md:text-5xl">
                   <CountUp to={2400} />+
                 </div>
-                <div className="mt-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/50">Active Carriers</div>
-              </div>
-              <div>
-                <div className="font-display text-4xl font-extrabold tracking-tight text-secondary md:text-5xl">
-                  $<CountUp to={2.4} decimals={1} />M+
+                <div className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45">
+                  Active Carriers
                 </div>
-                <div className="mt-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/50">Monthly Payouts</div>
+              </div>
+              <div className="border-l border-secondary/40 pl-4">
+                <div className="font-display text-4xl font-extrabold tracking-[-0.03em] text-secondary md:text-5xl">
+                  $<CountUp to={2.4} decimals={1} />
+                  M+
+                </div>
+                <div className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45">
+                  Monthly Payouts
+                </div>
               </div>
             </div>
           </div>
 
           {/* Right rail — live load board glass card */}
           <div className="relative md:col-span-5 lg:col-span-5">
-            <div className="relative z-10 rounded-2xl bg-white/95 p-5 shadow-2xl backdrop-blur md:p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-display text-xl font-extrabold tracking-tight text-foreground">Live Load Board</h3>
-                  <p className="text-xs text-muted-foreground">Real-time opportunities updating every 30 seconds</p>
+            <div className="relative z-10 overflow-hidden rounded-2xl bg-white/95 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)] backdrop-blur md:rounded-[20px]">
+              {/* top gradient strip — signals "live" */}
+              <span
+                aria-hidden
+                className="block h-1 w-full bg-gradient-to-r from-secondary via-primary to-secondary"
+              />
+              <div className="p-5 md:p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="dot-live" />
+                      <h3 className="font-display text-xl font-extrabold tracking-tight text-foreground">
+                        Live Load Board
+                      </h3>
+                    </div>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      Real-time opportunities updating every 30 seconds
+                    </p>
+                  </div>
+                  <Link
+                    to="/board"
+                    search={{
+                      q: "",
+                      origin: "all",
+                      destination: "all",
+                      loadType: "all",
+                      equipment: "all",
+                      pickup: "",
+                      minRate: 0,
+                      maxDistance: 2000,
+                      border: false,
+                      zimra: false,
+                      urgent: false,
+                      minWeight: 0,
+                      maxWeight: 40,
+                      payment: "all",
+                      sort: "newest",
+                      load: undefined,
+                    }}
+                    className="text-xs font-bold text-secondary hover:underline"
+                  >
+                    View All
+                  </Link>
                 </div>
-                <Link to="/board" search={{ q: "", origin: "all", destination: "all", loadType: "all", equipment: "all", pickup: "", minRate: 0, maxDistance: 2000, border: false, zimra: false, urgent: false, minWeight: 0, maxWeight: 40, payment: "all", sort: "newest", load: undefined }} className="text-xs font-bold text-secondary hover:underline">View All</Link>
-              </div>
-              <div className="mt-5 space-y-3">
-                {FLOAT_LOADS.slice(0, 3).map((l, i) => (
-                  <div key={i} className="relative overflow-hidden rounded-xl bg-[var(--bg-secondary)] p-4">
-                    {i === 0 && <span className="absolute left-0 top-0 h-full w-1 bg-secondary" />}
-                    <div className="flex items-center justify-between">
-                      <div className="ml-2">
-                        <div className="flex items-center gap-1.5 font-display text-sm font-bold text-foreground">
-                          {l.o} <ArrowRight className="h-3 w-3 text-secondary" /> {l.d}
+                <div className="mt-5 space-y-2.5">
+                  {FLOAT_LOADS.slice(0, 3).map((l, i) => (
+                    <div
+                      key={i}
+                      className="relative overflow-hidden rounded-xl bg-[var(--bg-secondary)] p-4 transition-colors hover:bg-[color-mix(in_oklab,var(--secondary)_5%,var(--bg-secondary))]"
+                    >
+                      {i === 0 && (
+                        <span className="absolute left-0 top-0 h-full w-1 bg-secondary" />
+                      )}
+                      <div className="flex items-center justify-between">
+                        <div className="ml-2">
+                          <div className="flex items-center gap-1.5 font-display text-sm font-bold text-foreground">
+                            {l.o} <ArrowRight className="h-3 w-3 text-secondary" /> {l.d}
+                          </div>
+                          <div className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                            {i === 0 ? "Urgent · in 2h" : l.t}
+                          </div>
                         </div>
-                        <div className="mt-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                          {i === 0 ? "Urgent · in 2h" : l.t}
+                        <div className="text-right">
+                          <div className="font-display text-lg font-extrabold tracking-tight text-foreground">
+                            ${l.r.toLocaleString()}
+                          </div>
+                          <div className="font-mono text-[10px] text-muted-foreground">
+                            ~{Math.round(l.r / 2.8)} km
+                          </div>
                         </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="font-display text-lg font-extrabold tracking-tight text-foreground">
-                          ${l.r.toLocaleString()}
-                        </div>
-                        <div className="text-[10px] font-medium text-muted-foreground">distance · {Math.round(l.r / 2.8)} km</div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                <Button
+                  asChild
+                  className="mt-5 w-full rounded-full bg-primary py-5 font-bold text-primary-foreground hover:bg-primary/90"
+                >
+                  <Link
+                    to="/board"
+                    search={{
+                      q: "",
+                      origin: "all",
+                      destination: "all",
+                      loadType: "all",
+                      equipment: "all",
+                      pickup: "",
+                      minRate: 0,
+                      maxDistance: 2000,
+                      border: false,
+                      zimra: false,
+                      urgent: false,
+                      minWeight: 0,
+                      maxWeight: 40,
+                      payment: "all",
+                      sort: "newest",
+                      load: undefined,
+                    }}
+                  >
+                    Place Bid <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
               </div>
-              <Button asChild className="mt-5 w-full rounded-full bg-primary py-5 font-bold text-primary-foreground hover:bg-primary/90">
-                <Link to="/board" search={{ q: "", origin: "all", destination: "all", loadType: "all", equipment: "all", pickup: "", minRate: 0, maxDistance: 2000, border: false, zimra: false, urgent: false, minWeight: 0, maxWeight: 40, payment: "all", sort: "newest", load: undefined }}>Place Bid <ArrowRight className="ml-2 h-4 w-4" /></Link>
-              </Button>
             </div>
             {/* glow */}
             <div className="pointer-events-none absolute -inset-4 -z-10 rounded-3xl bg-secondary/20 blur-3xl" />
@@ -271,7 +459,9 @@ function LandingPage() {
             <div key={i} className="flex items-center gap-4 text-sm">
               <span className="text-foreground">"{q.text}"</span>
               <span className="text-muted-foreground">— {q.who}</span>
-              <span className="font-display text-base font-bold uppercase tracking-wide text-primary">{q.co}</span>
+              <span className="font-display text-base font-bold uppercase tracking-wide text-primary">
+                {q.co}
+              </span>
             </div>
           ))}
         </div>
@@ -281,25 +471,47 @@ function LandingPage() {
       <section className="border-b border-border py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="reveal max-w-3xl">
-            <span className="font-mono text-xs uppercase tracking-widest text-primary">Features</span>
-            <h2 className="mt-3 font-display text-4xl font-black uppercase tracking-tight md:text-5xl">
-              Everything Zimbabwe's truckers actually need
+            <span className="section-kicker">Features</span>
+            <h2 className="mt-4 font-display text-4xl font-black tracking-tight md:text-5xl lg:text-6xl">
+              Everything Zimbabwe&rsquo;s truckers <span className="text-secondary">actually</span>{" "}
+              need
             </h2>
           </div>
-          <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map((f, i) => (
-              <div
-                key={f.title}
-                className="reveal group rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_0_40px_-10px_var(--primary)]"
-                style={{ transitionDelay: `${i * 60}ms` }}
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-2xl">
-                  {f.emoji}
+          <div className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {FEATURES.map((f, i) => {
+              const Icon = f.icon;
+              const accentClass = ACCENT_TO_CLASSES[f.accent];
+              return (
+                <div
+                  key={f.title}
+                  className="reveal hover-lift group relative overflow-hidden rounded-2xl border border-border bg-card p-7 transition-colors hover:border-foreground/15"
+                  style={{ transitionDelay: `${i * 60}ms` }}
+                >
+                  {/* corner accent — diagonal stripe */}
+                  <span
+                    aria-hidden
+                    className={`pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-60 ${accentClass.glow}`}
+                  />
+                  <div
+                    className={`relative flex h-12 w-12 items-center justify-center rounded-xl ${accentClass.bg} ${accentClass.text}`}
+                  >
+                    <Icon className="h-5.5 w-5.5" strokeWidth={2.2} />
+                    <span
+                      aria-hidden
+                      className={`absolute -inset-px rounded-xl border ${accentClass.ring}`}
+                    />
+                  </div>
+                  <h3 className="mt-6 font-display text-xl font-extrabold tracking-tight md:text-2xl">
+                    {f.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
+                  {/* tiny corner mark — adds editorial feel */}
+                  <span className="absolute right-5 top-5 font-mono text-[10px] font-semibold tracking-[0.18em] text-muted-foreground/50">
+                    0{i + 1}
+                  </span>
                 </div>
-                <h3 className="mt-5 font-display text-2xl font-bold uppercase tracking-tight">{f.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{f.desc}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -308,9 +520,13 @@ function LandingPage() {
       <section className="border-b border-border bg-card py-14 md:py-16">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="reveal flex flex-col items-center gap-2 text-center">
-            <span className="font-mono text-xs uppercase tracking-widest text-primary">Trusted across SADC</span>
+            <span className="section-kicker">Trusted across SADC</span>
             <h2 className="font-display text-2xl font-black uppercase tracking-tight md:text-3xl">
-              Trusted by <span className="text-secondary"><CountUp to={2400} suffix="+" /></span> carriers &amp; partners
+              Trusted by{" "}
+              <span className="text-secondary">
+                <CountUp to={2400} suffix="+" />
+              </span>{" "}
+              carriers &amp; partners
             </h2>
             <p className="max-w-xl text-sm text-muted-foreground">
               From owner-operators to national fleets and SADC freight forwarders.
@@ -344,10 +560,18 @@ function LandingPage() {
           </div>
 
           <div className="reveal mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs font-medium text-muted-foreground">
-            <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-success" /> ZIMRA-registered brokers</span>
-            <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-success" /> EcoCash &amp; USD payouts</span>
-            <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-success" /> 99.2% on-time delivery</span>
-            <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-success" /> SADC cross-border ready</span>
+            <span className="inline-flex items-center gap-1.5">
+              <Check className="h-3.5 w-3.5 text-success" /> ZIMRA-registered brokers
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <Check className="h-3.5 w-3.5 text-success" /> EcoCash &amp; USD payouts
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <Check className="h-3.5 w-3.5 text-success" /> 99.2% on-time delivery
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <Check className="h-3.5 w-3.5 text-success" /> SADC cross-border ready
+            </span>
           </div>
         </div>
       </section>
@@ -356,20 +580,26 @@ function LandingPage() {
       <section className="border-b border-border bg-[var(--bg-secondary)] py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="reveal mx-auto max-w-2xl text-center">
-            <span className="font-mono text-xs uppercase tracking-widest text-primary">How it works</span>
+            <span className="section-kicker">How it works</span>
             <h2 className="mt-3 font-display text-4xl font-black uppercase tracking-tight md:text-5xl">
               Up and running in 3 minutes
             </h2>
           </div>
           <div className="relative mt-14 grid gap-6 md:grid-cols-3">
             {STEPS.map((s, i) => (
-              <div key={s.title} className="reveal relative overflow-hidden rounded-xl border border-border bg-card p-8" style={{ transitionDelay: `${i * 80}ms` }}>
+              <div
+                key={s.title}
+                className="reveal relative overflow-hidden rounded-xl border border-border bg-card p-8"
+                style={{ transitionDelay: `${i * 80}ms` }}
+              >
                 <span className="pointer-events-none absolute -right-4 -top-8 font-display text-[120px] font-black leading-none text-primary opacity-[0.08]">
                   {i + 1}
                 </span>
                 <div className="relative">
-                  <span className="font-mono text-xs uppercase tracking-widest text-primary">Step {i + 1}</span>
-                  <h3 className="mt-2 font-display text-2xl font-black uppercase tracking-tight">{s.title}</h3>
+                  <span className="section-kicker">Step {i + 1}</span>
+                  <h3 className="mt-2 font-display text-2xl font-black uppercase tracking-tight">
+                    {s.title}
+                  </h3>
                   <p className="mt-3 text-sm text-muted-foreground">{s.desc}</p>
                 </div>
                 {i < STEPS.length - 1 && (
@@ -386,8 +616,8 @@ function LandingPage() {
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="reveal flex flex-wrap items-end justify-between gap-3">
             <div>
-              <span className="font-mono text-xs uppercase tracking-widest text-primary">
-                <span className="mr-1.5 inline-block h-2 w-2 animate-pulse rounded-full bg-success align-middle" />
+              <span className="section-kicker">
+                <span className="dot-live -ml-1" />
                 Live right now
               </span>
               <h2 className="mt-3 font-display text-4xl font-black uppercase tracking-tight md:text-5xl">
@@ -418,9 +648,13 @@ function LandingPage() {
                       <div className="font-mono text-[11px] text-muted-foreground">{l.km} km</div>
                     </td>
                     <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">{l.t}</td>
-                    <td className="px-4 py-3 font-mono-num font-bold text-primary">${l.r.toLocaleString()}</td>
+                    <td className="px-4 py-3 font-mono-num font-bold text-primary">
+                      ${l.r.toLocaleString()}
+                    </td>
                     <td className="px-4 py-3">
-                      <span className="select-none font-mono text-sm text-foreground blur-sm">+263 77 234 5678</span>
+                      <span className="select-none font-mono text-sm text-foreground blur-sm">
+                        +263 77 234 5678
+                      </span>
                     </td>
                   </tr>
                 ))}
@@ -430,10 +664,40 @@ function LandingPage() {
             <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-card via-card/70 to-transparent">
               <div className="rounded-xl border border-primary/30 bg-card/95 px-6 py-5 text-center shadow-2xl">
                 <Lock className="mx-auto h-6 w-6 text-primary" />
-                <p className="mt-2 font-display text-lg font-bold uppercase tracking-tight">Sign up free to unlock</p>
-                <p className="mt-1 text-xs text-muted-foreground">847 live loads · broker WhatsApp · rate analytics</p>
-                <Button asChild size="lg" className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90 font-display font-bold uppercase">
-                  <Link to="/board" search={{ q: "", origin: "all", destination: "all", loadType: "all", equipment: "all", pickup: "", minRate: 0, maxDistance: 2000, border: false, zimra: false, urgent: false, minWeight: 0, maxWeight: 40, payment: "all", sort: "newest", load: undefined }}>View 847 Live Loads <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                <p className="mt-2 font-display text-lg font-bold uppercase tracking-tight">
+                  Sign up free to unlock
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  847 live loads · broker WhatsApp · rate analytics
+                </p>
+                <Button
+                  asChild
+                  size="lg"
+                  className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90 font-display font-bold uppercase"
+                >
+                  <Link
+                    to="/board"
+                    search={{
+                      q: "",
+                      origin: "all",
+                      destination: "all",
+                      loadType: "all",
+                      equipment: "all",
+                      pickup: "",
+                      minRate: 0,
+                      maxDistance: 2000,
+                      border: false,
+                      zimra: false,
+                      urgent: false,
+                      minWeight: 0,
+                      maxWeight: 40,
+                      payment: "all",
+                      sort: "newest",
+                      load: undefined,
+                    }}
+                  >
+                    View 847 Live Loads <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -445,7 +709,7 @@ function LandingPage() {
       <section className="border-b border-border bg-[var(--bg-secondary)] py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="reveal mx-auto max-w-2xl text-center">
-            <span className="font-mono text-xs uppercase tracking-widest text-primary">Pricing</span>
+            <span className="section-kicker">Pricing</span>
             <h2 className="mt-3 font-display text-4xl font-black uppercase tracking-tight md:text-5xl">
               Start free. Upgrade when you're ready.
             </h2>
@@ -456,7 +720,9 @@ function LandingPage() {
               <div
                 key={p.name}
                 className={`reveal relative rounded-xl border bg-card p-7 transition-transform duration-200 hover:scale-[1.02] ${
-                  p.featured ? "border-primary shadow-[0_0_50px_-15px_var(--primary)]" : "border-border"
+                  p.featured
+                    ? "border-primary shadow-[0_0_50px_-15px_var(--primary)]"
+                    : "border-border"
                 }`}
                 style={{ transitionDelay: `${i * 80}ms` }}
               >
@@ -465,9 +731,13 @@ function LandingPage() {
                     Most Popular
                   </span>
                 )}
-                <div className="font-mono text-xs uppercase tracking-widest text-muted-foreground">{p.name}</div>
+                <div className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                  {p.name}
+                </div>
                 <div className="mt-2 flex items-baseline gap-1">
-                  <span className="font-display text-5xl font-black text-foreground">${p.price}</span>
+                  <span className="font-display text-5xl font-black text-foreground">
+                    ${p.price}
+                  </span>
                   <span className="text-sm text-muted-foreground">/month</span>
                 </div>
                 <ul className="mt-5 space-y-2 text-sm">
@@ -484,7 +754,9 @@ function LandingPage() {
 
           <div className="mt-10 text-center">
             <Button asChild variant="outline" size="lg">
-              <Link to="/pricing">See all plans <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              <Link to="/pricing">
+                See all plans <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
             <p className="mt-4 text-xs text-muted-foreground">
               💳 Pay with EcoCash · InnBucks · Visa · Bank Transfer
@@ -497,23 +769,60 @@ function LandingPage() {
       <section className="relative overflow-hidden border-b border-border py-20 md:py-28">
         <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 md:grid-cols-2 md:px-6">
           <div className="reveal">
-            <span className="font-mono text-xs uppercase tracking-widest text-primary">Coverage</span>
+            <span className="section-kicker">Coverage</span>
             <h2 className="mt-3 font-display text-4xl font-black uppercase tracking-tight md:text-5xl">
               Covering every route in Zimbabwe
             </h2>
             <p className="mt-4 text-muted-foreground">
-              From Vic Falls to Beitbridge, Mutare to Bulawayo. Every major freight corridor,
-              every border crossing. One platform.
+              From Vic Falls to Beitbridge, Mutare to Bulawayo. Every major freight corridor, every
+              border crossing. One platform.
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
-              {["Harare", "Bulawayo", "Mutare", "Beitbridge", "Chirundu", "Vic Falls", "Plumtree"].map((c) => (
-                <span key={c} className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2.5 py-1 text-xs">
+              {[
+                "Harare",
+                "Bulawayo",
+                "Mutare",
+                "Beitbridge",
+                "Chirundu",
+                "Vic Falls",
+                "Plumtree",
+              ].map((c) => (
+                <span
+                  key={c}
+                  className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2.5 py-1 text-xs"
+                >
                   <MapPin className="h-3 w-3 text-primary" /> {c}
                 </span>
               ))}
             </div>
-            <Button asChild size="lg" className="mt-7 bg-primary text-primary-foreground hover:bg-primary/90 font-display font-bold uppercase">
-              <Link to="/board" search={{ q: "", origin: "all", destination: "all", loadType: "all", equipment: "all", pickup: "", minRate: 0, maxDistance: 2000, border: false, zimra: false, urgent: false, minWeight: 0, maxWeight: 40, payment: "all", sort: "newest", load: undefined }}>Start Finding Loads <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            <Button
+              asChild
+              size="lg"
+              className="mt-7 bg-primary text-primary-foreground hover:bg-primary/90 font-display font-bold uppercase"
+            >
+              <Link
+                to="/board"
+                search={{
+                  q: "",
+                  origin: "all",
+                  destination: "all",
+                  loadType: "all",
+                  equipment: "all",
+                  pickup: "",
+                  minRate: 0,
+                  maxDistance: 2000,
+                  border: false,
+                  zimra: false,
+                  urgent: false,
+                  minWeight: 0,
+                  maxWeight: 40,
+                  payment: "all",
+                  sort: "newest",
+                  load: undefined,
+                }}
+              >
+                Start Finding Loads <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
           </div>
           <div className="reveal">
@@ -531,14 +840,45 @@ function LandingPage() {
             Ready to modernize <br /> your logistics?
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-base text-white/70 md:text-lg">
-            Join the network of professional truckers and shippers streamlining
-            Zimbabwe's supply chain.
+            Join the network of professional truckers and shippers streamlining Zimbabwe's supply
+            chain.
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button asChild size="lg" className="rounded-full bg-secondary px-8 py-6 font-extrabold text-secondary-foreground shadow-xl shadow-secondary/20 hover:bg-secondary/90">
-              <Link to="/board" search={{ q: "", origin: "all", destination: "all", loadType: "all", equipment: "all", pickup: "", minRate: 0, maxDistance: 2000, border: false, zimra: false, urgent: false, minWeight: 0, maxWeight: 40, payment: "all", sort: "newest", load: undefined }}>Create Carrier Account</Link>
+            <Button
+              asChild
+              size="lg"
+              className="rounded-full bg-secondary px-8 py-6 font-extrabold text-secondary-foreground shadow-xl shadow-secondary/20 hover:bg-secondary/90"
+            >
+              <Link
+                to="/board"
+                search={{
+                  q: "",
+                  origin: "all",
+                  destination: "all",
+                  loadType: "all",
+                  equipment: "all",
+                  pickup: "",
+                  minRate: 0,
+                  maxDistance: 2000,
+                  border: false,
+                  zimra: false,
+                  urgent: false,
+                  minWeight: 0,
+                  maxWeight: 40,
+                  payment: "all",
+                  sort: "newest",
+                  load: undefined,
+                }}
+              >
+                Create Carrier Account
+              </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="rounded-full border-white/20 bg-transparent px-8 py-6 font-extrabold text-white hover:bg-white/10 hover:text-white">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="rounded-full border-white/20 bg-transparent px-8 py-6 font-extrabold text-white hover:bg-white/10 hover:text-white"
+            >
               <Link to="/post">Register as Shipper</Link>
             </Button>
           </div>
@@ -556,7 +896,9 @@ function Stat({ value, label, pulse }: { value: React.ReactNode; label: string; 
       {pulse && <span className="h-2 w-2 animate-pulse rounded-full bg-success" />}
       <div>
         <div className="font-display text-2xl font-black text-foreground md:text-3xl">{value}</div>
-        <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</div>
+        <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          {label}
+        </div>
       </div>
     </div>
   );
@@ -564,25 +906,106 @@ function Stat({ value, label, pulse }: { value: React.ReactNode; label: string; 
 
 /* ───────────── data ───────────── */
 
+/** Accent color tokens for feature cards. Each set defines BG / text / ring / glow. */
+const ACCENT_TO_CLASSES: Record<string, { bg: string; text: string; ring: string; glow: string }> =
+  {
+    primary: {
+      bg: "bg-primary/10",
+      text: "text-primary",
+      ring: "border-primary/15",
+      glow: "bg-primary/40",
+    },
+    secondary: {
+      bg: "bg-secondary/15",
+      text: "text-secondary",
+      ring: "border-secondary/20",
+      glow: "bg-secondary/40",
+    },
+    success: {
+      bg: "bg-[color-mix(in_oklab,var(--success)_12%,transparent)]",
+      text: "text-[color:var(--success)]",
+      ring: "border-[color-mix(in_oklab,var(--success)_25%,transparent)]",
+      glow: "bg-[color-mix(in_oklab,var(--success)_40%,transparent)]",
+    },
+    info: {
+      bg: "bg-[color-mix(in_oklab,var(--info)_12%,transparent)]",
+      text: "text-[color:var(--info)]",
+      ring: "border-[color-mix(in_oklab,var(--info)_25%,transparent)]",
+      glow: "bg-[color-mix(in_oklab,var(--info)_40%,transparent)]",
+    },
+  };
+
 const QUOTES = [
-  { text: "Finally a load board that works with EcoCash 🙌", who: "Tatenda M., Harare", co: "MOYO LOGISTICS" },
-  { text: "Found 3 loads in my first hour. WhatsApp AI is 🔥", who: "Chamu K., Bulawayo", co: "KHUMALO TRANSPORT" },
-  { text: "Beit Bridge tips alone saved me 2 hours at the border", who: "Simba D., Masvingo", co: "DUBE HAULAGE" },
-  { text: "Best rates I've seen on the Harare–Joburg run", who: "Rumbi C., Harare", co: "CHIDZIVA FREIGHT" },
+  {
+    text: "Finally a load board that works with EcoCash 🙌",
+    who: "Tatenda M., Harare",
+    co: "MOYO LOGISTICS",
+  },
+  {
+    text: "Found 3 loads in my first hour. WhatsApp AI is 🔥",
+    who: "Chamu K., Bulawayo",
+    co: "KHUMALO TRANSPORT",
+  },
+  {
+    text: "Beit Bridge tips alone saved me 2 hours at the border",
+    who: "Simba D., Masvingo",
+    co: "DUBE HAULAGE",
+  },
+  {
+    text: "Best rates I've seen on the Harare–Joburg run",
+    who: "Rumbi C., Harare",
+    co: "CHIDZIVA FREIGHT",
+  },
 ];
 
 const FEATURES = [
-  { emoji: "🚛", title: "800+ Daily Loads", desc: "Harare, Bulawayo, Mutare and all major corridors. Updated in real-time." },
-  { emoji: "💰", title: "Rate Intelligence", desc: "Know the market rate per km before you negotiate. Never leave money on the table." },
-  { emoji: "📱", title: "WhatsApp AI Dispatch", desc: "Our AI agent finds loads, checks border status, and quotes rates — all inside WhatsApp." },
-  { emoji: "🛃", title: "ZIMRA Ready", desc: "Cross-border docs checklist, Beit Bridge wait times, and customs guidance built in." },
-  { emoji: "📶", title: "Works Offline", desc: "Rural Zimbabwe has patchy signal. ZimFreight caches loads and works without internet." },
-  { emoji: "✅", title: "Verified Brokers", desc: "Every broker is credit-checked. See days-to-payment and real ratings before you book." },
-];
+  {
+    icon: TruckIcon,
+    accent: "primary",
+    title: "800+ Daily Loads",
+    desc: "Harare, Bulawayo, Mutare and all major corridors. Updated in real-time.",
+  },
+  {
+    icon: BarChart3,
+    accent: "secondary",
+    title: "Rate Intelligence",
+    desc: "Know the market rate per km before you negotiate. Never leave money on the table.",
+  },
+  {
+    icon: MessageCircle,
+    accent: "success",
+    title: "WhatsApp AI Dispatch",
+    desc: "Our AI agent finds loads, checks border status, and quotes rates — all inside WhatsApp.",
+  },
+  {
+    icon: Stamp,
+    accent: "primary",
+    title: "ZIMRA Ready",
+    desc: "Cross-border docs checklist, Beit Bridge wait times, and customs guidance built in.",
+  },
+  {
+    icon: WifiOff,
+    accent: "info",
+    title: "Works Offline",
+    desc: "Rural Zimbabwe has patchy signal. ZimFreight caches loads and works without internet.",
+  },
+  {
+    icon: BadgeCheck,
+    accent: "secondary",
+    title: "Verified Brokers",
+    desc: "Every broker is credit-checked. See days-to-payment and real ratings before you book.",
+  },
+] as const;
 
 const STEPS = [
-  { title: "Create your free account", desc: "Sign up with your phone number. No paperwork, no waiting." },
-  { title: "Find or post loads", desc: "Search by route, load type, equipment. Contact brokers directly on WhatsApp." },
+  {
+    title: "Create your free account",
+    desc: "Sign up with your phone number. No paperwork, no waiting.",
+  },
+  {
+    title: "Find or post loads",
+    desc: "Search by route, load type, equipment. Contact brokers directly on WhatsApp.",
+  },
   { title: "Get paid, repeat", desc: "Track payments, build your rating, grow your business." },
 ];
 
@@ -594,9 +1017,23 @@ const PREVIEW_LOADS = [
   { o: "Bulawayo", d: "Vic Falls", km: 440, t: "Cement · 30t", r: 1180 },
 ];
 
-
 const PLANS = [
-  { name: "Free", price: 0, featured: false, features: ["Read-only access", "5 loads/day", "Basic search"] },
-  { name: "Basic", price: 19, featured: true, features: ["Broker contacts", "Post loads", "WhatsApp alerts", "Rate analytics"] },
-  { name: "Pro", price: 49, featured: false, features: ["Unlimited everything", "WhatsApp AI Agent", "Priority listing", "Rate forecasting"] },
+  {
+    name: "Free",
+    price: 0,
+    featured: false,
+    features: ["Read-only access", "5 loads/day", "Basic search"],
+  },
+  {
+    name: "Basic",
+    price: 19,
+    featured: true,
+    features: ["Broker contacts", "Post loads", "WhatsApp alerts", "Rate analytics"],
+  },
+  {
+    name: "Pro",
+    price: 49,
+    featured: false,
+    features: ["Unlimited everything", "WhatsApp AI Agent", "Priority listing", "Rate forecasting"],
+  },
 ];

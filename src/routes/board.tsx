@@ -191,8 +191,8 @@ function LoadBoardPage() {
         <main className="min-w-0 flex-1 py-6">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
-              <span className="font-mono text-xs uppercase tracking-widest text-primary">Live board</span>
-              <h1 className="mt-1 font-display text-3xl font-black uppercase tracking-tight md:text-4xl">Available loads</h1>
+              <span className="section-kicker">Live board</span>
+              <h1 className="mt-2 font-display text-3xl font-black tracking-[-0.035em] md:text-4xl">Available loads</h1>
             </div>
             <div className="font-mono text-xs text-muted-foreground">
               {loading ? "Loading…" : <>Showing <span className="text-foreground">{filtered.length}</span> of {loads.length}</>}

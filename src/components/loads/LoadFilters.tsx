@@ -58,7 +58,7 @@ export function LoadFilters({ filters, setFilters }: { filters: Filters; setFilt
 
   return (
     <div className="space-y-2">
-      <div className="rounded-lg border border-border bg-card p-3">
+      <div className="rounded-2xl border border-border/70 bg-card p-3.5 shadow-[0_1px_0_color-mix(in_oklab,var(--foreground)_5%,transparent)]">
         <div className="grid gap-2 md:grid-cols-[1fr_auto_auto_auto_auto_auto]">
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -98,7 +98,7 @@ export function LoadFilters({ filters, setFilters }: { filters: Filters; setFilt
               {LOAD_TYPES.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
             </SelectContent>
           </Select>
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90">Search loads</Button>
+          <Button className="bg-primary font-bold tracking-wide text-primary-foreground hover:bg-primary/90">Search loads</Button>
         </div>
 
         <div className="mt-2 flex items-center gap-3">
