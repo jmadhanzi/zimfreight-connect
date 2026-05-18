@@ -16,6 +16,7 @@ import { Route as PostRouteImport } from './routes/post'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as MapRouteImport } from './routes/map'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as GitStatusRouteImport } from './routes/git-status'
 import { Route as FuelRouteImport } from './routes/fuel'
 import { Route as ExpensesRouteImport } from './routes/expenses'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -60,6 +61,11 @@ const MapRoute = MapRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GitStatusRoute = GitStatusRouteImport.update({
+  id: '/git-status',
+  path: '/git-status',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FuelRoute = FuelRouteImport.update({
@@ -121,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/expenses': typeof ExpensesRoute
   '/fuel': typeof FuelRoute
+  '/git-status': typeof GitStatusRoute
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
   '/onboarding': typeof OnboardingRoute
@@ -140,6 +147,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/expenses': typeof ExpensesRoute
   '/fuel': typeof FuelRoute
+  '/git-status': typeof GitStatusRoute
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
   '/onboarding': typeof OnboardingRoute
@@ -160,6 +168,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/expenses': typeof ExpensesRoute
   '/fuel': typeof FuelRoute
+  '/git-status': typeof GitStatusRoute
   '/login': typeof LoginRoute
   '/map': typeof MapRoute
   '/onboarding': typeof OnboardingRoute
@@ -181,6 +190,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/expenses'
     | '/fuel'
+    | '/git-status'
     | '/login'
     | '/map'
     | '/onboarding'
@@ -200,6 +210,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/expenses'
     | '/fuel'
+    | '/git-status'
     | '/login'
     | '/map'
     | '/onboarding'
@@ -219,6 +230,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/expenses'
     | '/fuel'
+    | '/git-status'
     | '/login'
     | '/map'
     | '/onboarding'
@@ -239,6 +251,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   ExpensesRoute: typeof ExpensesRoute
   FuelRoute: typeof FuelRoute
+  GitStatusRoute: typeof GitStatusRoute
   LoginRoute: typeof LoginRoute
   MapRoute: typeof MapRoute
   OnboardingRoute: typeof OnboardingRoute
@@ -298,6 +311,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/git-status': {
+      id: '/git-status'
+      path: '/git-status'
+      fullPath: '/git-status'
+      preLoaderRoute: typeof GitStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/fuel': {
@@ -402,6 +422,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   ExpensesRoute: ExpensesRoute,
   FuelRoute: FuelRoute,
+  GitStatusRoute: GitStatusRoute,
   LoginRoute: LoginRoute,
   MapRoute: MapRoute,
   OnboardingRoute: OnboardingRoute,
@@ -414,12 +435,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
