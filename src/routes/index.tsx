@@ -239,24 +239,30 @@ function LandingPage() {
           fetchPriority="high"
           className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-70"
         />
-        {/* Warm amber atmospheric glow */}
+        {/* Warm copper-sunrise atmospheric glow — not generic blue */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 z-[5] mix-blend-screen"
           style={{
             backgroundImage:
-              "radial-gradient(ellipse at 80% 30%, rgba(253,175,0,0.25), transparent 55%), radial-gradient(ellipse at 20% 80%, rgba(110,160,255,0.15), transparent 60%)",
+              "radial-gradient(ellipse at 75% 25%, oklch(0.68 0.135 52 / 0.30), transparent 50%), radial-gradient(ellipse at 20% 85%, oklch(0.50 0.185 148 / 0.12), transparent 55%)",
           }}
         />
-        {/* Navy gradient overlay — darker on the left for headline legibility */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#000a1e] via-[#000a1e]/80 to-[#000a1e]/30" />
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#000a1e]/70 via-transparent to-[#000a1e]/40" />
+        {/* Warm earth overlay — deeper warmth, not cold navy */}
+        <div
+          className="absolute inset-0 z-10"
+          style={{ background: "linear-gradient(105deg, oklch(0.10 0.025 38 / 0.95) 0%, oklch(0.12 0.028 40 / 0.82) 45%, oklch(0.12 0.025 40 / 0.35) 100%)" }}
+        />
+        <div
+          className="absolute inset-0 z-10"
+          style={{ background: "linear-gradient(to top, oklch(0.10 0.025 38 / 0.75) 0%, transparent 40%, oklch(0.10 0.025 38 / 0.45) 100%)" }}
+        />
 
         <div className="relative z-20 mx-auto grid max-w-7xl items-center gap-10 px-4 pb-20 pt-16 md:grid-cols-12 md:px-6 md:pb-32 md:pt-24">
           <div className="md:col-span-7 lg:col-span-7">
-            <div className="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-3 py-1 text-secondary backdrop-blur">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.2em]">
+            <div className="hero-badge">
+              <ShieldCheck className="h-3.5 w-3.5 text-secondary" />
+              <span className="text-[0.6875rem] font-bold uppercase tracking-[0.22em] text-white/85">
                 Zimbabwe&rsquo;s #1 Digital Logistics Hub
               </span>
             </div>
@@ -264,11 +270,20 @@ function LandingPage() {
             <h1 className="mt-7 font-display text-5xl font-extrabold leading-[0.95] tracking-[-0.045em] text-white md:text-7xl lg:text-[88px]">
               Zimbabwe&rsquo;s #1
               <br />
-              <span className="relative inline-block text-secondary">
+              <span
+                className="relative inline-block"
+                style={{
+                  background: "linear-gradient(135deg, oklch(0.88 0.012 68) 0%, oklch(0.76 0.158 72) 50%, oklch(0.68 0.135 52) 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
                 Load Board
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute -bottom-2 left-0 right-0 h-2 rounded-full bg-gradient-to-r from-secondary/0 via-secondary/60 to-secondary/0 blur-md md:-bottom-3 md:h-3"
+                  className="pointer-events-none absolute -bottom-2 left-0 right-0 h-2 rounded-full blur-md md:-bottom-3 md:h-3"
+                  style={{ background: "linear-gradient(90deg, transparent, oklch(0.72 0.155 68 / 0.55), transparent)" }}
                 />
               </span>
             </h1>
@@ -282,7 +297,8 @@ function LandingPage() {
               <Button
                 asChild
                 size="lg"
-                className="rounded-full bg-secondary px-10 py-6 text-base font-extrabold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                className="rounded-full px-10 py-6 text-base font-extrabold text-secondary-foreground btn-amber-glow"
+                style={{ background: "linear-gradient(145deg, var(--secondary), color-mix(in oklab, var(--secondary) 78%, var(--primary)))" }}
               >
                 <Link
                   to="/board"
@@ -320,20 +336,37 @@ function LandingPage() {
 
             {/* Inline stat duo */}
             <div className="mt-12 grid max-w-md grid-cols-2 gap-8">
-              <div className="border-l border-white/15 pl-4">
-                <div className="font-display text-4xl font-extrabold tracking-[-0.03em] text-white md:text-5xl">
+              <div
+                className="pl-4"
+                style={{ borderLeft: "1.5px solid oklch(1 0 0 / 0.18)" }}
+              >
+                <div
+                  className="font-display text-4xl font-extrabold tracking-[-0.04em] text-white md:text-5xl"
+                  style={{ fontVariationSettings: '"wdth" 82' }}
+                >
                   <CountUp to={2400} />+
                 </div>
-                <div className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45">
+                <div className="mt-1.5 font-mono text-[0.625rem] font-semibold uppercase tracking-[0.24em] text-white/40">
                   Active Carriers
                 </div>
               </div>
-              <div className="border-l border-secondary/40 pl-4">
-                <div className="font-display text-4xl font-extrabold tracking-[-0.03em] text-secondary md:text-5xl">
-                  $<CountUp to={2.4} decimals={1} />
-                  M+
+              <div
+                className="pl-4"
+                style={{ borderLeft: "1.5px solid oklch(0.72 0.155 68 / 0.45)" }}
+              >
+                <div
+                  className="font-display text-4xl font-extrabold tracking-[-0.04em] md:text-5xl"
+                  style={{
+                    fontVariationSettings: '"wdth" 82',
+                    background: "linear-gradient(135deg, oklch(0.88 0.012 68), oklch(0.76 0.158 72))",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
+                >
+                  $<CountUp to={2.4} decimals={1} />M+
                 </div>
-                <div className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45">
+                <div className="mt-1.5 font-mono text-[0.625rem] font-semibold uppercase tracking-[0.24em] text-white/40">
                   Monthly Payouts
                 </div>
               </div>
@@ -342,11 +375,18 @@ function LandingPage() {
 
           {/* Right rail — live load board glass card */}
           <div className="relative md:col-span-5 lg:col-span-5">
-            <div className="relative z-10 overflow-hidden rounded-2xl bg-white/95 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)] backdrop-blur md:rounded-[20px]">
-              {/* top gradient strip — signals "live" */}
+            <div
+              className="relative z-10 overflow-hidden rounded-2xl backdrop-blur"
+              style={{
+                background: "oklch(0.998 0.003 75 / 0.97)",
+                boxShadow: "0 32px 80px -20px oklch(0.10 0.025 38 / 0.55), 0 0 0 1px oklch(1 0 0 / 0.12)",
+              }}
+            >
+              {/* top gradient strip — copper-to-gold */}
               <span
                 aria-hidden
-                className="block h-1 w-full bg-gradient-to-r from-secondary via-primary to-secondary"
+                className="block h-[3px] w-full"
+                style={{ background: "linear-gradient(90deg, var(--primary), var(--secondary), var(--primary))" }}
               />
               <div className="p-5 md:p-6">
                 <div className="flex items-center justify-between">
@@ -390,10 +430,21 @@ function LandingPage() {
                   {FLOAT_LOADS.slice(0, 3).map((l, i) => (
                     <div
                       key={i}
-                      className="relative overflow-hidden rounded-xl bg-[var(--bg-secondary)] p-4 transition-colors hover:bg-[color-mix(in_oklab,var(--secondary)_5%,var(--bg-secondary))]"
+                      className="relative overflow-hidden rounded-xl p-4 transition-colors"
+                      style={{
+                        background: i === 0
+                          ? "color-mix(in oklab, var(--primary) 6%, var(--bg-secondary))"
+                          : "var(--bg-secondary)",
+                        border: i === 0
+                          ? "1px solid color-mix(in oklab, var(--primary) 18%, transparent)"
+                          : "1px solid transparent",
+                      }}
                     >
                       {i === 0 && (
-                        <span className="absolute left-0 top-0 h-full w-1 bg-secondary" />
+                        <span
+                          className="absolute left-0 top-0 h-full w-[3px] rounded-l-xl"
+                          style={{ background: "linear-gradient(180deg, var(--secondary), var(--primary))" }}
+                        />
                       )}
                       <div className="flex items-center justify-between">
                         <div className="ml-2">
@@ -418,7 +469,8 @@ function LandingPage() {
                 </div>
                 <Button
                   asChild
-                  className="mt-5 w-full rounded-full bg-primary py-5 font-bold text-primary-foreground hover:bg-primary/90"
+                  className="mt-5 w-full rounded-full py-5 font-bold text-primary-foreground btn-primary-glow"
+                  style={{ background: "linear-gradient(145deg, var(--primary), color-mix(in oklab, var(--primary) 72%, black))" }}
                 >
                   <Link
                     to="/board"
@@ -446,20 +498,36 @@ function LandingPage() {
                 </Button>
               </div>
             </div>
-            {/* glow */}
-            <div className="pointer-events-none absolute -inset-4 -z-10 rounded-3xl bg-secondary/20 blur-3xl" />
+            {/* Warm copper glow behind card */}
+            <div
+              className="pointer-events-none absolute -inset-6 -z-10 rounded-3xl blur-3xl"
+              style={{ background: "radial-gradient(ellipse at 50% 50%, color-mix(in oklab, var(--primary) 22%, transparent), transparent 70%)" }}
+            />
           </div>
         </div>
       </section>
 
       {/* ============ SOCIAL PROOF TICKER ============ */}
-      <section className="overflow-hidden border-y border-border bg-card py-6">
-        <div className="flex w-max animate-marquee gap-12 whitespace-nowrap">
+      <section
+        className="overflow-hidden border-y py-5"
+        style={{
+          borderColor: "var(--color-border)",
+          background: "linear-gradient(90deg, var(--color-bg-secondary) 0%, var(--color-card) 50%, var(--color-bg-secondary) 100%)",
+        }}
+      >
+        <div className="flex w-max animate-marquee gap-16 whitespace-nowrap">
           {[...QUOTES, ...QUOTES].map((q, i) => (
-            <div key={i} className="flex items-center gap-4 text-sm">
-              <span className="text-foreground">"{q.text}"</span>
-              <span className="text-muted-foreground">— {q.who}</span>
-              <span className="font-display text-base font-bold uppercase tracking-wide text-primary">
+            <div key={i} className="flex items-center gap-5 text-[0.875rem]">
+              <span
+                className="h-1 w-1 rounded-full flex-shrink-0"
+                style={{ background: "var(--secondary)" }}
+              />
+              <span className="text-foreground/80 italic">&ldquo;{q.text}&rdquo;</span>
+              <span className="text-muted-foreground text-[0.8125rem]">&mdash; {q.who}</span>
+              <span
+                className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em]"
+                style={{ color: "var(--primary)" }}
+              >
                 {q.co}
               </span>
             </div>
@@ -473,7 +541,17 @@ function LandingPage() {
           <div className="reveal max-w-3xl">
             <span className="section-kicker">Features</span>
             <h2 className="mt-4 font-display text-4xl font-black tracking-tight md:text-5xl lg:text-6xl">
-              Everything Zimbabwe&rsquo;s truckers <span className="text-secondary">actually</span>{" "}
+              Everything Zimbabwe&rsquo;s truckers{" "}
+              <span
+                style={{
+                  background: "linear-gradient(135deg, var(--secondary), var(--primary))",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                actually
+              </span>{" "}
               need
             </h2>
           </div>
@@ -484,8 +562,11 @@ function LandingPage() {
               return (
                 <div
                   key={f.title}
-                  className="reveal hover-lift group relative overflow-hidden rounded-2xl border border-border bg-card p-7 transition-colors hover:border-foreground/15"
-                  style={{ transitionDelay: `${i * 60}ms` }}
+                  className="reveal hover-lift group relative overflow-hidden rounded-2xl border border-border/80 bg-card p-7 transition-colors hover:border-primary/20"
+                  style={{
+                    transitionDelay: `${i * 60}ms`,
+                    boxShadow: "inset 0 1px 0 0 oklch(1 0 0 / 0.55)",
+                  }}
                 >
                   {/* corner accent — diagonal stripe */}
                   <span
@@ -719,32 +800,80 @@ function LandingPage() {
             {PLANS.map((p, i) => (
               <div
                 key={p.name}
-                className={`reveal relative rounded-xl border bg-card p-7 transition-transform duration-200 hover:scale-[1.02] ${
-                  p.featured
-                    ? "border-primary shadow-[0_0_50px_-15px_var(--primary)]"
-                    : "border-border"
-                }`}
-                style={{ transitionDelay: `${i * 80}ms` }}
+                className="reveal relative rounded-2xl p-7 transition-all duration-200 hover:scale-[1.02]"
+                style={{
+                  transitionDelay: `${i * 80}ms`,
+                  background: p.featured
+                    ? "linear-gradient(158deg, oklch(0.30 0.078 42) 0%, oklch(0.24 0.060 38) 100%)"
+                    : "var(--color-card)",
+                  border: p.featured
+                    ? "1.5px solid color-mix(in oklab, var(--secondary) 35%, transparent)"
+                    : "1px solid var(--color-border)",
+                  boxShadow: p.featured
+                    ? "0 0 0 1px color-mix(in oklab, var(--secondary) 15%, transparent), 0 8px 32px -8px color-mix(in oklab, var(--primary) 30%, transparent), inset 0 1px 0 oklch(1 0 0 / 0.08)"
+                    : "inset 0 1px 0 oklch(1 0 0 / 0.55)",
+                }}
               >
                 {p.featured && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 font-display text-[11px] font-bold uppercase tracking-wider text-primary-foreground">
+                  <span
+                    className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em]"
+                    style={{
+                      background: "linear-gradient(135deg, var(--secondary), color-mix(in oklab, var(--secondary) 75%, var(--primary)))",
+                      color: "var(--secondary-foreground)",
+                      boxShadow: "0 4px 12px -2px color-mix(in oklab, var(--secondary) 45%, transparent)",
+                    }}
+                  >
                     Most Popular
                   </span>
                 )}
-                <div className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                <div
+                  className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.22em]"
+                  style={{ color: p.featured ? "color-mix(in oklab, var(--secondary) 80%, white)" : "var(--color-muted-foreground)" }}
+                >
                   {p.name}
                 </div>
-                <div className="mt-2 flex items-baseline gap-1">
-                  <span className="font-display text-5xl font-black text-foreground">
+                <div className="mt-2.5 flex items-baseline gap-1.5">
+                  <span
+                    className="font-display text-5xl font-black tracking-[-0.04em]"
+                    style={{
+                      fontVariationSettings: '"wdth" 82',
+                      color: p.featured ? "oklch(0.92 0.012 68)" : "var(--color-foreground)",
+                    }}
+                  >
                     ${p.price}
                   </span>
-                  <span className="text-sm text-muted-foreground">/month</span>
+                  <span
+                    className="text-[0.875rem]"
+                    style={{ color: p.featured ? "oklch(0.92 0.012 68 / 0.55)" : "var(--color-muted-foreground)" }}
+                  >
+                    /month
+                  </span>
                 </div>
-                <ul className="mt-5 space-y-2 text-sm">
+                {/* Divider */}
+                <div
+                  className="my-5 h-px"
+                  style={{ background: p.featured ? "oklch(1 0 0 / 0.10)" : "var(--color-border)" }}
+                />
+                <ul className="space-y-2.5">
                   {p.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-                      <span className="text-muted-foreground">{f}</span>
+                    <li key={f} className="flex items-start gap-2.5 text-[0.875rem]">
+                      <span
+                        className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full"
+                        style={{
+                          background: p.featured
+                            ? "color-mix(in oklab, var(--success) 22%, transparent)"
+                            : "color-mix(in oklab, var(--success) 14%, transparent)",
+                        }}
+                      >
+                        <Check
+                          className="h-2.5 w-2.5"
+                          style={{ color: "var(--success)" }}
+                          strokeWidth={3}
+                        />
+                      </span>
+                      <span style={{ color: p.featured ? "oklch(0.92 0.012 68 / 0.80)" : "var(--color-muted-foreground)" }}>
+                        {f}
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -835,19 +964,41 @@ function LandingPage() {
 
       {/* ============ FINAL CTA — Kinetic panel ============ */}
       <section className="bg-background px-4 py-16 md:px-6 md:py-24">
-        <div className="reveal mx-auto max-w-5xl overflow-hidden rounded-3xl kinetic-gradient p-10 text-center md:p-16">
-          <h2 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tighter text-white md:text-5xl">
+        <div
+          className="reveal mx-auto max-w-5xl overflow-hidden rounded-3xl p-10 text-center md:p-16 subtle-grain"
+          style={{
+            background: "linear-gradient(158deg, oklch(0.16 0.035 42) 0%, oklch(0.20 0.040 45) 40%, oklch(0.18 0.032 48) 100%)",
+            boxShadow: "0 0 0 1px oklch(1 0 0 / 0.06), 0 32px 80px -20px oklch(0.10 0.025 38 / 0.50)",
+          }}
+        >
+          {/* Warm copper glow top-right */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-20 -top-20 h-80 w-80 rounded-full blur-3xl"
+            style={{ background: "radial-gradient(circle, oklch(0.68 0.135 52 / 0.20), transparent 70%)" }}
+          />
+          {/* Gold glow bottom-left */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-16 -left-16 h-64 w-64 rounded-full blur-3xl"
+            style={{ background: "radial-gradient(circle, oklch(0.72 0.155 68 / 0.15), transparent 70%)" }}
+          />
+          <h2
+            className="relative font-display text-4xl font-extrabold leading-[1.05] tracking-[-0.035em] text-white md:text-5xl"
+            style={{ fontVariationSettings: '"wdth" 86' }}
+          >
             Ready to modernize <br /> your logistics?
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-base text-white/70 md:text-lg">
+          <p className="relative mx-auto mt-5 max-w-xl text-base text-white/65 md:text-lg">
             Join the network of professional truckers and shippers streamlining Zimbabwe's supply
             chain.
           </p>
-          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div className="relative mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button
               asChild
               size="lg"
-              className="rounded-full bg-secondary px-8 py-6 font-extrabold text-secondary-foreground shadow-xl shadow-secondary/20 hover:bg-secondary/90"
+              className="rounded-full px-8 py-6 font-extrabold text-secondary-foreground btn-amber-glow"
+              style={{ background: "linear-gradient(145deg, var(--secondary), color-mix(in oklab, var(--secondary) 78%, var(--primary)))" }}
             >
               <Link
                 to="/board"

@@ -118,7 +118,8 @@ export function PricingModal({
       <DialogContent className="max-h-[90vh] overflow-y-auto overflow-x-hidden border-border/70 bg-card p-0 sm:max-w-3xl">
         <span
           aria-hidden
-          className="sticky top-0 z-10 block h-1 w-full bg-gradient-to-r from-secondary via-primary to-secondary"
+          className="sticky top-0 z-10 block h-[3px] w-full"
+          style={{ background: "linear-gradient(90deg, var(--primary), var(--secondary), var(--primary))" }}
         />
         <div className="p-6 md:p-8">
           <DialogHeader className="text-center">
@@ -161,55 +162,89 @@ export function PricingModal({
               return (
                 <div
                   key={p.tier}
-                  className={cn(
-                    "relative flex flex-col overflow-hidden rounded-2xl border p-5 transition-all",
-                    p.highlight
-                      ? "border-secondary/40 bg-card shadow-[0_0_0_1px_color-mix(in_oklab,var(--secondary)_30%,transparent)]"
-                      : "border-border/70 bg-card",
-                  )}
+                  className="relative flex flex-col overflow-hidden rounded-2xl p-5 transition-all"
+                  style={{
+                    background: p.highlight
+                      ? "linear-gradient(158deg, oklch(0.28 0.072 42) 0%, oklch(0.22 0.055 38) 100%)"
+                      : "var(--color-card)",
+                    border: p.highlight
+                      ? "1.5px solid color-mix(in oklab, var(--secondary) 38%, transparent)"
+                      : "1px solid var(--color-border)",
+                    boxShadow: p.highlight
+                      ? "0 0 0 1px color-mix(in oklab, var(--secondary) 14%, transparent), 0 8px 28px -8px color-mix(in oklab, var(--primary) 28%, transparent), inset 0 1px 0 oklch(1 0 0 / 0.07)"
+                      : "inset 0 1px 0 0 oklch(1 0 0 / 0.55)",
+                  }}
                 >
                   {p.highlight && (
                     <span
                       aria-hidden
-                      className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+                      className="absolute inset-x-0 top-0 h-[3px]"
+                      style={{ background: "linear-gradient(90deg, var(--primary), var(--secondary), var(--primary))" }}
                     />
                   )}
                   {p.highlight && (
-                    <span className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 rounded-full bg-secondary px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-secondary-foreground shadow-[0_4px_12px_-2px_color-mix(in_oklab,var(--secondary)_60%,transparent)]">
+                    <span
+                      className="absolute -top-3.5 left-1/2 z-10 -translate-x-1/2 rounded-full px-3 py-1 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em]"
+                      style={{
+                        background: "linear-gradient(135deg, var(--secondary), color-mix(in oklab, var(--secondary) 78%, var(--primary)))",
+                        color: "var(--secondary-foreground)",
+                        boxShadow: "0 4px 12px -2px color-mix(in oklab, var(--secondary) 50%, transparent)",
+                      }}
+                    >
                       ★ Most popular
                     </span>
                   )}
-                  <h4 className="font-display text-2xl font-extrabold tracking-[-0.025em]">
+                  <h4
+                    className="font-display text-2xl font-extrabold tracking-[-0.025em]"
+                    style={{ color: p.highlight ? "oklch(0.92 0.012 68)" : "var(--color-foreground)" }}
+                  >
                     {p.name}
                   </h4>
                   <div className="mt-2 flex items-baseline gap-1">
-                    <span className="font-mono text-base font-bold text-muted-foreground">$</span>
                     <span
-                      className={cn(
-                        "font-display text-4xl font-black leading-none tracking-[-0.035em]",
-                        p.highlight ? "text-secondary" : "text-foreground",
-                      )}
+                      className="font-mono text-base font-bold"
+                      style={{ color: p.highlight ? "oklch(0.72 0.155 68 / 0.65)" : "var(--color-muted-foreground)" }}
+                    >
+                      $
+                    </span>
+                    <span
+                      className="font-display text-4xl font-black leading-none tracking-[-0.04em]"
+                      style={{
+                        fontVariationSettings: '"wdth" 82',
+                        color: p.highlight ? "oklch(0.88 0.012 68)" : "var(--color-foreground)",
+                      }}
                     >
                       {price}
                     </span>
-                    <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                    <span
+                      className="font-mono text-[0.625rem] font-semibold uppercase tracking-[0.16em]"
+                      style={{ color: p.highlight ? "oklch(0.88 0.012 68 / 0.50)" : "var(--color-muted-foreground)" }}
+                    >
                       {suffix}
                     </span>
                   </div>
-                  <ul className="mt-4 flex-1 space-y-2 text-xs">
+                  {/* Divider */}
+                  <div
+                    className="my-3.5 h-px"
+                    style={{ background: p.highlight ? "oklch(1 0 0 / 0.09)" : "var(--color-border)" }}
+                  />
+                  <ul className="flex-1 space-y-2">
                     {p.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2">
+                      <li key={f} className="flex items-start gap-2 text-[0.8125rem]">
                         <span
-                          className={cn(
-                            "mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full",
-                            p.highlight
-                              ? "bg-secondary/20 text-secondary"
-                              : "bg-primary/10 text-primary",
-                          )}
+                          className="mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full"
+                          style={{
+                            background: p.highlight
+                              ? "color-mix(in oklab, var(--success) 20%, transparent)"
+                              : "color-mix(in oklab, var(--success) 13%, transparent)",
+                            color: "var(--success)",
+                          }}
                         >
                           <Check className="h-2.5 w-2.5" strokeWidth={3.5} />
                         </span>
-                        <span className="text-foreground/85">{f}</span>
+                        <span style={{ color: p.highlight ? "oklch(0.90 0.012 68 / 0.80)" : "var(--color-foreground)" }}>
+                          {f}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -222,10 +257,14 @@ export function PricingModal({
                     }}
                     className={cn(
                       "mt-5 w-full rounded-full font-bold",
-                      p.highlight
-                        ? "bg-secondary text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
-                        : "bg-primary text-primary-foreground hover:bg-primary/90",
+                      p.highlight ? "btn-amber-glow" : "btn-primary-glow",
                     )}
+                    style={{
+                      background: p.highlight
+                        ? "linear-gradient(145deg, var(--secondary), color-mix(in oklab, var(--secondary) 78%, var(--primary)))"
+                        : "linear-gradient(145deg, var(--primary), color-mix(in oklab, var(--primary) 72%, black))",
+                      color: p.highlight ? "var(--secondary-foreground)" : "var(--primary-foreground)",
+                    }}
                   >
                     {p.tier === "free" ? "Current" : `Choose ${p.name}`}
                   </Button>
@@ -242,7 +281,13 @@ export function PricingModal({
           </button>
 
           {ecocashOpen && (
-            <div className="mt-4 overflow-hidden rounded-2xl border border-[color:var(--success)]/25 bg-gradient-to-br from-[color:var(--success)]/[0.05] via-card to-card p-5 text-sm">
+            <div
+              className="mt-4 overflow-hidden rounded-2xl p-5 text-sm"
+              style={{
+                border: "1px solid color-mix(in oklab, var(--success) 24%, transparent)",
+                background: "linear-gradient(135deg, color-mix(in oklab, var(--success) 5%, var(--color-card)), var(--color-card))",
+              }}
+            >
               <span className="section-kicker">Pay via mobile</span>
               <p className="mt-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                 EcoCash USSD
@@ -265,7 +310,8 @@ export function PricingModal({
                 <Button
                   onClick={submitEcoCash}
                   disabled={submitting}
-                  className="w-full rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                  className="w-full rounded-full font-bold text-secondary-foreground btn-amber-glow"
+                  style={{ background: "linear-gradient(145deg, var(--secondary), color-mix(in oklab, var(--secondary) 78%, var(--primary)))" }}
                 >
                   {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Verify payment
