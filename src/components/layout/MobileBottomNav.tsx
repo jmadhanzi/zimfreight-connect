@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils";
 
 /** Sticky 6-tab bottom nav, mobile-only. Renders below md breakpoint. */
 const TABS = [
-  { to: "/board", label: "Board", icon: LayoutGrid },
-  { to: "/map", label: "Map", icon: Map },
+  { to: "/board", label: "Board", icon: LayoutGrid, accent: false },
+  { to: "/map", label: "Map", icon: Map, accent: false },
   { to: "/post", label: "Post", icon: Plus, accent: true },
-  { to: "/ai-agent", label: "AI", icon: Bot },
-  { to: "/dashboard", label: "Dash", icon: BarChart3 },
-  { to: "/profile", label: "Profile", icon: User },
+  { to: "/ai-agent", label: "AI", icon: Bot, accent: false },
+  { to: "/dashboard", label: "Dash", icon: BarChart3, accent: false },
+  { to: "/profile", label: "Profile", icon: User, accent: false },
 ] as const;
 
 export function MobileBottomNav() {
