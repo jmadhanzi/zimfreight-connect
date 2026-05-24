@@ -189,13 +189,13 @@ function LoadBoardPage() {
       <div className="mx-auto flex max-w-7xl gap-6 px-4 md:px-6">
         <BoardSidebar />
         <main className="min-w-0 flex-1 py-6">
-          <div className="flex flex-wrap items-end justify-between gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <span className="section-kicker">Live board</span>
-              <h1 className="mt-2 font-display text-3xl font-black tracking-[-0.035em] md:text-4xl">Available loads</h1>
+              <div className="section-kicker">Live board</div>
+              <h1 className="mt-1.5 font-display text-2xl font-bold tracking-tight md:text-3xl">Available loads</h1>
             </div>
-            <div className="font-mono text-xs text-muted-foreground">
-              {loading ? "Loading…" : <>Showing <span className="text-foreground">{filtered.length}</span> of {loads.length}</>}
+            <div className="text-xs text-muted-foreground">
+              {loading ? "Loading…" : <>Showing <span className="font-medium text-foreground">{filtered.length}</span> of {loads.length} loads</>}
             </div>
           </div>
 
@@ -222,10 +222,10 @@ function LoadBoardPage() {
             )}
 
             {!loading && filtered.length === 0 ? (
-              <div className="rounded-lg border border-dashed border-border bg-card/50 p-16 text-center">
-                <h3 className="font-display text-xl font-bold uppercase">No loads match your filters</h3>
-                <p className="mt-1 text-sm text-muted-foreground">Try widening your search or clearing filters.</p>
-                <Button variant="outline" className="mt-4" onClick={() => setFilters(DEFAULT_FILTERS)}>Reset filters</Button>
+              <div className="rounded-lg border border-dashed border-border bg-muted/20 p-16 text-center">
+                <h3 className="font-display text-base font-semibold">No loads match your filters</h3>
+                <p className="mt-1.5 text-sm text-muted-foreground">Try widening your search or clearing filters.</p>
+                <Button variant="outline" size="sm" className="mt-4" onClick={() => setFilters(DEFAULT_FILTERS)}>Reset filters</Button>
               </div>
             ) : (
               <>
@@ -258,14 +258,14 @@ function LoadBoardPage() {
                   />
                 )}
                 {hiddenCount > 0 && (
-                  <div className="rounded-xl border border-primary/30 bg-gradient-to-b from-primary/10 to-card p-8 text-center">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-primary">
-                      <Lock className="h-6 w-6" />
+                  <div className="rounded-lg border border-border bg-muted/30 p-8 text-center">
+                    <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+                      <Lock className="h-4 w-4 text-muted-foreground" />
                     </div>
-                    <h3 className="mt-3 font-display text-2xl font-black uppercase tracking-tight">You've seen today's free loads</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">{hiddenCount} more loads waiting — upgrade to see all of them and unlock broker contacts.</p>
-                    <Button onClick={() => (user ? setPricingOpen(true) : setAuthOpen(true))} className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90">
-                      Upgrade to Basic — $19/mo →
+                    <h3 className="mt-3 font-display text-lg font-bold tracking-tight">You've seen today's free loads</h3>
+                    <p className="mt-1.5 text-sm text-muted-foreground">{hiddenCount} more loads waiting — upgrade to see all of them and unlock broker contacts.</p>
+                    <Button onClick={() => (user ? setPricingOpen(true) : setAuthOpen(true))} className="mt-4">
+                      Upgrade to Basic — $19/mo
                     </Button>
                   </div>
                 )}

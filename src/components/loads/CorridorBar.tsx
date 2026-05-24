@@ -48,7 +48,7 @@ interface CorridorBarProps {
 
 export function CorridorBar({ active, onSelect, resultCount, loading }: CorridorBarProps) {
   return (
-    <div className="border-b border-border bg-[color:var(--bg-secondary)]">
+    <div className="border-b border-border bg-background">
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <div className="flex items-center gap-2 overflow-x-auto py-2.5 scrollbar-none">
           {ZIM_CORRIDORS.map((c) => (

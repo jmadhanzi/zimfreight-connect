@@ -132,7 +132,7 @@ function PostTruckPage() {
 
       <div className="mt-6">
         <span className="section-kicker">Truck post</span>
-        <h1 className="mt-3 font-display text-3xl font-black tracking-[-0.04em] md:text-4xl">
+        <h1 className="mt-3 font-display text-3xl font-bold tracking-[-0.04em] md:text-4xl">
           List your <span className="text-secondary">available truck</span>
         </h1>
         <p className="mt-3 text-muted-foreground">
@@ -143,7 +143,7 @@ function PostTruckPage() {
 
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mt-8 space-y-5 rounded-2xl border border-border/70 bg-card p-6"
+        className="mt-8 space-y-5 rounded-lg border border-border/70 bg-card p-6"
       >
         {/* Carrier identity */}
         <div className="grid gap-4 md:grid-cols-2">
@@ -303,7 +303,7 @@ function PostTruckPage() {
           <Button
             type="submit"
             disabled={submitting}
-            className="rounded-full bg-secondary px-6 font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+            className="rounded-full bg-secondary px-6 font-bold text-secondary-foreground hover:bg-secondary/90"
           >
             {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             <Truck className="mr-2 h-4 w-4" /> Post my truck

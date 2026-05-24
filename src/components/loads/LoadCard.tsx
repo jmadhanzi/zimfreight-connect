@@ -58,7 +58,7 @@ export function LoadCard({ load, onClick, saved, onSave }: LoadCardProps) {
       onClick={onClick}
       style={{ ["--transit-progress" as string]: `${progress}%` }}
       className={cn(
-        "hover-lift group relative w-full overflow-hidden rounded-2xl border bg-card p-4 text-left transition-all",
+        " group relative w-full overflow-hidden rounded-lg border bg-card p-4 text-left transition-all",
         load.is_urgent
           ? "border-destructive/30 bg-[color-mix(in_oklab,var(--destructive)_3%,transparent)] hover:border-destructive/50"
           : "border-border/70 hover:border-foreground/15",
@@ -79,11 +79,11 @@ export function LoadCard({ load, onClick, saved, onSave }: LoadCardProps) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5 text-foreground">
-            <span className="font-display text-lg font-extrabold leading-none tracking-[-0.025em] truncate">
+            <span className="font-display text-lg font-bold leading-none tracking-[-0.025em] truncate">
               {load.origin}
             </span>
             <ArrowRight className="h-4 w-4 shrink-0 text-secondary" />
-            <span className="font-display text-lg font-extrabold leading-none tracking-[-0.025em] truncate">
+            <span className="font-display text-lg font-bold leading-none tracking-[-0.025em] truncate">
               {load.destination}
             </span>
           </div>
@@ -96,14 +96,14 @@ export function LoadCard({ load, onClick, saved, onSave }: LoadCardProps) {
               </span>
             )}
             {load.highway && (
-              <span className="rounded-full bg-[color:var(--bg-secondary)] px-2 py-0.5 font-mono text-[10px] font-semibold tracking-[0.04em] text-foreground/70">
+              <span className="rounded-full bg-muted/30 px-2 py-0.5 font-mono text-[10px] font-semibold tracking-[0.04em] text-foreground/70">
                 {load.highway}
               </span>
             )}
           </div>
         </div>
         <div className="shrink-0 text-right">
-          <div className="font-display text-[28px] font-black leading-none tracking-[-0.035em] text-foreground">
+          <div className="font-display text-[28px] font-bold leading-none tracking-[-0.035em] text-foreground">
             {formatUSD(load.rate_usd)}
           </div>
           {load.rate_per_km && (
@@ -120,27 +120,27 @@ export function LoadCard({ load, onClick, saved, onSave }: LoadCardProps) {
 
       {/* Chips row */}
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
-        <span className="glass-chip">
+        <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
           <TruckIcon className="h-3 w-3" /> {load.load_type}
         </span>
         {load.equipment_required && (
-          <span className="glass-chip text-muted-foreground">{load.equipment_required}</span>
+          <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground text-muted-foreground">{load.equipment_required}</span>
         )}
         {load.weight_tonnes && (
-          <span className="glass-chip font-mono text-muted-foreground">{load.weight_tonnes}t</span>
+          <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground font-mono text-muted-foreground">{load.weight_tonnes}t</span>
         )}
         {load.is_border_crossing && (
-          <span className="glass-chip glass-chip-info">
+          <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
             <MapPin className="h-3 w-3" /> Border
           </span>
         )}
         {load.zimra_required && (
-          <span className="glass-chip glass-chip-amber">
+          <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground-amber">
             <ShieldCheck className="h-3 w-3" /> ZIMRA
           </span>
         )}
         {load.is_urgent && (
-          <span className="glass-chip glass-chip-danger">
+          <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground-danger">
             <Flame className="h-3 w-3" /> Urgent
           </span>
         )}

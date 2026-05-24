@@ -97,7 +97,7 @@ function FuelPage() {
           <span className="section-kicker">
             <Fuel className="h-3 w-3" /> Fuel
           </span>
-          <h1 className="mt-3 font-display text-4xl font-black tracking-[-0.04em] md:text-5xl">
+          <h1 className="mt-3 font-display text-4xl font-bold tracking-[-0.04em] md:text-5xl">
             Where&rsquo;s the <span className="text-secondary">diesel</span> today?
           </h1>
           <p className="mt-2 max-w-xl text-muted-foreground">
@@ -107,7 +107,7 @@ function FuelPage() {
         </div>
         <Button
           onClick={() => setReportOpen(true)}
-          className="rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+          className="bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
         >
           <Plus className="mr-1.5 h-4 w-4" /> Report fuel
         </Button>
@@ -151,7 +151,7 @@ function FuelPage() {
           <section key={city}>
             <div className="mb-3 flex items-center gap-2">
               <MapPin className="h-3.5 w-3.5 text-secondary" />
-              <h2 className="font-display text-xl font-extrabold tracking-[-0.025em]">{city}</h2>
+              <h2 className="font-display text-xl font-bold tracking-[-0.025em]">{city}</h2>
               <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                 {items.filter((i) => i.report).length} of {items.length} reported
               </span>
@@ -169,7 +169,7 @@ function FuelPage() {
           </section>
         ))}
         {grouped.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-border bg-card/50 p-12 text-center">
+          <div className="rounded-lg border border-dashed border-border bg-card/50 p-12 text-center">
             <AlertTriangle className="mx-auto h-5 w-5 text-muted-foreground/60" />
             <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
               No reports match
@@ -199,16 +199,16 @@ function StatTile({
     color === "success"
       ? "bg-[color-mix(in_oklab,var(--success)_15%,transparent)] text-[color:var(--success)] border-[color:var(--success)]/30"
       : color === "warning"
-        ? "bg-[color-mix(in_oklab,var(--zim-yellow)_18%,transparent)] text-[color-mix(in_oklab,var(--zim-yellow)_70%,var(--foreground))] border-[color:var(--zim-yellow)]/30"
+        ? "bg-[color-mix(in_oklab,var(--warning)_18%,transparent)] text-[color-mix(in_oklab,var(--warning)_70%,var(--foreground))] border-[color:var(--warning)]/30"
         : color === "danger"
           ? "bg-destructive/12 text-destructive border-destructive/25"
           : "bg-card text-foreground border-border/70";
   return (
-    <div className={cn("rounded-2xl border p-4", cls)}>
+    <div className={cn("rounded-lg border p-4", cls)}>
       <div className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] opacity-80">
         {label}
       </div>
-      <div className="mt-1 font-display text-3xl font-black leading-none tracking-[-0.035em] tabular-nums">
+      <div className="mt-1 font-display text-3xl font-bold leading-none tracking-[-0.035em] tabular-nums">
         {count}
       </div>
     </div>
@@ -228,7 +228,7 @@ function FuelStationCard({
     return (
       <button
         onClick={onReport}
-        className="hover-lift group flex flex-col items-start rounded-2xl border border-dashed border-border bg-card/40 p-4 text-left transition-colors hover:border-secondary/40 hover:bg-card"
+        className=" group flex flex-col items-start rounded-lg border border-dashed border-border bg-card/40 p-4 text-left transition-colors hover:border-secondary/40 hover:bg-card"
       >
         <div className="font-display text-sm font-bold tracking-tight text-foreground">
           {station.name}
@@ -248,7 +248,7 @@ function FuelStationCard({
   const age = ageMin < 60 ? `${ageMin}m ago` : `${Math.floor(ageMin / 60)}h ago`;
 
   return (
-    <div className="hover-lift relative overflow-hidden rounded-2xl border border-border/70 bg-card p-4 pt-[15px]">
+    <div className=" relative overflow-hidden rounded-lg border border-border/70 bg-card p-4 pt-[15px]">
       <span
         aria-hidden
         className="absolute inset-x-0 top-0 h-[3px]"
@@ -256,7 +256,7 @@ function FuelStationCard({
       />
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <div className="font-display text-sm font-extrabold tracking-tight text-foreground">
+          <div className="font-display text-sm font-bold tracking-tight text-foreground">
             {station.name}
           </div>
           <div className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
@@ -274,7 +274,7 @@ function FuelStationCard({
       <div className="mt-3 flex items-baseline gap-3">
         {report.price_usd && (
           <div>
-            <span className="font-display text-xl font-black tracking-[-0.025em] tabular-nums text-foreground">
+            <span className="font-display text-xl font-bold tracking-[-0.025em] tabular-nums text-foreground">
               ${report.price_usd.toFixed(2)}
             </span>
             <span className="ml-0.5 font-mono text-[10px] font-medium text-muted-foreground">
@@ -356,12 +356,12 @@ function ReportDialog({
       <DialogContent className="overflow-hidden border-border/70 bg-card p-0 sm:max-w-md">
         <span
           aria-hidden
-          className="absolute inset-x-0 top-0 z-10 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+          className="hidden"
         />
         <div className="p-6">
           <DialogHeader>
             <span className="section-kicker">Report</span>
-            <DialogTitle className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
+            <DialogTitle className="mt-2 font-display text-2xl font-bold tracking-[-0.035em]">
               Tell drivers what you see
             </DialogTitle>
           </DialogHeader>
@@ -495,7 +495,7 @@ function ReportDialog({
               <Button
                 onClick={submit}
                 disabled={submitting}
-                className="flex-1 rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                className="flex-1 bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
               >
                 {submitting && <RefreshCw className="mr-1.5 h-3.5 w-3.5 animate-spin" />}
                 Post report <ArrowRight className="ml-1.5 h-3.5 w-3.5" />

@@ -79,7 +79,7 @@ function TrucksPage() {
           <span className="section-kicker">
             <Truck className="h-3 w-3" /> Trucks
           </span>
-          <h1 className="mt-3 font-display text-4xl font-black tracking-[-0.04em] md:text-5xl">
+          <h1 className="mt-3 font-display text-4xl font-bold tracking-[-0.04em] md:text-5xl">
             Find a <span className="text-secondary">truck</span>
           </h1>
           <p className="mt-2 max-w-xl text-muted-foreground">
@@ -89,7 +89,7 @@ function TrucksPage() {
         </div>
         <Button
           asChild
-          className="rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+          className="bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
         >
           <Link to="/trucks/post">
             <Plus className="mr-1.5 h-4 w-4" /> Post my truck
@@ -124,7 +124,7 @@ function TrucksPage() {
       </div>
 
       {showFilters && (
-        <div className="mt-3 grid gap-3 rounded-2xl border border-border/70 bg-card p-4 md:grid-cols-3">
+        <div className="mt-3 grid gap-3 rounded-lg border border-border/70 bg-card p-4 md:grid-cols-3">
           <div>
             <label className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
               Origin
@@ -191,7 +191,7 @@ function TrucksPage() {
 
       {/* Grid */}
       {filtered.length === 0 ? (
-        <div className="mt-6 rounded-2xl border border-dashed border-border bg-card/50 p-12 text-center">
+        <div className="mt-6 rounded-lg border border-dashed border-border bg-card/50 p-12 text-center">
           <Truck className="mx-auto h-6 w-6 text-muted-foreground/60" />
           <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
             No trucks match
@@ -229,23 +229,23 @@ function TruckPostCard({ post }: { post: TruckPost }) {
   });
 
   return (
-    <div className="hover-lift relative flex flex-col overflow-hidden rounded-2xl border border-border/70 bg-card p-5 pt-[18px]">
+    <div className=" relative flex flex-col overflow-hidden rounded-lg border border-border/70 bg-card p-5 pt-[18px]">
       <span
         aria-hidden
-        className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+        className="hidden"
       />
 
       {/* Route */}
       <div className="flex items-baseline gap-1.5">
-        <span className="font-display text-lg font-extrabold leading-none tracking-[-0.025em] text-foreground">
+        <span className="font-display text-lg font-bold leading-none tracking-[-0.025em] text-foreground">
           {post.origin}
         </span>
         <ArrowRight className="h-4 w-4 shrink-0 text-secondary" />
-        <span className="font-display text-lg font-extrabold leading-none tracking-[-0.025em] text-foreground">
+        <span className="font-display text-lg font-bold leading-none tracking-[-0.025em] text-foreground">
           {post.destination}
         </span>
         {post.is_cross_border && (
-          <span className="ml-auto glass-chip glass-chip-info uppercase">Border</span>
+          <span className="ml-auto inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground uppercase">Border</span>
         )}
       </div>
 
@@ -265,12 +265,12 @@ function TruckPostCard({ post }: { post: TruckPost }) {
 
       {/* Equipment + capacity */}
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
-        <span className="glass-chip">
+        <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
           <Truck className="h-3 w-3" /> {post.equipment}
         </span>
-        <span className="glass-chip font-mono">{post.weight_capacity_t}t</span>
+        <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground font-mono">{post.weight_capacity_t}t</span>
         {post.is_zimra_ready && (
-          <span className="glass-chip glass-chip-success">
+          <span className="inline-flex items-center gap-1 rounded-md border border-[color:var(--success)]/20 bg-[color-mix(in_oklab,var(--success)_10%,transparent)] px-1.5 py-0.5 text-[10px] font-medium text-[color:var(--success)]">
             <ShieldCheck className="h-3 w-3" /> ZIMRA
           </span>
         )}
@@ -282,7 +282,7 @@ function TruckPostCard({ post }: { post: TruckPost }) {
           <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
             Asking rate
           </span>
-          <div className="mt-0.5 font-display text-2xl font-black leading-none tracking-[-0.035em] text-foreground">
+          <div className="mt-0.5 font-display text-2xl font-bold leading-none tracking-[-0.035em] text-foreground">
             ${post.rate_usd_per_km.toFixed(2)}
             <span className="ml-0.5 font-mono text-xs font-medium text-muted-foreground">/km</span>
           </div>
@@ -336,7 +336,7 @@ function TruckPostCard({ post }: { post: TruckPost }) {
         <Button
           size="sm"
           className={cn(
-            "flex-1 rounded-full bg-secondary font-bold text-secondary-foreground hover:bg-secondary/90",
+            "flex-1 bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90",
             !post.carrierWhatsapp && "w-full",
           )}
         >

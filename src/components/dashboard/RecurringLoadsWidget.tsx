@@ -38,13 +38,13 @@ export function RecurringLoadsWidget() {
   }, []);
 
   return (
-    <div className="rounded-2xl border border-border/70 bg-card p-5">
+    <div className="rounded-lg border border-border/70 bg-card p-5">
       <div className="flex items-start justify-between gap-3">
         <div>
           <span className="section-kicker">
             <Repeat className="h-3 w-3" /> Recurring
           </span>
-          <h2 className="mt-2 font-display text-lg font-extrabold tracking-[-0.025em]">
+          <h2 className="mt-2 font-display text-lg font-bold tracking-[-0.025em]">
             Standing routes
           </h2>
           <p className="mt-1 text-xs text-muted-foreground">
@@ -180,7 +180,7 @@ function RecurringDialog({
         <div className="p-6">
           <DialogHeader>
             <span className="section-kicker">Standing route</span>
-            <DialogTitle className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
+            <DialogTitle className="mt-2 font-display text-2xl font-bold tracking-[-0.035em]">
               Set up a recurring load
             </DialogTitle>
           </DialogHeader>
@@ -301,7 +301,7 @@ function RecurringDialog({
               </Button>
               <Button
                 onClick={submit}
-                className="flex-1 rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                className="flex-1 bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
               >
                 Save standing route
               </Button>

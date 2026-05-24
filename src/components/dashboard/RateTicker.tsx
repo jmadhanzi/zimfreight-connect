@@ -11,7 +11,7 @@ export function RateTicker({ rates }: { rates: RouteRate[] }) {
   if (rates.length === 0) return null;
   const top = rates.slice(0, 6);
   return (
-    <div className="relative flex items-stretch overflow-hidden rounded-2xl border border-border/70 bg-card">
+    <div className="relative flex items-stretch overflow-hidden rounded-lg border border-border/70 bg-card">
       {/* Live indicator label */}
       <div className="hidden shrink-0 items-center gap-2 border-r border-border bg-[var(--bg-secondary)] px-4 sm:flex">
         <span className="dot-live" />
@@ -36,7 +36,7 @@ export function RateTicker({ rates }: { rates: RouteRate[] }) {
                   <ArrowRight className="mx-0.5 inline h-3 w-3 text-secondary" />
                   {dest}
                 </span>
-                <span className="font-mono-num font-bold text-foreground">
+                <span className="font-mono tabular-nums font-bold text-foreground">
                   ${Number(r.avg_rate_per_km).toFixed(2)}
                 </span>
                 <span

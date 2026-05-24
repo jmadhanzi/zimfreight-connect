@@ -90,7 +90,7 @@ export function UpgradeGate() {
       </div>
 
       <h1
-        className="mt-5 font-display text-5xl font-black tracking-[-0.045em] md:text-6xl"
+        className="mt-5 font-display text-5xl font-bold tracking-[-0.045em] md:text-6xl"
         style={{ fontVariationSettings: '"wdth" 85' }}
       >
         ZimFreight{" "}
@@ -120,7 +120,7 @@ export function UpgradeGate() {
           return (
             <div
               key={c.label}
-              className="hover-lift rounded-2xl p-4 text-left transition-colors"
+              className=" rounded-2xl p-4 text-left transition-colors"
               style={{
                 border: "1px solid var(--color-border)",
                 background: "var(--color-card)",
@@ -144,7 +144,7 @@ export function UpgradeGate() {
       </div>
 
       {/* Example prompts in chat-style bubbles */}
-      <div className="mt-10 w-full overflow-hidden rounded-2xl border border-border/70 bg-card text-left">
+      <div className="mt-10 w-full overflow-hidden rounded-lg border border-border/70 bg-card text-left">
         <div className="border-b border-border bg-[var(--bg-secondary)] px-5 py-3">
           <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
             Ask me anything like…
@@ -174,7 +174,7 @@ export function UpgradeGate() {
       <Button
         onClick={() => setOpen(true)}
         size="lg"
-        className="mt-10 h-14 rounded-full px-10 text-base font-extrabold tracking-wide text-secondary-foreground btn-amber-glow"
+        className="mt-10 h-14 rounded-full px-10 text-base font-bold tracking-wide text-secondary-foreground"
         style={{ background: "linear-gradient(145deg, var(--secondary), color-mix(in oklab, var(--secondary) 78%, var(--primary)))" }}
       >
         Upgrade to Pro &mdash; $49/month

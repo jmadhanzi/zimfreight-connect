@@ -235,7 +235,7 @@ export function AiChatPanel() {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={onKey}
           placeholder="Type a message"
-          className="max-h-32 min-h-[40px] flex-1 resize-none rounded-2xl border-none bg-[#2A3942] px-4 py-2.5 text-sm text-[#E9EDEF] outline-none placeholder:text-[#8696A0] focus:ring-0"
+          className="max-h-32 min-h-[40px] flex-1 resize-none rounded-lg border-none bg-[#2A3942] px-4 py-2.5 text-sm text-[#E9EDEF] outline-none placeholder:text-[#8696A0] focus:ring-0"
           style={{ height: Math.min(Math.max(40, input.split("\n").length * 20 + 20), 128) }}
         />
         <button

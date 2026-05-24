@@ -48,7 +48,7 @@ export function NotificationBell() {
           <div className="flex items-center justify-between">
             <div>
               <span className="section-kicker">Updates</span>
-              <SheetTitle className="mt-2 font-display text-2xl font-extrabold tracking-[-0.03em]">
+              <SheetTitle className="mt-2 font-display text-2xl font-bold tracking-[-0.03em]">
                 Notifications
               </SheetTitle>
             </div>

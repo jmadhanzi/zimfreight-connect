@@ -140,7 +140,7 @@ export function AuthModal({
                 </svg>
               </span>
               <div className="min-w-0 flex-1 text-left">
-                <DialogTitle className="font-display text-xl font-extrabold tracking-[-0.025em]">
+                <DialogTitle className="font-display text-xl font-bold tracking-[-0.025em]">
                   {mode === "signin" ? "Welcome back" : "Join ZimFreight"}
                 </DialogTitle>
                 <DialogDescription className="text-xs">
@@ -157,7 +157,7 @@ export function AuthModal({
             <button
               onClick={() => setMode("signup")}
               className={cn(
-                "rounded-full px-3 py-1.5 text-sm font-bold tracking-wide transition-all",
+                "rounded-md px-3 py-1.5 text-sm font-medium transition-all",
                 mode === "signup"
                   ? "bg-card text-foreground shadow-[0_1px_0_color-mix(in_oklab,var(--foreground)_8%,transparent),0_2px_4px_-1px_color-mix(in_oklab,var(--foreground)_10%,transparent)]"
                   : "text-muted-foreground hover:text-foreground",
@@ -168,7 +168,7 @@ export function AuthModal({
             <button
               onClick={() => setMode("signin")}
               className={cn(
-                "rounded-full px-3 py-1.5 text-sm font-bold tracking-wide transition-all",
+                "rounded-md px-3 py-1.5 text-sm font-medium transition-all",
                 mode === "signin"
                   ? "bg-card text-foreground shadow-[0_1px_0_color-mix(in_oklab,var(--foreground)_8%,transparent),0_2px_4px_-1px_color-mix(in_oklab,var(--foreground)_10%,transparent)]"
                   : "text-muted-foreground hover:text-foreground",
@@ -222,7 +222,7 @@ export function AuthModal({
 
               <Button
                 type="submit"
-                className="w-full rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                className="w-full bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
                 disabled={loading}
               >
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -247,7 +247,7 @@ export function AuthModal({
               </Field>
               <Button
                 type="submit"
-                className="w-full rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                className="w-full bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
                 disabled={loading}
               >
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

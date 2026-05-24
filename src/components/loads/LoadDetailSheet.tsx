@@ -166,11 +166,11 @@ export function LoadDetailSheet({
         {/* top accent strip */}
         <span
           aria-hidden
-          className="block h-1 w-full bg-gradient-to-r from-secondary via-primary to-secondary"
+          className="hidden"
         />
         <SheetHeader className="border-b border-border p-5">
           <span className="section-kicker">Load detail</span>
-          <SheetTitle className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
+          <SheetTitle className="mt-2 font-display text-2xl font-bold tracking-[-0.035em]">
             {load.origin} <ArrowRight className="inline h-5 w-5 text-secondary" />{" "}
             {load.destination}
           </SheetTitle>
@@ -196,7 +196,7 @@ export function LoadDetailSheet({
         <div className="space-y-5 p-5">
           {/* RATE SUMMARY */}
           <section>
-            <div className="font-display text-[2.75rem] font-black leading-none tracking-[-0.04em] text-foreground">
+            <div className="font-display text-[2.75rem] font-bold leading-none tracking-[-0.04em] text-foreground">
               {formatUSD(load.rate_usd)}
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-2 font-mono text-xs text-muted-foreground">
@@ -231,7 +231,7 @@ export function LoadDetailSheet({
                     {ratePos.label}
                   </span>
                 </div>
-                <div className="relative mt-2 h-1.5 overflow-hidden rounded-full bg-background">
+                <div className="relative mt-2 h-1 overflow-hidden rounded-full bg-muted">
                   <div className="absolute inset-y-0 left-0 w-1/2 bg-destructive/60" />
                   <div className="absolute inset-y-0 left-1/3 w-1/3 bg-primary/60" />
                   <div className="absolute inset-y-0 right-0 w-1/3 bg-[color:var(--success)]/60" />
@@ -256,7 +256,7 @@ export function LoadDetailSheet({
           </section>
 
           {/* BROKER */}
-          <section className="rounded-2xl border border-border/70 bg-card p-4">
+          <section className="rounded-lg border border-border/70 bg-card p-4">
             <div className="flex items-center justify-between">
               <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                 Broker profile
@@ -279,7 +279,7 @@ export function LoadDetailSheet({
                     }
                   }}
                   className={cn(
-                    "inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] transition-colors",
+                    "inline-flex items-center gap-1 rounded-md border border-border px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide transition-colors",
                     preferred
                       ? "bg-destructive/12 text-destructive"
                       : "border border-border bg-card text-muted-foreground hover:border-foreground/15 hover:text-foreground",
@@ -298,12 +298,12 @@ export function LoadDetailSheet({
             {canSeeContacts ? (
               <div className="mt-3">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10 font-display text-lg font-black text-primary">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted font-display text-sm font-semibold text-muted-foreground">
                     {((load as Load & { poster?: { full_name?: string } }).poster?.full_name ??
                       "B")[0].toUpperCase()}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="font-display text-base font-extrabold tracking-tight text-foreground">
+                    <div className="font-display text-base font-bold tracking-tight text-foreground">
                       {(load as Load & { poster?: { full_name?: string } }).poster?.full_name ??
                         "Verified Broker"}
                     </div>
@@ -312,7 +312,7 @@ export function LoadDetailSheet({
                       <VerifiedPayerBadge agg={brokerAgg} />
                       {preferred && <PreferredBadge />}
                       {load.zimra_required && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-secondary/15 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-secondary">
+                        <span className="inline-flex items-center gap-1 rounded-md border border-[color:var(--success)]/20 bg-[color-mix(in_oklab,var(--success)_8%,transparent)] px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide text-[color:var(--success)]">
                           <ShieldCheck className="h-3 w-3" /> ZIMRA
                         </span>
                       )}
@@ -353,7 +353,7 @@ export function LoadDetailSheet({
                       onUpgrade();
                     }
                   }}
-                  className="mt-3 w-full rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                  className="mt-3 w-full bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
                 >
                   {user ? "View plans →" : "Sign in →"}
                 </Button>
@@ -404,7 +404,7 @@ export function LoadDetailSheet({
                 {beit && (
                   <div className="mt-2 font-mono text-[11px] text-muted-foreground">
                     Beitbridge wait:{" "}
-                    <span className="text-[color:var(--zim-yellow)]">
+                    <span className="text-[color:var(--warning)]">
                       ~{Number(beit.wait_hours).toFixed(1)}h
                     </span>
                   </div>
@@ -568,7 +568,7 @@ function BrokerStat({ value, label, tone }: { value: string; label: string; tone
     <div className="rounded-xl bg-[var(--bg-secondary)] px-3 py-2.5 text-center">
       <div
         className={cn(
-          "font-display text-base font-extrabold leading-none tracking-tight tabular-nums",
+          "font-display text-base font-bold leading-none tracking-tight tabular-nums",
           tone === "success" ? "text-[color:var(--success)]" : "text-foreground",
         )}
       >

@@ -85,7 +85,7 @@ function MapPage() {
         <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-primary/10 text-primary">
           <MapIcon className="h-3.5 w-3.5" strokeWidth={2.4} />
         </span>
-        <h1 className="font-display text-sm font-extrabold tracking-[-0.02em] text-foreground">
+        <h1 className="font-display text-sm font-bold tracking-[-0.02em] text-foreground">
           Freight Map
         </h1>
         <span className="hidden font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground sm:inline">

@@ -99,7 +99,7 @@ function ExpensesPage() {
           <span className="section-kicker">
             <Receipt className="h-3 w-3" /> Expenses
           </span>
-          <h1 className="mt-3 font-display text-4xl font-black tracking-[-0.04em] md:text-5xl">
+          <h1 className="mt-3 font-display text-4xl font-bold tracking-[-0.04em] md:text-5xl">
             Trip <span className="text-secondary">expenses</span>
           </h1>
           <p className="mt-2 max-w-xl text-muted-foreground">
@@ -118,7 +118,7 @@ function ExpensesPage() {
           </Button>
           <Button
             onClick={() => setOpen(true)}
-            className="rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+            className="bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
           >
             <Plus className="mr-1.5 h-4 w-4" /> Add expense
           </Button>
@@ -159,7 +159,7 @@ function ExpensesPage() {
           <div className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
             All
           </div>
-          <div className="mt-1 font-display text-base font-extrabold tabular-nums">
+          <div className="mt-1 font-display text-base font-bold tabular-nums">
             {formatUSD(expenses.reduce((s, e) => s + e.amount_usd, 0))}
           </div>
         </button>
@@ -183,7 +183,7 @@ function ExpensesPage() {
               <div className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                 {meta.emoji} {meta.label}
               </div>
-              <div className="mt-1 font-display text-base font-extrabold tabular-nums text-foreground">
+              <div className="mt-1 font-display text-base font-bold tabular-nums text-foreground">
                 {formatUSD(amt)}
               </div>
             </button>
@@ -192,13 +192,13 @@ function ExpensesPage() {
       </div>
 
       {/* Expense list */}
-      <div className="mt-6 overflow-hidden rounded-2xl border border-border/70 bg-card">
+      <div className="mt-6 overflow-hidden rounded-lg border border-border/70 bg-card">
         <div className="flex items-center justify-between border-b border-border px-5 py-3">
           <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
             <span className="text-foreground">{filtered.length}</span>{" "}
             {filter === "all" ? "entries" : EXPENSE_META[filter].label.toLowerCase() + " entries"}
           </span>
-          <span className="font-display text-sm font-extrabold tabular-nums text-foreground">
+          <span className="font-display text-sm font-bold tabular-nums text-foreground">
             Total {formatUSD(total)}
           </span>
         </div>
@@ -232,7 +232,7 @@ function ExpensesPage() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-display text-sm font-extrabold tracking-tight text-foreground">
+                      <span className="font-display text-sm font-bold tracking-tight text-foreground">
                         {meta.label}
                       </span>
                       {e.location && (
@@ -246,7 +246,7 @@ function ExpensesPage() {
                     )}
                   </div>
                   <div className="shrink-0 text-right">
-                    <div className="font-display text-base font-extrabold tabular-nums text-foreground">
+                    <div className="font-display text-base font-bold tabular-nums text-foreground">
                       {formatUSD(e.amount_usd)}
                     </div>
                     <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
@@ -293,7 +293,7 @@ function SummaryTile({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border bg-card p-5 pt-[18px]",
+        "relative overflow-hidden rounded-lg border bg-card p-5 pt-[18px]",
         accent ? "border-secondary/30" : "border-border/70",
       )}
     >
@@ -302,8 +302,8 @@ function SummaryTile({
         className={cn(
           "absolute inset-x-0 top-0 h-[3px]",
           accent
-            ? "bg-gradient-to-r from-secondary via-primary to-secondary"
-            : "bg-gradient-to-r from-border via-foreground/20 to-border",
+            ? "bg-foreground"
+            : "bg-border",
         )}
       />
       <div className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
@@ -311,7 +311,7 @@ function SummaryTile({
       </div>
       <div
         className={cn(
-          "mt-2 font-display text-3xl font-black leading-none tracking-[-0.035em] tabular-nums",
+          "mt-2 font-display text-3xl font-bold leading-none tracking-[-0.035em] tabular-nums",
           accent && "text-secondary",
         )}
       >
@@ -387,12 +387,12 @@ function ExpenseDialog({
       <DialogContent className="overflow-hidden border-border/70 bg-card p-0 sm:max-w-md">
         <span
           aria-hidden
-          className="absolute inset-x-0 top-0 z-10 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+          className="hidden"
         />
         <div className="p-6">
           <DialogHeader>
             <span className="section-kicker">New expense</span>
-            <DialogTitle className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
+            <DialogTitle className="mt-2 font-display text-2xl font-bold tracking-[-0.035em]">
               Log a trip cost
             </DialogTitle>
           </DialogHeader>
@@ -491,7 +491,7 @@ function ExpenseDialog({
               <Button
                 onClick={submit}
                 disabled={submitting}
-                className="flex-1 rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                className="flex-1 bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
               >
                 Add expense
               </Button>

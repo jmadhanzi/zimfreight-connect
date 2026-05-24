@@ -20,7 +20,7 @@ export function IncomingBids({ bids, onChange }: { bids: BidRow[]; onChange: () 
 
   if (bids.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 text-center">
+      <div className="rounded-lg border border-dashed border-border bg-card/50 p-8 text-center">
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
           No pending bids
         </p>
@@ -32,7 +32,7 @@ export function IncomingBids({ bids, onChange }: { bids: BidRow[]; onChange: () 
   }
 
   return (
-    <ul className="divide-y divide-border rounded-2xl border border-border/70 bg-card overflow-hidden">
+    <ul className="divide-y divide-border rounded-lg border border-border/70 bg-card overflow-hidden">
       {bids.map((b) => {
         const wa = b.carrier_profile?.phone_whatsapp?.replace(/[^0-9]/g, "");
         return (
@@ -54,7 +54,7 @@ export function IncomingBids({ bids, onChange }: { bids: BidRow[]; onChange: () 
                   {b.loads?.origin} → {b.loads?.destination}
                 </span>
                 <span className="text-border">·</span>
-                <span className="font-mono-num font-semibold text-foreground">
+                <span className="font-mono tabular-nums font-semibold text-foreground">
                   ${Number(b.rate_usd ?? 0).toLocaleString()}
                 </span>
               </div>

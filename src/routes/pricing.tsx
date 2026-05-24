@@ -162,7 +162,7 @@ function PricingPage() {
       {/* Hero */}
       <div className="mx-auto max-w-3xl text-center">
         <span className="section-kicker mx-auto justify-center">Pricing</span>
-        <h1 className="mt-4 font-display text-5xl font-black tracking-[-0.045em] md:text-6xl lg:text-7xl">
+        <h1 className="mt-4 font-display text-5xl font-bold tracking-[-0.045em] md:text-6xl lg:text-7xl">
           Simple pricing for{" "}
           <span className="relative inline-block">
             <span className="text-secondary">Zimbabwe&rsquo;s truckers</span>
@@ -210,7 +210,7 @@ function PricingPage() {
             <div
               key={p.tier}
               className={cn(
-                "hover-lift group relative flex flex-col overflow-hidden rounded-2xl border bg-card p-7 transition-all",
+                " group relative flex flex-col overflow-hidden rounded-lg border bg-card p-7 transition-all",
                 p.highlight
                   ? "border-secondary/40 shadow-[0_0_0_1px_color-mix(in_oklab,var(--secondary)_30%,transparent),0_20px_60px_-20px_color-mix(in_oklab,var(--secondary)_50%,transparent)] md:scale-[1.02]"
                   : "border-border/70 hover:border-foreground/15",
@@ -220,12 +220,12 @@ function PricingPage() {
               {p.highlight && (
                 <span
                   aria-hidden
-                  className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+                  className="hidden"
                 />
               )}
               {/* "Most popular" ribbon */}
               {p.highlight && (
-                <span className="absolute -top-3 left-1/2 z-10 inline-flex -translate-x-1/2 items-center gap-1 rounded-full bg-secondary px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-secondary-foreground shadow-[0_4px_12px_-2px_color-mix(in_oklab,var(--secondary)_60%,transparent)]">
+                <span className="absolute -top-3 left-1/2 z-10 inline-flex -translate-x-1/2 items-center gap-1 rounded-full border border-border bg-background px-3 py-1 text-[10px] font-semibold text-foreground">
                   <Sparkles className="h-3 w-3" />
                   Most popular
                 </span>
@@ -234,7 +234,7 @@ function PricingPage() {
               {p.highlight && (
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-b from-secondary/[0.06] via-transparent to-transparent"
+                  className="hidden"
                 />
               )}
 
@@ -252,7 +252,7 @@ function PricingPage() {
                     0{i + 1}
                   </span>
                 </div>
-                <h3 className="mt-3 font-display text-3xl font-black tracking-[-0.035em]">
+                <h3 className="mt-3 font-display text-3xl font-bold tracking-[-0.035em]">
                   {p.name}
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">{p.sub}</p>
@@ -261,7 +261,7 @@ function PricingPage() {
                   <span className="font-mono text-2xl font-bold text-muted-foreground">$</span>
                   <span
                     className={cn(
-                      "font-display text-6xl font-black leading-none tracking-[-0.04em]",
+                      "font-display text-6xl font-bold leading-none tracking-[-0.04em]",
                       p.highlight ? "text-secondary" : "text-foreground",
                     )}
                   >
@@ -301,7 +301,7 @@ function PricingPage() {
                 className={cn(
                   "relative mt-7 rounded-full font-bold tracking-wide",
                   p.highlight
-                    ? "bg-secondary text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                    ? "bg-secondary text-secondary-foreground hover:bg-secondary/90"
                     : "bg-primary text-primary-foreground hover:bg-primary/90",
                 )}
               >
@@ -341,13 +341,13 @@ function PricingPage() {
       {/* Comparison */}
       <div className="mt-24">
         <span className="section-kicker">Comparison</span>
-        <h2 className="mt-3 font-display text-3xl font-black tracking-[-0.035em] md:text-4xl">
+        <h2 className="mt-3 font-display text-3xl font-bold tracking-[-0.035em] md:text-4xl">
           Compare plans
         </h2>
-        <div className="mt-6 overflow-hidden rounded-2xl border border-border/70 bg-card shadow-[0_1px_0_color-mix(in_oklab,var(--foreground)_5%,transparent)]">
+        <div className="mt-6 overflow-hidden rounded-lg border border-border bg-card">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-[color:var(--bg-secondary)]">
+              <thead className="bg-muted/30">
                 <tr className="border-b border-border">
                   <th className="px-4 py-3 text-left font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                     Feature
@@ -386,7 +386,7 @@ function PricingPage() {
                             <X className="h-4 w-4 text-muted-foreground/30" />
                           )
                         ) : (
-                          <span className="font-mono-num font-bold text-foreground">{v}</span>
+                          <span className="font-mono tabular-nums font-bold text-foreground">{v}</span>
                         )}
                       </td>
                     ))}
@@ -401,7 +401,7 @@ function PricingPage() {
       {/* FAQ */}
       <div className="mt-24 max-w-3xl">
         <span className="section-kicker">Questions</span>
-        <h2 className="mt-3 font-display text-3xl font-black tracking-[-0.035em] md:text-4xl">
+        <h2 className="mt-3 font-display text-3xl font-bold tracking-[-0.035em] md:text-4xl">
           Frequently asked
         </h2>
         <Accordion type="single" collapsible className="mt-8">
@@ -419,10 +419,10 @@ function PricingPage() {
       </div>
 
       {/* Final CTA */}
-      <div className="relative mt-24 overflow-hidden rounded-3xl border border-secondary/25 bg-gradient-to-br from-primary/[0.04] via-card to-secondary/[0.06] p-10 text-center md:p-16">
+      <div className="relative mt-16 rounded-lg border border-border bg-muted/20 p-10 text-center md:p-16">
         <span
           aria-hidden
-          className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent via-secondary to-transparent"
+          className="hidden"
         />
         <span
           aria-hidden
@@ -434,10 +434,10 @@ function PricingPage() {
         />
 
         <div className="relative">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary/15 text-secondary">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-muted text-muted-foreground">
             <Lock className="h-6 w-6" />
           </div>
-          <h2 className="mt-6 font-display text-4xl font-black tracking-[-0.04em] md:text-5xl">
+          <h2 className="mt-6 font-display text-4xl font-bold tracking-[-0.04em] md:text-5xl">
             Try free for 14 days{" "}
             <span className="block md:inline text-muted-foreground">— no credit card</span>
           </h2>
@@ -448,7 +448,7 @@ function PricingPage() {
           <Button
             asChild
             size="lg"
-            className="mt-8 rounded-full bg-secondary px-10 py-6 text-base font-extrabold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+            className="mt-8 rounded-full bg-secondary px-10 py-6 text-base font-bold text-secondary-foreground hover:bg-secondary/90"
           >
             <Link to="/board" search={BOARD_SEARCH}>
               Get started free

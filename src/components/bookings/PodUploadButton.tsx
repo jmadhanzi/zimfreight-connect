@@ -38,7 +38,7 @@ export function PodUploadButton({ bookingId }: { bookingId: string }) {
       <Button
         size="sm"
         onClick={() => setOpen(true)}
-        className="rounded-full bg-secondary font-bold text-secondary-foreground hover:bg-secondary/90"
+        className="bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
       >
         <Camera className="mr-1.5 h-3.5 w-3.5" /> Upload POD
       </Button>
@@ -70,11 +70,11 @@ function PodPreviewDialog({
             <span className="section-kicker">
               <Check className="h-3 w-3" /> Delivered
             </span>
-            <DialogTitle className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
+            <DialogTitle className="mt-2 font-display text-2xl font-bold tracking-[-0.035em]">
               Proof of delivery
             </DialogTitle>
           </DialogHeader>
-          <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-[var(--bg-secondary)]">
+          <div className="mt-4 overflow-hidden rounded-lg border border-border bg-[var(--bg-secondary)]">
             <img src={pod.imageDataUrl} alt="Proof of delivery" className="block h-auto w-full" />
           </div>
           {pod.notes && (
@@ -166,7 +166,7 @@ function PodUploadDialog({
             <span className="section-kicker">
               <Camera className="h-3 w-3" /> POD
             </span>
-            <DialogTitle className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
+            <DialogTitle className="mt-2 font-display text-2xl font-bold tracking-[-0.035em]">
               Upload proof of delivery
             </DialogTitle>
             <p className="mt-1 text-xs text-muted-foreground">
@@ -185,7 +185,7 @@ function PodUploadDialog({
               onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
             />
             {preview ? (
-              <div className="relative overflow-hidden rounded-2xl border border-border">
+              <div className="relative overflow-hidden rounded-lg border border-border">
                 <img src={preview} alt="POD preview" className="block h-auto w-full" />
                 <button
                   onClick={() => setPreview(null)}
@@ -200,7 +200,7 @@ function PodUploadDialog({
                 type="button"
                 onClick={() => inputRef.current?.click()}
                 className={cn(
-                  "flex w-full flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-border bg-card/40 px-6 py-10 transition-all",
+                  "flex w-full flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-border bg-card/40 px-6 py-10 transition-all",
                   "hover:border-secondary/40 hover:bg-card",
                 )}
               >
@@ -208,7 +208,7 @@ function PodUploadDialog({
                   <FileImage className="h-5 w-5" strokeWidth={2.4} />
                 </span>
                 <div className="text-center">
-                  <span className="font-display text-base font-extrabold tracking-tight">
+                  <span className="font-display text-base font-bold tracking-tight">
                     Choose photo
                   </span>
                   <p className="mt-1 text-xs text-muted-foreground">
@@ -239,7 +239,7 @@ function PodUploadDialog({
             <Button
               onClick={submit}
               disabled={submitting || !preview}
-              className="flex-1 rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+              className="flex-1 bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
             >
               <Upload className="mr-1.5 h-3.5 w-3.5" /> Upload POD
             </Button>

@@ -362,16 +362,16 @@ function PostLoadPage() {
   if (!user) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-20 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-primary">
+        <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground">
           <Lock className="h-5 w-5" />
         </div>
-        <h1 className="mt-4 font-display text-3xl font-black uppercase tracking-tight">
+        <h1 className="mt-4 font-display text-3xl font-bold uppercase tracking-tight">
           Sign in to post loads
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Create a free account to post your first load.
         </p>
-        <Button asChild className="mt-6 bg-primary text-primary-foreground">
+        <Button asChild className="mt-6">
           <Link to="/">Back to home</Link>
         </Button>
       </div>
@@ -459,7 +459,7 @@ function PostLoadPage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <span className="section-kicker">New load</span>
-          <h1 className="mt-2 font-display text-3xl font-black tracking-[-0.04em] md:text-4xl">
+          <h1 className="mt-2 font-display text-3xl font-bold tracking-[-0.04em] md:text-4xl">
             Post a load
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -484,7 +484,7 @@ function PostLoadPage() {
 
       {/* Draft prompt */}
       {showDraftPrompt && (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-secondary/30 bg-secondary/[0.06] px-4 py-3 text-sm">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-muted/30 px-4 py-3 text-sm">
           <span>
             You have an unsaved draft from{" "}
             <span className="font-bold text-foreground">{draftAge}</span>. Continue?
@@ -495,7 +495,7 @@ function PostLoadPage() {
             </Button>
             <Button
               size="sm"
-              className="rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
+              className="bg-secondary text-secondary-foreground hover:bg-secondary/90"
               onClick={loadDraft}
             >
               Yes, continue
@@ -513,7 +513,7 @@ function PostLoadPage() {
         {/* Nav */}
         <div className="mt-6 flex items-center justify-between gap-3 md:static fixed inset-x-0 bottom-16 z-30 border-t border-border bg-background/95 px-4 py-3 backdrop-blur md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
           {step > 0 ? (
-            <Button type="button" variant="outline" onClick={back} className="rounded-full">
+            <Button type="button" variant="outline" onClick={back}>
               <ArrowLeft className="mr-1.5 h-4 w-4" /> Back
             </Button>
           ) : (
@@ -523,7 +523,7 @@ function PostLoadPage() {
             <Button
               type="button"
               onClick={next}
-              className="rounded-full bg-secondary px-6 font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+              className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-semibold"
             >
               Continue <ArrowRight className="ml-1.5 h-4 w-4" />
             </Button>
@@ -531,7 +531,7 @@ function PostLoadPage() {
             <Button
               type="submit"
               disabled={submitting}
-              className="rounded-full bg-secondary px-8 text-base font-extrabold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+              className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-semibold"
             >
               {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               <Truck className="mr-2 h-4 w-4" /> Post load now
@@ -553,7 +553,7 @@ function PostLoadPage() {
 function Stepper({ step }: { step: number }) {
   const steps = ["Route", "Cargo", "Rate & Date", "Review"];
   return (
-    <div className="mt-6 overflow-hidden rounded-2xl border border-border/70 bg-card p-5">
+    <div className="mt-6 overflow-hidden rounded-lg border border-border bg-card p-5">
       <div className="mb-4 flex items-center justify-between">
         <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
           Step {step + 1} of {steps.length}
@@ -566,7 +566,7 @@ function Stepper({ step }: { step: number }) {
       <div className="relative">
         <div className="absolute left-3 right-3 top-3.5 h-0.5 rounded-full bg-border" />
         <div
-          className="absolute left-3 top-3.5 h-0.5 rounded-full bg-gradient-to-r from-primary to-secondary transition-all duration-500"
+          className="absolute left-3 top-3.5 h-0.5 rounded-full bg-foreground transition-all duration-500"
           style={{
             width: `calc((${(step / (steps.length - 1)) * 100}%) - ${step === steps.length - 1 ? "1.5rem" : "0px"})`,
           }}
@@ -624,9 +624,9 @@ function StepRoute({ form }: StepFormProps) {
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
       {/* LEFT */}
-      <div className="rounded-2xl border border-border/70 bg-card p-6">
+      <div className="rounded-lg border border-border bg-card p-6">
         <span className="section-kicker">Where</span>
-        <h2 className="mt-2 font-display text-xl font-extrabold tracking-[-0.025em]">
+        <h2 className="mt-2 font-display text-xl font-bold tracking-[-0.025em]">
           Route &amp; pickup
         </h2>
         <p className="mt-1 text-xs text-muted-foreground">Tell us where the load needs to go.</p>
@@ -658,14 +658,14 @@ function StepRoute({ form }: StepFormProps) {
       </div>
 
       {/* RIGHT — Live preview */}
-      <aside className="relative space-y-3 overflow-hidden rounded-2xl border border-secondary/25 bg-gradient-to-br from-secondary/[0.06] via-card to-card p-5">
+      <aside className="relative space-y-3 overflow-hidden rounded-lg border border-border bg-card p-5">
         <span
           aria-hidden
-          className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+          className="hidden"
         />
         <span
           aria-hidden
-          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-secondary/15 blur-2xl"
+          className="hidden"
         />
         <div className="relative flex items-center gap-2">
           <span className="dot-live" />
@@ -675,33 +675,33 @@ function StepRoute({ form }: StepFormProps) {
         </div>
         {intel ? (
           <div className="relative space-y-3">
-            <div className="font-display text-2xl font-extrabold leading-tight tracking-[-0.025em]">
+            <div className="font-display text-2xl font-bold leading-tight tracking-[-0.025em]">
               {origin} <ArrowRight className="inline h-5 w-5 text-secondary" /> {destination}
             </div>
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="glass-chip glass-chip-amber uppercase">via {intel.highway}</span>
-              <span className="glass-chip uppercase">{intel.distance} km</span>
-              <span className="glass-chip uppercase">
+              <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground-amber uppercase">via {intel.highway}</span>
+              <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground uppercase">{intel.distance} km</span>
+              <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground uppercase">
                 <Clock className="h-3 w-3" /> ~{Math.round((intel.distance / 80) * 10) / 10}h
               </span>
             </div>
-            <div className="rounded-xl border border-border bg-background/50 p-3">
+            <div className="rounded-md border border-border bg-muted/30 p-3">
               <div className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                 Market rate
               </div>
-              <div className="mt-1 font-display text-2xl font-black tracking-[-0.03em] text-foreground">
+              <div className="mt-1 font-display text-2xl font-bold tracking-[-0.03em] text-foreground">
                 {formatUSD(intel.low)} <span className="text-muted-foreground">–</span>{" "}
                 {formatUSD(intel.high)}
               </div>
-              <div className="font-mono-num text-xs text-muted-foreground">
+              <div className="font-mono tabular-nums text-xs text-muted-foreground">
                 ≈ ${(intel.avg / intel.distance).toFixed(2)}/km average
               </div>
             </div>
-            <div className="rounded-xl border border-border bg-background/50 p-3">
+            <div className="rounded-md border border-border bg-muted/30 p-3">
               <div className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                 <Fuel className="h-3 w-3" /> Fuel estimate
               </div>
-              <div className="mt-1 font-mono-num text-sm font-semibold text-foreground">
+              <div className="mt-1 font-mono tabular-nums text-sm font-semibold text-foreground">
                 ~{Math.round(intel.distance * 0.1)}L diesel (~${Math.round(intel.distance * 0.16)})
               </div>
             </div>
@@ -716,11 +716,11 @@ function StepRoute({ form }: StepFormProps) {
               </div>
             )}
             {(origin === "Beitbridge" || destination === "Beitbridge") && (
-              <div className="rounded-xl border border-[color:var(--zim-yellow)]/30 bg-[color:var(--zim-yellow)]/10 p-3">
-                <div className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[color-mix(in_oklab,var(--zim-yellow)_70%,var(--foreground))]">
+              <div className="rounded-xl border border-[color:var(--warning)]/30 bg-[color:var(--warning)]/10 p-3">
+                <div className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[color-mix(in_oklab,var(--warning)_70%,var(--foreground))]">
                   Beit Bridge wait
                 </div>
-                <div className="mt-1 font-mono-num text-sm font-semibold text-foreground">
+                <div className="mt-1 font-mono tabular-nums text-sm font-semibold text-foreground">
                   ~2.5 hours · last updated 2 min ago
                 </div>
               </div>
@@ -747,9 +747,9 @@ function StepCargo({ form }: StepFormProps) {
   const errs = form.formState.errors;
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-      <div className="rounded-2xl border border-border/70 bg-card p-6">
+      <div className="rounded-lg border border-border bg-card p-6">
         <span className="section-kicker">What</span>
-        <h2 className="mt-2 font-display text-xl font-extrabold tracking-[-0.025em]">
+        <h2 className="mt-2 font-display text-xl font-bold tracking-[-0.025em]">
           Cargo &amp; equipment
         </h2>
         <p className="mt-1 text-xs text-muted-foreground">
@@ -835,10 +835,10 @@ function StepCargo({ form }: StepFormProps) {
           </div>
         </div>
       </div>
-      <aside className="relative space-y-3 overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.04] via-card to-card p-5">
+      <aside className="relative space-y-3 overflow-hidden rounded-lg border border-border bg-card p-5">
         <span
           aria-hidden
-          className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-primary/60 via-primary to-primary/60"
+          className="hidden"
         />
         <div className="relative">
           <span className="section-kicker">Cargo tips</span>
@@ -880,9 +880,9 @@ function StepRateDate({ form }: StepFormProps) {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
-      <div className="rounded-2xl border border-border/70 bg-card p-6">
+      <div className="rounded-lg border border-border bg-card p-6">
         <span className="section-kicker">When &amp; how</span>
-        <h2 className="mt-2 font-display text-xl font-extrabold tracking-[-0.025em]">
+        <h2 className="mt-2 font-display text-xl font-bold tracking-[-0.025em]">
           Schedule &amp; payment
         </h2>
         <p className="mt-1 text-xs text-muted-foreground">
@@ -967,7 +967,7 @@ function StepRateDate({ form }: StepFormProps) {
             )}
           </div>
 
-          <label className="flex cursor-pointer items-start justify-between gap-3 rounded-xl border border-destructive/30 bg-destructive/[0.05] px-4 py-3">
+          <label className="flex cursor-pointer items-start justify-between gap-3 rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3">
             <span className="text-sm">
               <span className="flex items-center gap-1.5 font-display font-bold text-destructive">
                 <Flame className="h-3.5 w-3.5" /> Mark as URGENT
@@ -996,14 +996,14 @@ function StepRateDate({ form }: StepFormProps) {
         </div>
       </div>
 
-      <aside className="relative space-y-4 overflow-hidden rounded-2xl border border-secondary/25 bg-gradient-to-br from-secondary/[0.06] via-card to-card p-5">
+      <aside className="relative space-y-4 overflow-hidden rounded-lg border border-border bg-card p-5">
         <span
           aria-hidden
-          className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+          className="hidden"
         />
         <span
           aria-hidden
-          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-secondary/15 blur-2xl"
+          className="hidden"
         />
 
         <div className="relative">
@@ -1017,7 +1017,7 @@ function StepRateDate({ form }: StepFormProps) {
               step={50}
               min={50}
               placeholder="1200"
-              className="h-16 pl-9 font-display !text-3xl font-black tracking-[-0.025em] text-foreground"
+              className="h-16 pl-9 font-display !text-3xl font-bold tracking-[-0.025em] text-foreground"
               {...form.register("rate_usd")}
             />
           </div>
@@ -1029,7 +1029,7 @@ function StepRateDate({ form }: StepFormProps) {
         {intel && (
           <div className="relative space-y-3">
             <MarketGauge zone={zone} />
-            <div className="rounded-xl border border-border bg-background/50 p-3">
+            <div className="rounded-md border border-border bg-muted/30 p-3">
               <div className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                 Market rates &middot; last 30 days
               </div>
@@ -1061,13 +1061,13 @@ function StepRateDate({ form }: StepFormProps) {
                 onClick={() =>
                   form.setValue("rate_usd", Math.round(intel.high * 0.95), { shouldValidate: true })
                 }
-                className="flex w-full items-center justify-between rounded-xl border border-[color:var(--zim-yellow)]/30 bg-[color:var(--zim-yellow)]/[0.06] px-3 py-2.5 text-left text-sm transition-colors hover:bg-[color:var(--zim-yellow)]/12"
+                className="flex w-full items-center justify-between rounded-xl border border-[color:var(--warning)]/30 bg-[color:var(--warning)]/[0.06] px-3 py-2.5 text-left text-sm transition-colors hover:bg-[color:var(--warning)]/12"
               >
                 <span className="flex items-center gap-1.5 font-medium">
-                  <Flame className="h-3.5 w-3.5 text-[color:var(--zim-yellow)]" />
+                  <Flame className="h-3.5 w-3.5 text-[color:var(--warning)]" />
                   Attract urgent bookings
                 </span>
-                <span className="font-display font-bold text-[color-mix(in_oklab,var(--zim-yellow)_70%,var(--foreground))]">
+                <span className="font-display font-bold text-[color-mix(in_oklab,var(--warning)_70%,var(--foreground))]">
                   {formatUSD(Math.round(intel.high * 0.95))}
                 </span>
               </button>
@@ -1090,10 +1090,10 @@ function StepReview({ form, onEdit }: StepFormProps & { onEdit: (step: number) =
     <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
       <div className="space-y-5">
         {/* Review summary */}
-        <div className="relative overflow-hidden rounded-2xl border border-secondary/30 bg-gradient-to-br from-secondary/[0.06] via-card to-card p-6">
+        <div className="relative overflow-hidden rounded-lg border border-border bg-card p-6">
           <span
             aria-hidden
-            className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+            className="hidden"
           />
           <div className="relative flex items-center justify-between gap-3">
             <span className="section-kicker">Review</span>
@@ -1101,16 +1101,16 @@ function StepReview({ form, onEdit }: StepFormProps & { onEdit: (step: number) =
               Tap any row to edit
             </span>
           </div>
-          <h2 className="relative mt-2 font-display text-xl font-extrabold tracking-[-0.025em]">
+          <h2 className="relative mt-2 font-display text-xl font-bold tracking-[-0.025em]">
             Final check before posting
           </h2>
           <div className="relative mt-5 space-y-2">
             <ReviewRow label="Route" onEdit={() => onEdit(0)}>
-              <span className="font-display text-base font-extrabold tracking-tight">
+              <span className="font-display text-base font-bold tracking-tight">
                 {v.origin || "—"} → {v.destination || "—"}
               </span>
               {intel?.distance && (
-                <span className="ml-2 font-mono-num text-xs text-muted-foreground">
+                <span className="ml-2 font-mono tabular-nums text-xs text-muted-foreground">
                   {intel.distance}km · {intel.highway}
                 </span>
               )}
@@ -1124,12 +1124,12 @@ function StepReview({ form, onEdit }: StepFormProps & { onEdit: (step: number) =
               </span>
             </ReviewRow>
             <ReviewRow label="Rate" onEdit={() => onEdit(2)}>
-              <span className="font-display text-base font-extrabold tracking-tight text-foreground">
+              <span className="font-display text-base font-bold tracking-tight text-foreground">
                 {v.rate_usd ? formatUSD(Number(v.rate_usd)) : "—"}
               </span>
               <span className="text-muted-foreground"> · {v.payment_terms || "—"}</span>
               {v.is_urgent && (
-                <span className="glass-chip glass-chip-danger ml-2 uppercase">
+                <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground-danger ml-2 uppercase">
                   <Flame className="h-3 w-3" /> Urgent
                 </span>
               )}
@@ -1139,15 +1139,15 @@ function StepReview({ form, onEdit }: StepFormProps & { onEdit: (step: number) =
               {v.delivery_deadline && (
                 <span className="text-muted-foreground"> → {v.delivery_deadline}</span>
               )}
-              {v.flexible_dates && <span className="glass-chip ml-2 uppercase">Flex ±1d</span>}
+              {v.flexible_dates && <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground ml-2 uppercase">Flex ±1d</span>}
             </ReviewRow>
           </div>
         </div>
 
         {/* Contact + distribution */}
-        <div className="rounded-2xl border border-border/70 bg-card p-6">
+        <div className="rounded-lg border border-border bg-card p-6">
           <span className="section-kicker">Reach</span>
-          <h2 className="mt-2 font-display text-xl font-extrabold tracking-[-0.025em]">
+          <h2 className="mt-2 font-display text-xl font-bold tracking-[-0.025em]">
             Contact &amp; distribution
           </h2>
           <p className="mt-1 text-xs text-muted-foreground">
@@ -1215,10 +1215,10 @@ function StepReview({ form, onEdit }: StepFormProps & { onEdit: (step: number) =
         </div>
       </div>
 
-      <aside className="relative space-y-3 overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.04] via-card to-card p-5">
+      <aside className="relative space-y-3 overflow-hidden rounded-lg border border-border bg-card p-5">
         <span
           aria-hidden
-          className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-primary/60 via-primary to-primary/60"
+          className="hidden"
         />
         <div className="relative">
           <span className="section-kicker">Preview</span>
@@ -1227,7 +1227,7 @@ function StepReview({ form, onEdit }: StepFormProps & { onEdit: (step: number) =
           </p>
         </div>
         <div className="relative rounded-xl border border-border bg-background/60 p-4">
-          <div className="flex items-center gap-1.5 font-display text-base font-extrabold leading-tight tracking-[-0.025em]">
+          <div className="flex items-center gap-1.5 font-display text-base font-bold leading-tight tracking-[-0.025em]">
             <span className="truncate">{v.origin || "—"}</span>
             <ArrowRight className="h-3.5 w-3.5 shrink-0 text-secondary" />
             <span className="truncate">{v.destination || "—"}</span>
@@ -1244,12 +1244,12 @@ function StepReview({ form, onEdit }: StepFormProps & { onEdit: (step: number) =
               </span>
             )}
             {v.is_urgent && (
-              <span className="glass-chip glass-chip-danger uppercase">
+              <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground-danger uppercase">
                 <Flame className="h-3 w-3" /> Urgent
               </span>
             )}
             {isCrossBorder(v.origin, v.destination) && (
-              <span className="glass-chip glass-chip-info uppercase">Border</span>
+              <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground uppercase">Border</span>
             )}
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
@@ -1309,27 +1309,27 @@ function SuccessScreen({
           aria-hidden
           className="absolute inset-0 -z-10 animate-pulse rounded-full bg-[color:var(--success)]/20 blur-2xl"
         />
-        <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-[color:var(--success)] text-white shadow-[0_8px_24px_-6px_color-mix(in_oklab,var(--success)_50%,transparent)]">
+        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-[color-mix(in_oklab,var(--success)_15%,transparent)] text-[color:var(--success)]">
           <Check className="h-9 w-9" strokeWidth={2.8} />
         </div>
       </div>
       <span className="section-kicker mx-auto mt-7 justify-center">Posted</span>
-      <h1 className="mt-3 font-display text-4xl font-black tracking-[-0.04em] md:text-5xl">
+      <h1 className="mt-3 font-display text-4xl font-bold tracking-[-0.04em] md:text-5xl">
         Your load is <span className="text-secondary">live</span>
-        <PartyPopper className="ml-2 inline h-7 w-7 text-[color:var(--zim-yellow)]" />
+        <PartyPopper className="ml-2 inline h-7 w-7 text-[color:var(--warning)]" />
       </h1>
       <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
         Load ID <span className="text-foreground">{code}</span>
       </p>
-      <div className="relative mt-7 overflow-hidden rounded-2xl border border-secondary/25 bg-gradient-to-br from-secondary/[0.06] via-card to-card p-6">
+      <div className="relative mt-7 overflow-hidden rounded-lg border border-border bg-card p-6">
         <span
           aria-hidden
-          className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+          className="hidden"
         />
         <div className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
           Live impressions
         </div>
-        <div className="mt-2 font-display text-5xl font-black leading-none tracking-[-0.04em] tabular-nums text-foreground">
+        <div className="mt-2 font-display text-5xl font-bold leading-none tracking-[-0.04em] tabular-nums text-foreground">
           {views}
         </div>
         <div className="mt-2 text-xs text-muted-foreground">carriers have seen your load</div>
@@ -1565,7 +1565,7 @@ function Stepper2({
       >
         −
       </button>
-      <div className="flex w-14 items-center justify-center border-x border-border font-display text-lg font-extrabold tracking-tight text-foreground">
+      <div className="flex w-14 items-center justify-center border-x border-border font-display text-lg font-bold tracking-tight text-foreground">
         {value}
       </div>
       <button
@@ -1597,8 +1597,8 @@ function MarketGauge({ zone }: { zone: "low" | "mid" | "high" }) {
         />
         <div
           className={cn(
-            "flex-1 bg-[color:var(--zim-yellow)]/40",
-            zone === "high" && "bg-[color:var(--zim-yellow)]",
+            "flex-1 bg-[color:var(--warning)]/40",
+            zone === "high" && "bg-[color:var(--warning)]",
           )}
         />
       </div>
@@ -1608,13 +1608,13 @@ function MarketGauge({ zone }: { zone: "low" | "mid" | "high" }) {
           className={cn(
             "font-bold",
             zone === "mid" && "text-[color:var(--success)]",
-            zone === "high" && "text-[color:var(--zim-yellow)]",
+            zone === "high" && "text-[color:var(--warning)]",
             zone === "low" && "text-destructive",
           )}
         >
           {labels[zone]}
         </span>
-        <span className={cn(zone === "high" && "text-[color:var(--zim-yellow)]")}>High</span>
+        <span className={cn(zone === "high" && "text-[color:var(--warning)]")}>High</span>
       </div>
     </div>
   );
@@ -1673,7 +1673,7 @@ function Stat({ label, value, accent }: { label: string; value: string; accent?:
       </div>
       <div
         className={cn(
-          "mt-0.5 font-display text-base font-extrabold tracking-tight",
+          "mt-0.5 font-display text-base font-bold tracking-tight",
           accent ? "text-secondary" : "text-foreground",
         )}
       >
@@ -1693,7 +1693,7 @@ function Cell({ label, value, accent }: { label: string; value: string; accent?:
         className={cn(
           "mt-0.5 truncate text-sm",
           accent
-            ? "font-display text-base font-extrabold tracking-tight text-foreground"
+            ? "font-display text-base font-bold tracking-tight text-foreground"
             : "text-foreground",
         )}
       >

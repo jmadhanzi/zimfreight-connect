@@ -65,10 +65,10 @@ function ProfilePage() {
   if (!user) {
     return (
       <div className="mx-auto max-w-md px-4 py-20 text-center">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-muted text-muted-foreground">
           <User className="h-6 w-6" />
         </div>
-        <h1 className="mt-5 font-display text-3xl font-black tracking-[-0.035em]">
+        <h1 className="mt-5 font-display text-3xl font-bold tracking-[-0.035em]">
           Sign in to view your profile
         </h1>
         <Button asChild className="mt-6 rounded-full bg-primary text-primary-foreground">
@@ -86,18 +86,18 @@ function ProfilePage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 md:py-12">
       <span className="section-kicker">Account</span>
-      <h1 className="mt-3 font-display text-3xl font-black tracking-[-0.035em] md:text-4xl">
+      <h1 className="mt-3 font-display text-3xl font-bold tracking-[-0.035em] md:text-4xl">
         Profile
       </h1>
 
       {/* Identity card */}
-      <div className="relative mt-6 overflow-hidden rounded-2xl border border-border/70 bg-card p-6">
+      <div className="relative mt-6 overflow-hidden rounded-lg border border-border/70 bg-card p-6">
         <span
           aria-hidden
-          className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+          className="hidden"
         />
         <div className="flex items-center gap-4">
-          <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary via-primary to-[color-mix(in_oklab,var(--primary)_70%,black)] font-display text-2xl font-black text-primary-foreground shadow-[inset_0_1px_0_color-mix(in_oklab,white_25%,transparent)]">
+          <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-foreground font-display text-xl font-bold text-background">
             {initial}
             {profile?.verified && (
               <span
@@ -109,18 +109,18 @@ function ProfilePage() {
             )}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="truncate font-display text-xl font-extrabold tracking-tight text-foreground">
+            <div className="truncate font-display text-xl font-bold tracking-tight text-foreground">
               {profile?.full_name || user.email}
             </div>
             <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-              <span className="glass-chip glass-chip-navy uppercase">
+              <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground-navy uppercase">
                 {profile?.role ?? "carrier"}
               </span>
-              <span className={`glass-chip uppercase ${isFree ? "" : "glass-chip-amber"}`}>
+              <span className={`inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground uppercase ${isFree ? "" : "inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground-amber"}`}>
                 <Crown className="h-3 w-3" /> {planUpper}
               </span>
               {profile?.verified && (
-                <span className="glass-chip glass-chip-success uppercase">
+                <span className="inline-flex items-center gap-1 rounded-md border border-[color:var(--success)]/20 bg-[color-mix(in_oklab,var(--success)_10%,transparent)] px-1.5 py-0.5 text-[10px] font-medium text-[color:var(--success)] uppercase">
                   <ShieldCheck className="h-3 w-3" /> Verified
                 </span>
               )}
@@ -140,7 +140,7 @@ function ProfilePage() {
       {isFree && (
         <Link
           to="/pricing"
-          className="hover-lift mt-4 flex items-center gap-3 overflow-hidden rounded-2xl border border-secondary/30 bg-gradient-to-br from-secondary/[0.08] via-card to-card p-4 transition-colors hover:border-secondary/50"
+          className=" mt-4 flex items-center gap-3 overflow-hidden rounded-lg border border-border bg-muted/30 p-4 transition-colors hover:border-foreground/20"
         >
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary text-secondary-foreground shadow-[0_4px_12px_-2px_color-mix(in_oklab,var(--secondary)_60%,transparent)]">
             <Sparkles className="h-4 w-4" strokeWidth={2.5} />
@@ -247,7 +247,7 @@ function ProfileLink({
     </>
   );
 
-  const className = `hover-lift group flex items-center gap-3 rounded-2xl border border-border/70 bg-card p-3.5 transition-colors hover:border-foreground/15`;
+  const className = ` group flex items-center gap-3 rounded-lg border border-border/70 bg-card p-3.5 transition-colors hover:border-foreground/15`;
 
   if (kind === "board") {
     return (

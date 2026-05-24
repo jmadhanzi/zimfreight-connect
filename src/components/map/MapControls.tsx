@@ -47,7 +47,7 @@ export function MapControls({
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="pointer-events-auto absolute left-3 top-3 z-[1000] w-64 overflow-hidden rounded-2xl border border-border/70 bg-card/95 shadow-[0_20px_50px_-15px_color-mix(in_oklab,var(--foreground)_25%,transparent)] backdrop-blur-xl">
+    <div className="pointer-events-auto absolute left-3 top-3 z-[1000] w-64 overflow-hidden rounded-lg border border-border/70 bg-card/95 shadow-[0_20px_50px_-15px_color-mix(in_oklab,var(--foreground)_25%,transparent)] backdrop-blur-xl">
       {/* Top accent strip */}
       <span
         aria-hidden
@@ -63,7 +63,7 @@ export function MapControls({
           <span className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10 text-primary">
             <SlidersHorizontal className="h-3.5 w-3.5" strokeWidth={2.4} />
           </span>
-          <span className="font-display text-sm font-extrabold tracking-tight text-foreground">
+          <span className="font-display text-sm font-bold tracking-tight text-foreground">
             Map filters
           </span>
         </div>

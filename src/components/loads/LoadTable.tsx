@@ -78,7 +78,7 @@ function TrustScore({ verified, zimra }: { verified?: boolean; zimra?: boolean }
     score >= 90
       ? "text-[color:var(--success)]"
       : score >= 75
-        ? "text-[color:var(--zim-yellow)]"
+        ? "text-[color:var(--warning)]"
         : "text-destructive";
   const label = score >= 90 ? "High" : score >= 75 ? "Med" : "Low";
   return (
@@ -134,11 +134,11 @@ export function LoadTable({
     );
   };
   return (
-    <div className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-[0_1px_0_color-mix(in_oklab,var(--foreground)_5%,transparent),0_8px_24px_-12px_color-mix(in_oklab,var(--foreground)_15%,transparent)]">
+    <div className="overflow-hidden rounded-lg border border-border bg-card">
       <div className="overflow-x-auto">
         <TooltipProvider delayDuration={150}>
           <table className="w-full text-sm">
-            <thead className="sticky top-[44px] z-20 bg-[color:var(--bg-secondary)]/95 backdrop-blur">
+            <thead className="sticky top-[44px] z-20 bg-muted/80 backdrop-blur">
               <tr className="border-b border-border">
                 <th className="px-3 py-3 text-left font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                   Age
@@ -213,27 +213,27 @@ function Row({
       className={cn(
         "group relative cursor-pointer border-b border-border/50 transition-colors transit-bar-row animate-fade-in",
         load.is_urgent
-          ? "bg-[color-mix(in_oklab,var(--destructive)_3%,transparent)] hover:bg-[color-mix(in_oklab,var(--destructive)_6%,transparent)]"
-          : "hover:bg-[color-mix(in_oklab,var(--primary)_3%,transparent)]",
+          ? "bg-destructive/5 hover:bg-destructive/8"
+          : "hover:bg-muted/50",
       )}
     >
       <td className="px-3 py-3" onClick={stop}>
         <AgeBadge iso={load.created_at} />
       </td>
       <td className="px-3 py-3">
-        <div className="flex items-center gap-1.5 font-display text-[15px] font-bold leading-none text-foreground">
+        <div className="flex items-center gap-1.5 text-sm font-semibold leading-none text-foreground">
           <span>{load.origin}</span>
-          <ArrowRight className="h-3.5 w-3.5 shrink-0 text-primary" />
+          <ArrowRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
           <span>{load.destination}</span>
           {load.is_border_crossing && (
-            <span className="glass-chip glass-chip-info ml-1 uppercase">
+            <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground ml-1 uppercase">
               <MapPin className="h-2.5 w-2.5" /> Border
             </span>
           )}
         </div>
         <div className="mt-1 flex items-center gap-2 font-mono text-[10px] text-muted-foreground">
           {load.highway && (
-            <span className="rounded bg-[color:var(--bg-secondary)] px-1.5 py-0.5 text-foreground/70">
+            <span className="rounded bg-muted/30 px-1.5 py-0.5 text-foreground/70">
               {load.highway}
             </span>
           )}
@@ -249,7 +249,7 @@ function Row({
         )}
       </td>
       <td className="px-3 py-3">
-        <div className="font-mono-num font-bold text-foreground">
+        <div className="font-mono tabular-nums font-bold text-foreground">
           {load.weight_tonnes ? `${load.weight_tonnes}T` : "—"}
         </div>
         <div className="font-mono text-[10px] text-muted-foreground">
@@ -304,15 +304,15 @@ function Row({
       </td>
       <td className="px-3 py-3">
         {load.is_urgent ? (
-          <span className="glass-chip glass-chip-danger uppercase">
+          <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground-danger uppercase">
             <Flame className="h-3 w-3" /> Urgent
           </span>
         ) : load.status === "available" ? (
-          <span className="glass-chip glass-chip-success uppercase">Available</span>
+          <span className="inline-flex items-center gap-1 rounded-md border border-[color:var(--success)]/20 bg-[color-mix(in_oklab,var(--success)_10%,transparent)] px-1.5 py-0.5 text-[10px] font-medium text-[color:var(--success)] uppercase">Available</span>
         ) : load.status === "booked" ? (
-          <span className="glass-chip glass-chip-danger uppercase">Booked</span>
+          <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground-danger uppercase">Booked</span>
         ) : (
-          <span className="glass-chip uppercase">{load.status}</span>
+          <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground uppercase">{load.status}</span>
         )}
       </td>
       <td className="px-3 py-3">

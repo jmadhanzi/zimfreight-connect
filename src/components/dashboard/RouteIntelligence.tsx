@@ -36,7 +36,7 @@ export function RouteIntelligence({
 
   if (list.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 text-center">
+      <div className="rounded-lg border border-dashed border-border bg-card/50 p-8 text-center">
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
           No route rates yet
         </p>
@@ -48,10 +48,10 @@ export function RouteIntelligence({
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-[0_1px_0_color-mix(in_oklab,var(--foreground)_5%,transparent)]">
+    <div className="overflow-hidden rounded-lg border border-border/70 bg-card shadow-[0_1px_0_color-mix(in_oklab,var(--foreground)_5%,transparent)]">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-[color:var(--bg-secondary)]">
+          <thead className="bg-muted/30">
             <tr className="border-b border-border text-left">
               <th className="px-3 py-3 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 Route
@@ -79,7 +79,7 @@ export function RouteIntelligence({
                   <td className="px-3 py-3 font-display text-sm font-bold tracking-tight text-foreground">
                     {r.origin} → {r.destination}
                   </td>
-                  <td className="px-3 py-3 font-mono-num font-bold text-foreground">
+                  <td className="px-3 py-3 font-mono tabular-nums font-bold text-foreground">
                     ${Number(r.avg_rate_per_km).toFixed(2)}
                   </td>
                   <td className="px-3 py-3">
@@ -97,7 +97,7 @@ export function RouteIntelligence({
                   <td className="px-3 py-3">
                     <Sparkline values={spark(r.id, Number(r.avg_rate_per_km))} positive={up} />
                   </td>
-                  <td className="px-3 py-3 font-mono-num text-muted-foreground">
+                  <td className="px-3 py-3 font-mono tabular-nums text-muted-foreground">
                     {r.weekly_loads}
                   </td>
                 </tr>

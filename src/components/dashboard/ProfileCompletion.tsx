@@ -8,7 +8,7 @@ export function ProfileCompletion({ profile }: { profile: Profile | null }) {
   if (pct >= 80) return null;
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-secondary/30 bg-gradient-to-br from-secondary/[0.06] via-card to-card p-6">
+    <div className="relative overflow-hidden rounded-lg border border-secondary/30 bg-gradient-to-br from-secondary/[0.06] via-card to-card p-6">
       <span
         aria-hidden
         className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
@@ -25,7 +25,7 @@ export function ProfileCompletion({ profile }: { profile: Profile | null }) {
           </span>
           <div>
             <span className="section-kicker">Setup</span>
-            <h3 className="mt-1 font-display text-lg font-extrabold tracking-[-0.02em]">
+            <h3 className="mt-1 font-display text-lg font-bold tracking-[-0.02em]">
               Complete your profile
             </h3>
             <p className="mt-1 text-xs text-muted-foreground">
@@ -34,7 +34,7 @@ export function ProfileCompletion({ profile }: { profile: Profile | null }) {
           </div>
         </div>
         <div className="text-right">
-          <span className="font-display text-3xl font-black leading-none tracking-[-0.035em] text-secondary">
+          <span className="font-display text-3xl font-bold leading-none tracking-[-0.035em] text-secondary">
             {pct}%
           </span>
           <div className="mt-1 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">

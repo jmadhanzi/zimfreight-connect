@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import type { Profile, Subscription } from "@/types";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { Profile, Subscription } from "@/types";
 
 export function Greeting({
   profile,
@@ -12,12 +12,13 @@ export function Greeting({
 }) {
   const hour = new Date().getHours();
   const part = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
-  const first = profile?.full_name?.split(" ")[0] || "driver";
+  const first = profile?.full_name?.split(" ")[0] || "there";
   const today = new Date().toLocaleDateString("en-GB", {
     weekday: "long",
     day: "numeric",
     month: "long",
   });
+
   const plan = (subscription?.plan ?? "free").toUpperCase();
   const renews = subscription?.expires_at
     ? new Date(subscription.expires_at).toLocaleDateString("en-GB", {
@@ -28,46 +29,37 @@ export function Greeting({
   const isFree = plan === "FREE";
 
   return (
-    <div className="flex flex-wrap items-end justify-between gap-4">
+    <div className="flex flex-wrap items-start justify-between gap-4">
       <div>
-        <span className="section-kicker">{today}</span>
-        <h1 className="mt-2 font-display text-3xl font-black tracking-[-0.04em] md:text-[2.5rem] md:leading-[1.05]">
-          {part},{" "}
-          <span className="bg-gradient-to-r from-foreground to-[color-mix(in_oklab,var(--foreground)_70%,var(--secondary))] bg-clip-text text-transparent">
-            {first}
-          </span>
+        <div className="text-xs font-medium text-muted-foreground">{today}</div>
+        <h1 className="mt-1 font-display text-2xl font-bold tracking-tight md:text-3xl">
+          {part}, {first}
         </h1>
         {profile?.city && (
-          <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-            {profile.city}
-          </p>
+          <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+            <span>{profile.city}</span>
+          </div>
         )}
       </div>
+
       <Link
         to="/pricing"
         className={cn(
-          "group inline-flex items-center gap-2.5 rounded-full border bg-card px-3 py-1.5 text-xs transition-colors",
+          "inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors",
           isFree
-            ? "border-secondary/30 hover:border-secondary/60"
-            : "border-border hover:border-foreground/15",
+            ? "border-border bg-muted text-muted-foreground hover:border-foreground/20 hover:text-foreground"
+            : "border-border bg-card text-muted-foreground hover:border-foreground/20 hover:text-foreground",
         )}
       >
-        {isFree && <Sparkles className="h-3 w-3 text-secondary" />}
-        <span className="flex items-center gap-2">
-          <span className="font-mono font-semibold uppercase tracking-[0.18em] text-foreground">
-            {plan}
-          </span>
-          {renews && (
-            <>
-              <span className="h-3 w-px bg-border" />
-              <span className="text-muted-foreground">Renews {renews}</span>
-            </>
-          )}
-        </span>
-        <span className="inline-flex items-center gap-1 font-bold text-secondary">
-          {isFree ? "Upgrade" : "Manage"}
-          <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-        </span>
+        {isFree && <Sparkles className="h-3 w-3" />}
+        <span className="font-semibold">{plan}</span>
+        {renews && (
+          <>
+            <span className="h-3 w-px bg-border" />
+            <span>Renews {renews}</span>
+          </>
+        )}
+        <ArrowRight className="h-3 w-3" />
       </Link>
     </div>
   );

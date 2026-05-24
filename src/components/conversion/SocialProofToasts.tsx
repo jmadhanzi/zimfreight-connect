@@ -76,7 +76,7 @@ export function SocialProofToasts() {
   const n = NOTICES[idx];
   return (
     <div className="pointer-events-auto fixed bottom-4 left-4 z-40 hidden max-w-xs animate-fade-up md:block">
-      <div className="relative flex items-center gap-3 overflow-hidden rounded-2xl border border-border/70 bg-card/95 px-3.5 py-3 shadow-[0_12px_36px_-12px_color-mix(in_oklab,var(--foreground)_25%,transparent)] backdrop-blur-xl">
+      <div className="relative flex items-center gap-3 overflow-hidden rounded-lg border border-border/70 bg-card/95 px-3.5 py-3 shadow-[0_12px_36px_-12px_color-mix(in_oklab,var(--foreground)_25%,transparent)] backdrop-blur-xl">
         <span
           aria-hidden
           className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary/60 to-transparent"

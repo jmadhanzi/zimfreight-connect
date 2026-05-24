@@ -76,7 +76,7 @@ function ShipmentDocsPage() {
           <span className="section-kicker">
             <ShieldCheck className="h-3 w-3" /> ZIMRA workspace
           </span>
-          <h1 className="mt-3 font-display text-3xl font-black tracking-[-0.04em] md:text-4xl">
+          <h1 className="mt-3 font-display text-3xl font-bold tracking-[-0.04em] md:text-4xl">
             Shipment <span className="text-secondary">documents</span>
           </h1>
           <p className="mt-2 max-w-xl text-muted-foreground">
@@ -87,14 +87,14 @@ function ShipmentDocsPage() {
       </div>
 
       {/* Progress bar */}
-      <div className="mt-6 overflow-hidden rounded-2xl border border-border/70 bg-card p-5 pt-[18px]">
+      <div className="mt-6 overflow-hidden rounded-lg border border-border/70 bg-card p-5 pt-[18px]">
         <span
           aria-hidden
           className={cn(
             "absolute inset-x-0 top-0 h-[3px]",
             allRequired
               ? "bg-[color:var(--success)]"
-              : "bg-gradient-to-r from-secondary via-primary to-secondary",
+              : "bg-foreground",
           )}
         />
         <div className="flex items-baseline justify-between">
@@ -117,7 +117,7 @@ function ShipmentDocsPage() {
               "h-full rounded-full transition-all duration-500",
               allRequired
                 ? "bg-[color:var(--success)]"
-                : "bg-gradient-to-r from-secondary to-primary",
+                : "bg-foreground",
             )}
             style={{ width: `${(requiredComplete / requiredTotal) * 100}%` }}
           />
@@ -140,7 +140,7 @@ function ShipmentDocsPage() {
 
       {/* Document grid */}
       <div className="mt-6 space-y-3">
-        <h2 className="font-display text-lg font-extrabold tracking-[-0.025em]">
+        <h2 className="font-display text-lg font-bold tracking-[-0.025em]">
           Required documents
         </h2>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -156,7 +156,7 @@ function ShipmentDocsPage() {
           ))}
         </div>
 
-        <h2 className="mt-6 font-display text-lg font-extrabold tracking-[-0.025em]">Optional</h2>
+        <h2 className="mt-6 font-display text-lg font-bold tracking-[-0.025em]">Optional</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {(Object.keys(DOC_META) as DocKind[])
             .filter((k) => !DOC_META[k].required_cross_border)
@@ -209,7 +209,7 @@ function DocRow({
   return (
     <div
       className={cn(
-        "flex items-center gap-3 rounded-2xl border p-4 transition-colors",
+        "flex items-center gap-3 rounded-lg border p-4 transition-colors",
         has
           ? "border-[color:var(--success)]/30 bg-[color-mix(in_oklab,var(--success)_4%,transparent)]"
           : required
@@ -229,7 +229,7 @@ function DocRow({
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <span className="font-display text-sm font-extrabold tracking-tight text-foreground">
+          <span className="font-display text-sm font-bold tracking-tight text-foreground">
             {meta.label}
           </span>
           {required && !has && (
@@ -272,7 +272,7 @@ function DocRow({
         <Button
           size="sm"
           onClick={onUpload}
-          className="rounded-full bg-secondary font-bold text-secondary-foreground hover:bg-secondary/90"
+          className="bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
         >
           <Upload className="mr-1 h-3.5 w-3.5" /> Upload
         </Button>
@@ -340,12 +340,12 @@ function UploadDialog({
       <DialogContent className="overflow-hidden border-border/70 bg-card p-0 sm:max-w-md">
         <span
           aria-hidden
-          className="absolute inset-x-0 top-0 z-10 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+          className="hidden"
         />
         <div className="p-6">
           <DialogHeader>
             <span className="section-kicker">Upload</span>
-            <DialogTitle className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
+            <DialogTitle className="mt-2 font-display text-2xl font-bold tracking-[-0.035em]">
               {DOC_META[kind].label}
             </DialogTitle>
           </DialogHeader>
@@ -377,10 +377,10 @@ function UploadDialog({
               <button
                 type="button"
                 onClick={() => inputRef.current?.click()}
-                className="flex w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border bg-card/40 px-4 py-10 transition-all hover:border-secondary/40 hover:bg-card"
+                className="flex w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-card/40 px-4 py-10 transition-all hover:border-secondary/40 hover:bg-card"
               >
                 <Upload className="h-6 w-6 text-muted-foreground" />
-                <span className="font-display text-sm font-extrabold tracking-tight">
+                <span className="font-display text-sm font-bold tracking-tight">
                   Choose file
                 </span>
                 <span className="text-xs text-muted-foreground">PDF or image · max 5MB</span>
@@ -398,7 +398,7 @@ function UploadDialog({
             <Button
               onClick={submit}
               disabled={submitting || !preview}
-              className="flex-1 rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+              className="flex-1 bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
             >
               <Upload className="mr-1.5 h-3.5 w-3.5" /> Upload
             </Button>
@@ -429,7 +429,7 @@ function PreviewDialog({
         <div className="p-6">
           <DialogHeader>
             <span className="section-kicker">Document</span>
-            <DialogTitle className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
+            <DialogTitle className="mt-2 font-display text-2xl font-bold tracking-[-0.035em]">
               {DOC_META[doc.kind].label}
             </DialogTitle>
             <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
@@ -459,7 +459,7 @@ function PreviewDialog({
             </Button>
             {doc.fileData && (
               <a href={doc.fileData} download={doc.filename} className="flex-1">
-                <Button className="w-full rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90">
+                <Button className="w-full bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90">
                   <Download className="mr-1.5 h-3.5 w-3.5" /> Download
                 </Button>
               </a>

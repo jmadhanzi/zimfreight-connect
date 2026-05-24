@@ -75,13 +75,13 @@ export function LocationShareWidget() {
           : `${Math.floor(ageMin / 60)}h ago`;
 
   return (
-    <div className="rounded-2xl border border-border/70 bg-card p-5">
+    <div className="rounded-lg border border-border/70 bg-card p-5">
       <div className="flex items-start justify-between gap-3">
         <div>
           <span className="section-kicker">
             <MapPin className="h-3 w-3" /> Tracking
           </span>
-          <h2 className="mt-2 font-display text-lg font-extrabold tracking-[-0.025em]">
+          <h2 className="mt-2 font-display text-lg font-bold tracking-[-0.025em]">
             Share your location
           </h2>
           <p className="mt-1 text-xs text-muted-foreground">
@@ -102,7 +102,7 @@ export function LocationShareWidget() {
               <div className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                 Last ping
               </div>
-              <div className="mt-1 font-display text-base font-extrabold tracking-[-0.02em] tabular-nums">
+              <div className="mt-1 font-display text-base font-bold tracking-[-0.02em] tabular-nums">
                 {latest.lat.toFixed(4)}°, {latest.lng.toFixed(4)}°
               </div>
               {latest.label && (
@@ -114,7 +114,7 @@ export function LocationShareWidget() {
                 <Clock className="mr-0.5 inline h-2.5 w-2.5" /> {ageLabel}
               </div>
               {latest.speed !== undefined && (
-                <div className="mt-1 font-mono-num text-sm font-bold tabular-nums text-foreground">
+                <div className="mt-1 font-mono tabular-nums text-sm font-bold tabular-nums text-foreground">
                   {Math.round((latest.speed ?? 0) * 3.6)}
                   <span className="ml-0.5 font-mono text-[10px] text-muted-foreground">km/h</span>
                 </div>
@@ -135,7 +135,7 @@ export function LocationShareWidget() {
         <Button
           onClick={() => sharePing()}
           disabled={busy}
-          className="flex-1 rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+          className="flex-1 bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
         >
           {busy ? (
             <RefreshCw className="mr-1.5 h-3.5 w-3.5 animate-spin" />

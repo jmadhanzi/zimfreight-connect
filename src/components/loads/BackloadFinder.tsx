@@ -35,7 +35,7 @@ export function BackloadFinder({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-[color:var(--success)]/30 bg-gradient-to-br from-[color:var(--success)]/[0.06] via-card to-card p-4 md:p-5",
+        "relative overflow-hidden rounded-lg border border-[color:var(--success)]/30 bg-gradient-to-br from-[color:var(--success)]/[0.06] via-card to-card p-4 md:p-5",
         className,
       )}
     >
@@ -49,11 +49,11 @@ export function BackloadFinder({
             <ArrowLeftRight className="h-4.5 w-4.5" strokeWidth={2.4} />
           </div>
           <div>
-            <div className="flex flex-wrap items-center gap-2 font-display text-sm font-extrabold tracking-tight text-foreground">
+            <div className="flex flex-wrap items-center gap-2 font-display text-sm font-bold tracking-tight text-foreground">
               <Truck className="h-3.5 w-3.5 text-[color:var(--success)]" />
               Return Load Finder
               {returnCount > 0 && (
-                <span className="glass-chip glass-chip-success uppercase">
+                <span className="inline-flex items-center gap-1 rounded-md border border-[color:var(--success)]/20 bg-[color-mix(in_oklab,var(--success)_10%,transparent)] px-1.5 py-0.5 text-[10px] font-medium text-[color:var(--success)] uppercase">
                   {returnCount} available
                 </span>
               )}

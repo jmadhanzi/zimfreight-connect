@@ -189,7 +189,7 @@ function BulkPostPage() {
           <span className="section-kicker">
             <Upload className="h-3 w-3" /> Bulk
           </span>
-          <h1 className="mt-3 font-display text-4xl font-black tracking-[-0.04em] md:text-5xl">
+          <h1 className="mt-3 font-display text-4xl font-bold tracking-[-0.04em] md:text-5xl">
             Post <span className="text-secondary">many loads</span> at once
           </h1>
           <p className="mt-2 max-w-xl text-muted-foreground">
@@ -203,15 +203,15 @@ function BulkPostPage() {
       </div>
 
       {submitted ? (
-        <div className="mt-8 overflow-hidden rounded-2xl border border-[color:var(--success)]/30 bg-gradient-to-br from-[color:var(--success)]/[0.06] via-card to-card p-8 text-center">
+        <div className="mt-8 rounded-lg border border-[color:var(--success)]/20 bg-[color-mix(in_oklab,var(--success)_6%,transparent)] p-8 text-center">
           <span
             aria-hidden
             className="absolute inset-x-0 top-0 h-[3px] bg-[color:var(--success)]"
           />
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[color:var(--success)] text-white shadow-[0_8px_24px_-6px_color-mix(in_oklab,var(--success)_50%,transparent)]">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-[color-mix(in_oklab,var(--success)_15%,transparent)] text-[color:var(--success)]">
             <Check className="h-6 w-6" strokeWidth={2.8} />
           </div>
-          <h2 className="mt-5 font-display text-3xl font-black tracking-[-0.04em]">
+          <h2 className="mt-5 font-display text-3xl font-bold tracking-[-0.04em]">
             <span className="text-[color:var(--success)]">{submitted.ok}</span> loads posted
           </h2>
           {submitted.failed > 0 && (
@@ -223,7 +223,7 @@ function BulkPostPage() {
           <div className="mt-6 flex flex-wrap justify-center gap-2">
             <Button
               asChild
-              className="rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+              className="bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
             >
               <Link to="/dashboard">
                 <Truck className="mr-1.5 h-4 w-4" /> View dashboard
@@ -243,10 +243,10 @@ function BulkPostPage() {
           </div>
         </div>
       ) : !parsed ? (
-        <div className="mt-8 rounded-2xl border-2 border-dashed border-border bg-card p-10">
+        <div className="mt-8 rounded-lg border-2 border-dashed border-border bg-card p-10">
           <div className="text-center">
             <Upload className="mx-auto h-7 w-7 text-muted-foreground" />
-            <h3 className="mt-3 font-display text-lg font-extrabold tracking-tight">
+            <h3 className="mt-3 font-display text-lg font-bold tracking-tight">
               Drop your CSV here
             </h3>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -265,7 +265,7 @@ function BulkPostPage() {
             />
             <label
               htmlFor="bulk-csv"
-              className="mt-5 inline-flex cursor-pointer items-center gap-2 rounded-full bg-secondary px-5 py-2.5 font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+              className="mt-5 inline-flex cursor-pointer items-center gap-2 rounded-full bg-secondary px-5 py-2.5 font-bold text-secondary-foreground hover:bg-secondary/90"
             >
               <Upload className="h-4 w-4" /> Choose CSV file
             </label>
@@ -298,7 +298,7 @@ function BulkPostPage() {
           </div>
 
           {/* Preview table */}
-          <div className="overflow-hidden rounded-2xl border border-border/70 bg-card">
+          <div className="overflow-hidden rounded-lg border border-border/70 bg-card">
             <div className="flex items-center justify-between border-b border-border bg-[var(--bg-secondary)] px-5 py-3">
               <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                 Preview
@@ -366,7 +366,7 @@ function BulkPostPage() {
                         {r.origin || "—"} → {r.destination || "—"}
                       </td>
                       <td className="px-3 py-2 text-muted-foreground">{r.load_type || "—"}</td>
-                      <td className="px-3 py-2 font-mono-num font-bold tabular-nums">
+                      <td className="px-3 py-2 font-mono tabular-nums font-bold tabular-nums">
                         ${r.rate_usd?.toLocaleString() || "—"}
                       </td>
                       <td className="px-3 py-2 font-mono text-xs text-muted-foreground">
@@ -380,7 +380,7 @@ function BulkPostPage() {
           </div>
 
           {invalidRows.length > 0 && (
-            <div className="rounded-2xl border border-destructive/25 bg-destructive/[0.04] p-4">
+            <div className="rounded-lg border border-destructive/25 bg-destructive/[0.04] p-4">
               <div className="flex items-start gap-2 text-sm">
                 <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
                 <div>
@@ -411,7 +411,7 @@ function BulkPostPage() {
             <Button
               onClick={submit}
               disabled={submitting || validRows.length === 0}
-              className="rounded-full bg-secondary px-6 font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+              className="rounded-full bg-secondary px-6 font-bold text-secondary-foreground hover:bg-secondary/90"
             >
               {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               <FileText className="mr-2 h-4 w-4" />
@@ -440,11 +440,11 @@ function SummaryTile({
         ? "border-destructive/30 bg-destructive/[0.06] text-destructive"
         : "border-border/70 bg-card text-foreground";
   return (
-    <div className={`rounded-2xl border p-4 ${accentCls}`}>
+    <div className={`rounded-lg border p-4 ${accentCls}`}>
       <div className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] opacity-80">
         {label}
       </div>
-      <div className="mt-1 font-display text-3xl font-black leading-none tracking-[-0.035em] tabular-nums">
+      <div className="mt-1 font-display text-3xl font-bold leading-none tracking-[-0.035em] tabular-nums">
         {value}
       </div>
     </div>

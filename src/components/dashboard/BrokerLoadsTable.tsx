@@ -52,7 +52,7 @@ export function BrokerLoadsTable({ loads, onChange }: { loads: Row[]; onChange: 
 
   if (loads.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-border bg-card/50 p-10 text-center">
+      <div className="rounded-lg border border-dashed border-border bg-card/50 p-10 text-center">
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
           No posted loads yet
         </p>
@@ -64,10 +64,10 @@ export function BrokerLoadsTable({ loads, onChange }: { loads: Row[]; onChange: 
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-[0_1px_0_color-mix(in_oklab,var(--foreground)_5%,transparent)]">
+    <div className="overflow-hidden rounded-lg border border-border/70 bg-card shadow-[0_1px_0_color-mix(in_oklab,var(--foreground)_5%,transparent)]">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-[color:var(--bg-secondary)]">
+          <thead className="bg-muted/30">
             <tr className="border-b border-border text-left">
               <th className="px-3 py-3 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 ID
@@ -108,22 +108,22 @@ export function BrokerLoadsTable({ loads, onChange }: { loads: Row[]; onChange: 
                   {l.origin} → {l.destination}
                 </td>
                 <td className="px-3 py-3 text-muted-foreground">{l.load_type}</td>
-                <td className="px-3 py-3 font-mono-num font-bold text-foreground">
+                <td className="px-3 py-3 font-mono tabular-nums font-bold text-foreground">
                   ${Number(l.rate_usd).toLocaleString()}
                 </td>
                 <td className="px-3 py-3 font-mono text-[11px] text-muted-foreground">
                   {formatDistanceToNow(new Date(l.created_at), { addSuffix: true })}
                 </td>
-                <td className="px-3 py-3 font-mono-num">
+                <td className="px-3 py-3 font-mono tabular-nums">
                   <Eye className="mr-1 inline h-3 w-3 text-muted-foreground" />
                   {l.view_count}
                 </td>
-                <td className="px-3 py-3 font-mono-num">
+                <td className="px-3 py-3 font-mono tabular-nums">
                   <MessageSquare className="mr-1 inline h-3 w-3 text-muted-foreground" />
                   {l.bid_count}
                 </td>
                 <td className="px-3 py-3">
-                  <span className="glass-chip uppercase">{l.status}</span>
+                  <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground uppercase">{l.status}</span>
                 </td>
                 <td className="px-3 py-3">
                   <div className="flex justify-end gap-1">

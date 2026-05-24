@@ -43,7 +43,7 @@ export function BorderStatusPanel({ borders }: Props) {
       </button>
 
       {open && (
-        <div className="overflow-hidden rounded-2xl border border-border/70 bg-card/95 shadow-[0_20px_50px_-15px_color-mix(in_oklab,var(--foreground)_25%,transparent)] backdrop-blur-xl">
+        <div className="overflow-hidden rounded-lg border border-border/70 bg-card/95 shadow-[0_20px_50px_-15px_color-mix(in_oklab,var(--foreground)_25%,transparent)] backdrop-blur-xl">
           <span
             aria-hidden
             className="block h-1 w-full bg-gradient-to-r from-secondary via-primary to-secondary"
@@ -53,7 +53,7 @@ export function BorderStatusPanel({ borders }: Props) {
             <span className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10 text-primary">
               <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2.4} />
             </span>
-            <span className="font-display text-sm font-extrabold tracking-tight text-foreground">
+            <span className="font-display text-sm font-bold tracking-tight text-foreground">
               Border crossings
             </span>
             <span className="ml-auto font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
@@ -89,7 +89,7 @@ export function BorderStatusPanel({ borders }: Props) {
                     <div key={border.id} className="px-4 py-3 transition-colors hover:bg-muted/30">
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0 flex-1">
-                          <div className="truncate font-display text-sm font-extrabold tracking-tight text-foreground">
+                          <div className="truncate font-display text-sm font-bold tracking-tight text-foreground">
                             {border.border_name}
                           </div>
                           <div className="mt-0.5 font-mono text-[10px] text-muted-foreground">
@@ -106,7 +106,7 @@ export function BorderStatusPanel({ borders }: Props) {
                         >
                           <Clock className="h-3 w-3" style={{ color: waitColor }} />
                           <span
-                            className="font-mono text-xs font-black tabular-nums"
+                            className="font-mono text-xs font-bold tabular-nums"
                             style={{ color: waitColor }}
                           >
                             {borderWaitLabel(Number(border.wait_hours))}

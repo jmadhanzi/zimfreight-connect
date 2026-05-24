@@ -124,7 +124,7 @@ export function PricingModal({
         <div className="p-6 md:p-8">
           <DialogHeader className="text-center">
             <span className="section-kicker mx-auto justify-center">Pricing</span>
-            <DialogTitle className="mt-2 font-display text-3xl font-black tracking-[-0.04em] md:text-4xl">
+            <DialogTitle className="mt-2 font-display text-3xl font-bold tracking-[-0.04em] md:text-4xl">
               Choose your plan
             </DialogTitle>
             <DialogDescription>
@@ -149,7 +149,7 @@ export function PricingModal({
               )}
             >
               Annual
-              <span className="rounded-full bg-secondary/20 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-secondary">
+              <span className="rounded-md border border-border bg-muted px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
                 Save 20%
               </span>
             </span>
@@ -162,7 +162,7 @@ export function PricingModal({
               return (
                 <div
                   key={p.tier}
-                  className="relative flex flex-col overflow-hidden rounded-2xl p-5 transition-all"
+                  className="relative flex flex-col overflow-hidden rounded-lg p-5 transition-all"
                   style={{
                     background: p.highlight
                       ? "linear-gradient(158deg, oklch(0.28 0.072 42) 0%, oklch(0.22 0.055 38) 100%)"
@@ -184,7 +184,7 @@ export function PricingModal({
                   )}
                   {p.highlight && (
                     <span
-                      className="absolute -top-3.5 left-1/2 z-10 -translate-x-1/2 rounded-full px-3 py-1 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em]"
+                      className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 rounded-full border border-border bg-background px-3 py-1 text-[10px] font-semibold text-foreground"
                       style={{
                         background: "linear-gradient(135deg, var(--secondary), color-mix(in oklab, var(--secondary) 78%, var(--primary)))",
                         color: "var(--secondary-foreground)",
@@ -195,7 +195,7 @@ export function PricingModal({
                     </span>
                   )}
                   <h4
-                    className="font-display text-2xl font-extrabold tracking-[-0.025em]"
+                    className="font-display text-2xl font-bold tracking-[-0.025em]"
                     style={{ color: p.highlight ? "oklch(0.92 0.012 68)" : "var(--color-foreground)" }}
                   >
                     {p.name}
@@ -208,7 +208,7 @@ export function PricingModal({
                       $
                     </span>
                     <span
-                      className="font-display text-4xl font-black leading-none tracking-[-0.04em]"
+                      className="font-display text-4xl font-bold leading-none tracking-[-0.04em]"
                       style={{
                         fontVariationSettings: '"wdth" 82',
                         color: p.highlight ? "oklch(0.88 0.012 68)" : "var(--color-foreground)",
@@ -257,7 +257,7 @@ export function PricingModal({
                     }}
                     className={cn(
                       "mt-5 w-full rounded-full font-bold",
-                      p.highlight ? "btn-amber-glow" : "btn-primary-glow",
+                      
                     )}
                     style={{
                       background: p.highlight
@@ -282,7 +282,7 @@ export function PricingModal({
 
           {ecocashOpen && (
             <div
-              className="mt-4 overflow-hidden rounded-2xl p-5 text-sm"
+              className="mt-4 overflow-hidden rounded-lg border border-border bg-muted/20 p-5 text-sm"
               style={{
                 border: "1px solid color-mix(in oklab, var(--success) 24%, transparent)",
                 background: "linear-gradient(135deg, color-mix(in oklab, var(--success) 5%, var(--color-card)), var(--color-card))",
@@ -310,7 +310,7 @@ export function PricingModal({
                 <Button
                   onClick={submitEcoCash}
                   disabled={submitting}
-                  className="w-full rounded-full font-bold text-secondary-foreground btn-amber-glow"
+                  className="w-full rounded-full font-bold text-secondary-foreground"
                   style={{ background: "linear-gradient(145deg, var(--secondary), color-mix(in oklab, var(--secondary) 78%, var(--primary)))" }}
                 >
                   {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

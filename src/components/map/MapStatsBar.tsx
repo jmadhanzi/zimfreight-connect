@@ -24,7 +24,7 @@ export function MapStatsBar({ loads, borders }: Props) {
 
   return (
     <div className="pointer-events-auto absolute bottom-6 left-1/2 z-[1000] -translate-x-1/2">
-      <div className="flex items-center gap-0 overflow-hidden rounded-2xl border border-border/70 bg-card/95 shadow-[0_20px_50px_-15px_color-mix(in_oklab,var(--foreground)_25%,transparent)] backdrop-blur-xl">
+      <div className="flex items-center gap-0 overflow-hidden rounded-lg border border-border/70 bg-card/95 shadow-[0_20px_50px_-15px_color-mix(in_oklab,var(--foreground)_25%,transparent)] backdrop-blur-xl">
         <span
           aria-hidden
           className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary/60 to-transparent"
@@ -75,7 +75,7 @@ export function MapStatsBar({ loads, borders }: Props) {
               </span>
               <div>
                 <div
-                  className="font-display text-sm font-extrabold tracking-tight tabular-nums"
+                  className="font-display text-sm font-bold tracking-tight tabular-nums"
                   style={{ color: borderWaitColor(Number(worstBorder.wait_hours)) }}
                 >
                   {Number(worstBorder.wait_hours).toFixed(1)}h
@@ -111,7 +111,7 @@ function StatCell({
         {icon}
       </span>
       <div>
-        <div className={`font-display text-sm font-extrabold tracking-tight ${color}`}>{value}</div>
+        <div className={`font-display text-sm font-bold tracking-tight ${color}`}>{value}</div>
         <div className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
           {label}
         </div>

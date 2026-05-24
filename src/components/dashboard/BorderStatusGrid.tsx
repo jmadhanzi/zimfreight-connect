@@ -27,16 +27,16 @@ const TONE_BY_SEVERITY: Record<
     iconBg: "bg-[color-mix(in_oklab,var(--success)_15%,transparent)]",
     iconText: "text-[color:var(--success)]",
     valueText: "text-[color:var(--success)]",
-    chip: "glass-chip-success",
+    chip: "inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground-success",
     icon: CheckCircle2,
   },
   warning: {
     strip:
-      "bg-gradient-to-r from-[color:var(--zim-yellow)] to-[color-mix(in_oklab,var(--zim-yellow)_60%,white)]",
-    iconBg: "bg-[color-mix(in_oklab,var(--zim-yellow)_18%,transparent)]",
-    iconText: "text-[color-mix(in_oklab,var(--zim-yellow)_70%,var(--foreground))]",
-    valueText: "text-[color-mix(in_oklab,var(--zim-yellow)_70%,var(--foreground))]",
-    chip: "glass-chip-amber",
+      "bg-foreground",
+    iconBg: "bg-[color-mix(in_oklab,var(--warning)_18%,transparent)]",
+    iconText: "text-[color-mix(in_oklab,var(--warning)_70%,var(--foreground))]",
+    valueText: "text-[color-mix(in_oklab,var(--warning)_70%,var(--foreground))]",
+    chip: "inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground-amber",
     icon: Clock,
   },
   danger: {
@@ -45,7 +45,7 @@ const TONE_BY_SEVERITY: Record<
     iconBg: "bg-destructive/12",
     iconText: "text-destructive",
     valueText: "text-destructive",
-    chip: "glass-chip-danger",
+    chip: "inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground-danger",
     icon: AlertTriangle,
   },
 };
@@ -53,7 +53,7 @@ const TONE_BY_SEVERITY: Record<
 export function BorderStatusGrid({ borders }: { borders: BorderStatus[] }) {
   if (borders.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 text-center">
+      <div className="rounded-lg border border-dashed border-border bg-card/50 p-8 text-center">
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
           No live border data
         </p>
@@ -71,12 +71,12 @@ export function BorderStatusGrid({ borders }: { borders: BorderStatus[] }) {
         return (
           <div
             key={b.id}
-            className="hover-lift relative overflow-hidden rounded-2xl border border-border/70 bg-card p-5 pt-[18px]"
+            className=" relative overflow-hidden rounded-lg border border-border/70 bg-card p-5 pt-[18px]"
           >
             <span aria-hidden className={`absolute inset-x-0 top-0 h-[3px] ${tone.strip}`} />
             <div className="flex items-start justify-between">
               <div className="min-w-0">
-                <div className="font-display text-base font-extrabold tracking-[-0.02em] text-foreground">
+                <div className="font-display text-base font-bold tracking-[-0.02em] text-foreground">
                   {b.border_name}
                 </div>
                 <div className="mt-1 flex items-center gap-1 font-mono text-[11px] text-muted-foreground">
@@ -93,7 +93,7 @@ export function BorderStatusGrid({ borders }: { borders: BorderStatus[] }) {
             </div>
             <div className="mt-4 flex items-baseline gap-1.5">
               <span
-                className={`font-display text-3xl font-black leading-none tracking-[-0.035em] ${tone.valueText}`}
+                className={`font-display text-3xl font-bold leading-none tracking-[-0.035em] ${tone.valueText}`}
               >
                 {Number(b.wait_hours).toFixed(1)}
               </span>
@@ -102,7 +102,7 @@ export function BorderStatusGrid({ borders }: { borders: BorderStatus[] }) {
               </span>
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-1.5 text-[10px]">
-              <span className={`glass-chip ${tone.chip} uppercase`}>{b.status}</span>
+              <span className={`inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground ${tone.chip} uppercase`}>{b.status}</span>
               <span className="font-mono text-muted-foreground">
                 {formatDistanceToNow(new Date(b.updated_at), { addSuffix: true })}
               </span>

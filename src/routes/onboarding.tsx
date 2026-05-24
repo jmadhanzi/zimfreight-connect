@@ -106,7 +106,7 @@ function OnboardingPage() {
   if (!user)
     return (
       <Centered>
-        <h1 className="font-display text-3xl font-black uppercase">Sign in first</h1>
+        <h1 className="font-display text-3xl font-bold uppercase">Sign in first</h1>
         <Button asChild className="mt-6 bg-primary text-primary-foreground">
           <Link to="/">Back home</Link>
         </Button>
@@ -156,7 +156,7 @@ function OnboardingPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14">
       {/* Progress */}
-      <div className="mb-8 overflow-hidden rounded-2xl border border-border/70 bg-card p-5">
+      <div className="mb-8 overflow-hidden rounded-lg border border-border/70 bg-card p-5">
         <div className="flex items-center justify-between">
           <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             Step {step + 1} of {STEPS.length} <span className="mx-1.5 text-border">·</span>{" "}
@@ -168,17 +168,17 @@ function OnboardingPage() {
         </div>
         <div className="relative mt-3 h-1.5 overflow-hidden rounded-full bg-border">
           <div
-            className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-primary to-secondary transition-all duration-500"
+            className="absolute inset-y-0 left-0 rounded-full bg-foreground transition-all duration-500"
             style={{ width: `${progress}%` }}
           />
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border/70 bg-card p-6 md:p-10">
+      <div className="rounded-lg border border-border/70 bg-card p-6 md:p-10">
         {/* STEP 1 */}
         {step === 0 && (
           <div className="space-y-7 text-center">
-            <div className="relative mx-auto flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary to-[color-mix(in_oklab,var(--primary)_70%,black)] shadow-[0_4px_12px_-2px_color-mix(in_oklab,var(--primary)_60%,transparent),inset_0_1px_0_color-mix(in_oklab,white_25%,transparent)]">
+            <div className="relative mx-auto flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl bg-foreground">
               <svg
                 viewBox="0 0 24 24"
                 className="h-9 w-9 text-primary-foreground"
@@ -192,12 +192,12 @@ function OnboardingPage() {
               </svg>
               <span
                 aria-hidden
-                className="absolute inset-x-3 bottom-2 h-px bg-gradient-to-r from-transparent via-secondary/70 to-transparent"
+                className="hidden"
               />
             </div>
             <div>
               <span className="section-kicker mx-auto justify-center">Welcome</span>
-              <h1 className="mt-3 font-display text-4xl font-black tracking-[-0.04em] md:text-5xl">
+              <h1 className="mt-3 font-display text-4xl font-bold tracking-[-0.04em] md:text-5xl">
                 Welcome to <span className="text-secondary">ZimFreight</span>
               </h1>
               <p className="mt-4 text-base text-muted-foreground">
@@ -222,7 +222,7 @@ function OnboardingPage() {
             </div>
             <Button
               onClick={() => setStep(1)}
-              className="w-full rounded-full bg-secondary text-secondary-foreground btn-amber-glow hover:bg-secondary/90 md:w-auto md:px-12"
+              className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 md:w-auto md:px-12"
             >
               Get started <span className="ml-1.5">→</span>
             </Button>
@@ -232,7 +232,7 @@ function OnboardingPage() {
         {/* STEP 2 */}
         {step === 1 && (
           <div className="space-y-5">
-            <h2 className="font-display text-3xl font-black tracking-[-0.035em]">
+            <h2 className="font-display text-3xl font-bold tracking-[-0.035em]">
               Tell us about your operation
             </h2>
 
@@ -351,7 +351,7 @@ function OnboardingPage() {
                 <MessageCircle className="h-6 w-6" />
               </div>
               <div>
-                <h2 className="font-display text-2xl font-black tracking-[-0.03em]">
+                <h2 className="font-display text-2xl font-bold tracking-[-0.03em]">
                   Set up WhatsApp
                 </h2>
                 <p className="text-sm text-muted-foreground">
@@ -418,7 +418,7 @@ function OnboardingPage() {
                 <MapPin className="h-6 w-6" />
               </div>
               <div>
-                <h2 className="font-display text-2xl font-black tracking-[-0.03em]">
+                <h2 className="font-display text-2xl font-bold tracking-[-0.03em]">
                   Your preferred routes
                 </h2>
                 <p className="text-sm text-muted-foreground">
@@ -481,7 +481,7 @@ function OnboardingPage() {
         {step === 4 && (
           <div className="space-y-5">
             <div>
-              <h2 className="font-display text-3xl font-black tracking-[-0.035em]">
+              <h2 className="font-display text-3xl font-bold tracking-[-0.035em]">
                 Choose your plan
               </h2>
               <p className="text-sm text-muted-foreground">
@@ -588,7 +588,7 @@ function RoleCard({
       type="button"
       onClick={onClick}
       className={cn(
-        "hover-lift group relative flex flex-col items-start gap-3 overflow-hidden rounded-2xl border p-5 text-left transition-all",
+        " group relative flex flex-col items-start gap-3 overflow-hidden rounded-lg border p-5 text-left transition-all",
         active
           ? "border-secondary/50 bg-secondary/[0.05] shadow-[0_0_0_1px_color-mix(in_oklab,var(--secondary)_35%,transparent)]"
           : "border-border/70 bg-card hover:border-foreground/15",
@@ -611,7 +611,7 @@ function RoleCard({
         {icon}
       </span>
       <div>
-        <div className="font-display text-lg font-extrabold tracking-tight text-foreground">
+        <div className="font-display text-lg font-bold tracking-tight text-foreground">
           {title}
         </div>
         <div className="mt-0.5 text-xs text-muted-foreground">{subtitle}</div>
@@ -677,7 +677,7 @@ function NavRow({
         )}
         <Button
           onClick={onNext}
-          className="rounded-full bg-secondary px-6 font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+          className="rounded-full bg-secondary px-6 font-bold text-secondary-foreground hover:bg-secondary/90"
         >
           Continue <span className="ml-1.5">→</span>
         </Button>
@@ -713,7 +713,7 @@ function PlanCard({
   return (
     <div
       className={cn(
-        "relative flex flex-col overflow-hidden rounded-2xl border p-5 transition-all",
+        "relative flex flex-col overflow-hidden rounded-lg border p-5 transition-all",
         highlight
           ? "border-secondary/40 bg-card shadow-[0_0_0_1px_color-mix(in_oklab,var(--secondary)_30%,transparent),0_12px_36px_-12px_color-mix(in_oklab,var(--secondary)_45%,transparent)]"
           : "border-border/70 bg-card",
@@ -722,7 +722,7 @@ function PlanCard({
       {highlight && (
         <span
           aria-hidden
-          className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
+          className="hidden"
         />
       )}
       {badge && (
@@ -730,11 +730,11 @@ function PlanCard({
           ★ {badge}
         </span>
       )}
-      <h3 className="font-display text-2xl font-extrabold tracking-[-0.025em]">{name}</h3>
+      <h3 className="font-display text-2xl font-bold tracking-[-0.025em]">{name}</h3>
       <div className="mt-2 flex items-baseline gap-1.5">
         <span
           className={cn(
-            "font-display text-4xl font-black tracking-[-0.035em]",
+            "font-display text-4xl font-bold tracking-[-0.035em]",
             highlight ? "text-secondary" : "text-foreground",
           )}
         >
@@ -768,7 +768,7 @@ function PlanCard({
         className={cn(
           "mt-5 w-full rounded-full font-bold",
           highlight
-            ? "bg-secondary text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+            ? "bg-secondary text-secondary-foreground hover:bg-secondary/90"
             : "bg-primary text-primary-foreground hover:bg-primary/90",
         )}
       >

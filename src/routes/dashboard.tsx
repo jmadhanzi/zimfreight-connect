@@ -4,8 +4,9 @@ import {
   Lock,
   Truck,
   DollarSign,
-  Route as RouteIcon,
+  Star,
   TrendingUp,
+  Route as RouteIcon,
   Layers,
   MessageSquare,
   CheckCircle2,
@@ -63,21 +64,24 @@ function DashboardPage() {
   if (loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-20 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-primary">
-          <Lock className="h-5 w-5" />
+      <div className="mx-auto max-w-md px-4 py-20 text-center">
+        <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+          <Lock className="h-4 w-4 text-muted-foreground" />
         </div>
-        <h1 className="mt-4 font-display text-3xl font-black uppercase tracking-tight">
+        <h1 className="mt-4 font-display text-xl font-bold tracking-tight">
           Sign in to view your dashboard
         </h1>
-        <Button asChild className="mt-6 bg-primary text-primary-foreground">
+        <p className="mt-2 text-sm text-muted-foreground">
+          Your personalized freight command center awaits.
+        </p>
+        <Button asChild className="mt-6">
           <Link to="/">Back to home</Link>
         </Button>
       </div>
@@ -87,16 +91,18 @@ function DashboardPage() {
   const role = profile?.role ?? "carrier";
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 md:px-6">
+    <div className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-8">
       <Greeting profile={profile} subscription={subscription} />
+
       <div className="mt-5">
         <QuickActions />
       </div>
-      <div className="mt-4">
+
+      <div className="mt-5">
         <TickerSection />
       </div>
 
-      <div className="mt-10 space-y-12">
+      <div className="mt-8 space-y-10">
         {role === "broker" || role === "owner" ? <BrokerSections /> : <CarrierSections />}
         <SharedSections />
         <ProfileCompletion profile={profile} />
@@ -119,15 +125,15 @@ function CarrierSections() {
   const rateLabel =
     stats && stats.avg_rate_per_km > 0
       ? stats.avg_rate_per_km >= market
-        ? `vs $${market} · Above ▲`
-        : `vs $${market} · Below ▼`
+        ? `vs $${market} · Above ↑`
+        : `vs $${market} · Below ↓`
       : `Market avg $${market}`;
 
   return (
-    <section className="space-y-8">
+    <section className="space-y-6">
       <div>
-        <span className="section-kicker">Carrier overview</span>
-        <h2 className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
+        <div className="section-kicker">Carrier overview</div>
+        <h2 className="mt-1.5 font-display text-xl font-bold tracking-tight">
           Your activity — last 30 days
         </h2>
       </div>
@@ -148,60 +154,37 @@ function CarrierSections() {
           accent="gold"
         />
         <StatsCard
-          label="Km driven"
-          value={`${Number(stats?.km_driven ?? 0).toLocaleString()} km`}
-          icon={RouteIcon}
-          accent="blue"
-        />
-        <StatsCard
-          label="Avg rate / km"
-          value={`$${Number(stats?.avg_rate_per_km ?? 0).toFixed(2)}`}
+          label="Avg rate/km"
+          value={stats?.avg_rate_per_km ? `$${stats.avg_rate_per_km.toFixed(2)}` : "—"}
           sub={rateLabel}
           icon={TrendingUp}
+          accent="blue"
+          trend={
+            stats?.avg_rate_per_km
+              ? {
+                  value: rateLabel,
+                  direction: stats.avg_rate_per_km >= market ? "up" : "down",
+                }
+              : undefined
+          }
+        />
+        <StatsCard
+          label="Completed"
+          value={String(completed.length)}
+          sub="deliveries"
+          icon={CheckCircle2}
           accent="green"
         />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl border border-border/70 bg-card p-5 lg:col-span-2">
-          <h3 className="font-display text-lg font-bold tracking-[-0.02em]">
-            Your rate vs market avg — last 30 days
-          </h3>
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            Gold = your earned $/km · Blue dashed = market average
-          </p>
-          <div className="mt-3">
-            <RatePerformanceChart bookings={completed} marketAvg={market} />
-          </div>
-        </div>
-        <div className="rounded-2xl border border-border/70 bg-card p-5">
-          <h3 className="font-display text-lg font-bold tracking-[-0.02em]">Top routes</h3>
-          <p className="mt-0.5 text-xs text-muted-foreground">Your 5 most-run corridors</p>
-          <div className="mt-3">
-            <TopRoutesChart bookings={completed} />
-          </div>
-        </div>
+      <div className="grid gap-4 md:grid-cols-2">
+        <CarrierBookings bookings={bookings} onRefresh={refresh} />
+        <SavedLoadsGrid items={saved} />
       </div>
 
-      <div>
-        <h3 className="font-display text-xl font-bold tracking-[-0.025em]">Active bookings</h3>
-        <div className="mt-3">
-          <CarrierBookings bookings={bookings} onChange={refresh} />
-        </div>
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
+        <RecurringLoadsWidget />
         <LocationShareWidget />
-        <div className="rounded-2xl border border-border/70 bg-card p-5">
-          <span className="section-kicker">Saved</span>
-          <h3 className="mt-2 font-display text-lg font-extrabold tracking-[-0.025em]">
-            Saved loads
-          </h3>
-          <p className="mt-1 text-xs text-muted-foreground">Loads you bookmarked from the board.</p>
-          <div className="mt-3">
-            <SavedLoadsGrid items={saved} />
-          </div>
-        </div>
       </div>
     </section>
   );
@@ -210,14 +193,15 @@ function CarrierSections() {
 function BrokerSections() {
   const stats = useBrokerStats();
   const { loads, refresh } = useBrokerLoads();
-  const { bids, refresh: refreshBids } = useIncomingBids();
+  const { bids } = useIncomingBids();
+  const pending = loads.filter((l) => l.status === "available").length;
 
   return (
-    <section className="space-y-8">
+    <section className="space-y-6">
       <div>
-        <span className="section-kicker">Broker overview</span>
-        <h2 className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
-          Your posted loads
+        <div className="section-kicker">Broker overview</div>
+        <h2 className="mt-1.5 font-display text-xl font-bold tracking-tight">
+          Your activity — last 30 days
         </h2>
       </div>
 
@@ -225,111 +209,73 @@ function BrokerSections() {
         <StatsCard
           label="Active loads"
           value={String(stats?.active_loads ?? 0)}
-          sub="live now"
+          sub="on the board"
           icon={Layers}
-          accent="gold"
-        />
-        <StatsCard
-          label="Bids received"
-          value={String(stats?.bids_received ?? 0)}
-          sub="this month"
-          icon={MessageSquare}
           accent="blue"
         />
         <StatsCard
-          label="Loads filled"
-          value={`${stats?.loads_filled ?? 0}`}
-          sub={`${stats?.fill_rate ?? 0}% fill rate`}
-          icon={CheckCircle2}
-          accent="green"
+          label="Total bids"
+          value={String(stats?.total_bids ?? 0)}
+          sub="received"
+          icon={MessageSquare}
+          accent="gold"
         />
         <StatsCard
-          label="Avg time to fill"
-          value={`${stats?.avg_hours_to_fill ?? 0}h`}
-          sub="from posting"
+          label="Avg fill time"
+          value={stats?.avg_fill_hours ? `${stats.avg_fill_hours}h` : "—"}
+          sub="hours to fill"
           icon={Clock}
+          accent="neutral"
+        />
+        <StatsCard
+          label="Pending"
+          value={String(pending)}
+          sub="awaiting carrier"
+          icon={RouteIcon}
           accent="red"
         />
       </div>
 
-      <div>
-        <BrokerLoadsTable loads={loads} onChange={refresh} />
+      <div className="grid gap-4 md:grid-cols-2">
+        <BrokerLoadsTable loads={loads} onRefresh={refresh} />
+        <IncomingBids bids={bids} />
       </div>
 
-      <div>
-        <h3 className="font-display text-xl font-bold tracking-[-0.025em]">
-          Incoming booking requests
-        </h3>
-        <div className="mt-3">
-          <IncomingBids
-            bids={bids}
-            onChange={() => {
-              refreshBids();
-              refresh();
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-2">
-        <RecurringLoadsWidget />
+      <div className="grid gap-4 md:grid-cols-2">
         <SavedCarriersWidget />
+        <RecurringLoadsWidget />
       </div>
     </section>
   );
 }
 
 function SharedSections() {
-  const saved = useSavedRoutes();
-  const rates = useRouteRates(20);
-  const borders = useBorderStatus();
+  const { routes } = useSavedRoutes();
+  const { statuses } = useBorderStatus();
 
   return (
-    <>
-      <section id="rates">
-        <span className="section-kicker">Rate intelligence</span>
-        <h2 className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
-          Market rates — your routes
+    <section className="space-y-6">
+      <div>
+        <div className="section-kicker">Market intelligence</div>
+        <h2 className="mt-1.5 font-display text-xl font-bold tracking-tight">
+          Rates, routes & border status
         </h2>
-        <p className="mt-0.5 text-xs text-muted-foreground">
-          Live $/km from the load board, with 7-day movement and a 30-day trend sparkline.
-        </p>
-        <div className="mt-4">
-          <RouteIntelligence saved={saved} allRates={rates} />
-        </div>
-      </section>
+      </div>
 
-      <section>
-        <span className="section-kicker">Border intelligence</span>
-        <h2 className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
-          Border crossing status
-        </h2>
-        <p className="mt-0.5 text-xs text-muted-foreground">
-          Live wait times at Zimbabwe’s main crossings — updated every 30 minutes.
-        </p>
-        <div className="mt-4">
-          <BorderStatusGrid borders={borders} />
-        </div>
-      </section>
+      <div className="grid gap-4 md:grid-cols-2">
+        <RatePerformanceChart />
+        <TopRoutesChart />
+      </div>
 
-      <section className="grid gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl border border-border/70 bg-card p-5 lg:col-span-2">
-          <h3 className="font-display text-lg font-bold tracking-[-0.02em]">
-            Route popularity — this week
-          </h3>
-          <p className="mt-0.5 text-xs text-muted-foreground">Top 8 routes by load volume</p>
-          <div className="mt-3">
-            <RoutePopularityChart rates={rates} />
-          </div>
-        </div>
-        <div className="rounded-2xl border border-border/70 bg-card p-5">
-          <h3 className="font-display text-lg font-bold tracking-[-0.02em]">
-            ZWL / USD — last 30 days
-          </h3>
-          <p className="mt-0.5 text-xs text-muted-foreground">Official RBZ interbank rate</p>
-          <ZwlChart />
-        </div>
-      </section>
-    </>
+      <div className="grid gap-4 md:grid-cols-2">
+        <RouteIntelligence routes={routes} />
+        <BorderStatusGrid statuses={statuses} />
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <RoutePopularityChart />
+        <ZwlChart />
+      </div>
+    </section>
   );
 }

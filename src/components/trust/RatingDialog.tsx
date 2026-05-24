@@ -75,7 +75,7 @@ export function RatingDialog({
             <span className="section-kicker">
               <ThumbsUp className="h-3 w-3" /> Rate
             </span>
-            <DialogTitle className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
+            <DialogTitle className="mt-2 font-display text-2xl font-bold tracking-[-0.035em]">
               How was <span className="text-secondary">{subjectName}</span>?
             </DialogTitle>
             <p className="mt-1 text-xs text-muted-foreground">
@@ -192,7 +192,7 @@ export function RatingDialog({
             <Button
               onClick={submit}
               disabled={submitting}
-              className="flex-1 rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+              className="flex-1 bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
             >
               <Check className="mr-1.5 h-3.5 w-3.5" /> Submit rating
             </Button>
@@ -220,7 +220,7 @@ function YesNoTile({
       type="button"
       onClick={onClick}
       className={cn(
-        "rounded-lg border-2 px-4 py-2 font-display text-sm font-extrabold tracking-tight transition-all",
+        "rounded-lg border-2 px-4 py-2 font-display text-sm font-bold tracking-tight transition-all",
         active
           ? "border-current"
           : "border-border bg-card text-muted-foreground hover:border-foreground/15 hover:text-foreground",

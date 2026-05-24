@@ -125,7 +125,7 @@ export function BoardSidebar() {
                     <span className="mx-1 text-secondary">→</span>
                     {abbr(r.destination)}
                   </span>
-                  <span className="flex items-center gap-1.5 font-mono-num">
+                  <span className="flex items-center gap-1.5 font-mono tabular-nums">
                     <span className="font-bold text-foreground">
                       ${Number(r.avg_rate_per_km).toFixed(2)}
                     </span>
@@ -147,11 +147,11 @@ export function BoardSidebar() {
                 </span>
                 <span
                   className={cn(
-                    "font-mono-num font-bold tabular-nums",
+                    "font-mono tabular-nums font-bold tabular-nums",
                     b.wait_hours > 4
                       ? "text-destructive"
                       : b.wait_hours > 2
-                        ? "text-[color-mix(in_oklab,var(--zim-yellow)_70%,var(--foreground))]"
+                        ? "text-[color-mix(in_oklab,var(--warning)_70%,var(--foreground))]"
                         : "text-[color:var(--success)]",
                   )}
                 >
@@ -176,7 +176,7 @@ function Section({
   rightSlot?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-border/70 bg-card p-4">
+    <div className="rounded-lg border border-border/70 bg-card p-4">
       <div className="mb-3 flex items-center justify-between">
         <h4 className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
           {title}

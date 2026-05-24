@@ -52,7 +52,7 @@ export function CarrierBookings({
 
   if (bookings.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-border bg-card/50 p-10 text-center">
+      <div className="rounded-lg border border-dashed border-border bg-card/50 p-10 text-center">
         <Truck className="mx-auto h-5 w-5 text-muted-foreground/60" />
         <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
           No bookings yet
@@ -65,10 +65,10 @@ export function CarrierBookings({
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-[0_1px_0_color-mix(in_oklab,var(--foreground)_5%,transparent)]">
+    <div className="overflow-hidden rounded-lg border border-border/70 bg-card shadow-[0_1px_0_color-mix(in_oklab,var(--foreground)_5%,transparent)]">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-[color:var(--bg-secondary)]">
+          <thead className="bg-muted/30">
             <tr className="border-b border-border text-left">
               <th className="px-3 py-3 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 Route
@@ -93,7 +93,7 @@ export function CarrierBookings({
                 <td className="px-3 py-3 font-display text-sm font-bold tracking-tight text-foreground">
                   {b.loads?.origin} → {b.loads?.destination}
                 </td>
-                <td className="px-3 py-3 font-mono-num font-bold text-foreground">
+                <td className="px-3 py-3 font-mono tabular-nums font-bold text-foreground">
                   ${Number(b.rate_usd ?? 0).toLocaleString()}
                 </td>
                 <td className="px-3 py-3 font-mono text-[11px] text-muted-foreground">

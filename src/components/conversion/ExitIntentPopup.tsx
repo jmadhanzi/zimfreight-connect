@@ -56,27 +56,27 @@ export function ExitIntentPopup() {
         />
         <span
           aria-hidden
-          className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-secondary/25 blur-3xl"
+          className="hidden"
         />
         <div className="relative p-7 text-center">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary/15 text-secondary">
             <Gift className="h-6 w-6" />
           </div>
           <span className="section-kicker mx-auto mt-5 justify-center">Wait!</span>
-          <h2 className="mt-3 font-display text-3xl font-black leading-[1.05] tracking-[-0.04em]">
+          <h2 className="mt-3 font-display text-3xl font-bold leading-[1.05] tracking-[-0.04em]">
             Before you go &mdash;
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             Get your <span className="font-bold text-foreground">first month free</span> with code
           </p>
-          <div className="mx-auto mt-5 inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-secondary bg-secondary/8 px-6 py-3.5 font-mono text-2xl font-extrabold tracking-[0.2em] text-secondary">
+          <div className="mx-auto mt-5 inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-secondary bg-secondary/8 px-6 py-3.5 font-mono text-2xl font-bold tracking-[0.2em] text-secondary">
             ZIMFIRST
           </div>
           <div className="mt-7 flex flex-col gap-2">
             <Button
               onClick={claim}
               size="lg"
-              className="rounded-full bg-secondary text-base font-extrabold tracking-wide text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+              className="bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
             >
               Claim offer
             </Button>

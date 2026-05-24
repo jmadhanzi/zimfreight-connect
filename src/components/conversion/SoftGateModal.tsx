@@ -75,7 +75,7 @@ export function SoftGateModal({ onUpgrade }: { onUpgrade: () => void }) {
             <Lock className="h-6 w-6" />
           </div>
           <span className="section-kicker mx-auto mt-5 justify-center">Daily limit</span>
-          <h2 className="mt-3 font-display text-3xl font-black leading-[1.05] tracking-[-0.04em]">
+          <h2 className="mt-3 font-display text-3xl font-bold leading-[1.05] tracking-[-0.04em]">
             You&rsquo;ve seen 5 of <span className="text-secondary">today&rsquo;s 847 loads</span>
           </h2>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -104,7 +104,7 @@ export function SoftGateModal({ onUpgrade }: { onUpgrade: () => void }) {
                 onUpgrade();
               }}
               size="lg"
-              className="rounded-full bg-secondary text-base font-extrabold tracking-wide text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+              className="bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
             >
               Upgrade to Basic &mdash; $19
             </Button>

@@ -77,7 +77,7 @@ export function EscrowBookButton({
       <Button
         size="sm"
         onClick={() => setOpen(true)}
-        className="rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+        className="bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
       >
         <Shield className="mr-1.5 h-3.5 w-3.5" />
         Book through ZimFreight
@@ -167,7 +167,7 @@ function CreateEscrowDialog({
             <span className="section-kicker">
               <ShieldCheck className="h-3 w-3" /> Escrow
             </span>
-            <DialogTitle className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
+            <DialogTitle className="mt-2 font-display text-2xl font-bold tracking-[-0.035em]">
               {step === "review" ? "Review booking" : "Fund the booking"}
             </DialogTitle>
             <p className="mt-1 text-xs text-muted-foreground">
@@ -181,7 +181,7 @@ function CreateEscrowDialog({
             <div className="mt-5 space-y-4">
               {/* Route summary */}
               <div className="rounded-xl border border-border bg-[var(--bg-secondary)] p-4">
-                <div className="font-display text-base font-extrabold tracking-[-0.02em]">
+                <div className="font-display text-base font-bold tracking-[-0.02em]">
                   {load.origin} → {load.destination}
                 </div>
                 <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
@@ -190,7 +190,7 @@ function CreateEscrowDialog({
               </div>
 
               {/* Money breakdown */}
-              <div className="rounded-2xl border border-border/70 bg-card p-4">
+              <div className="rounded-lg border border-border/70 bg-card p-4">
                 <BreakdownRow label="Load rate" value={formatUSD(amount)} />
                 <BreakdownRow label="Platform fee (2.5%)" value={`-${formatUSD(fee)}`} muted />
                 <div className="my-2 border-t border-border" />
@@ -204,7 +204,7 @@ function CreateEscrowDialog({
                   <div className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-secondary">
                     In ZWL
                   </div>
-                  <div className="mt-0.5 font-mono-num text-sm font-bold tabular-nums text-foreground">
+                  <div className="mt-0.5 font-mono tabular-nums text-sm font-bold tabular-nums text-foreground">
                     {dual.zwl}
                   </div>
                 </div>
@@ -233,7 +233,7 @@ function CreateEscrowDialog({
                 </Button>
                 <Button
                   onClick={() => setStep("fund")}
-                  className="flex-1 rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                  className="flex-1 bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
                 >
                   Continue <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                 </Button>
@@ -340,7 +340,7 @@ function CreateEscrowDialog({
                   <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                     Total
                   </span>
-                  <span className="font-display text-2xl font-black tracking-[-0.03em] tabular-nums text-foreground">
+                  <span className="font-display text-2xl font-bold tracking-[-0.03em] tabular-nums text-foreground">
                     {formatUSD(amount)}
                   </span>
                 </div>
@@ -357,7 +357,7 @@ function CreateEscrowDialog({
                 <Button
                   onClick={submit}
                   disabled={submitting}
-                  className="flex-1 rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                  className="flex-1 bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
                 >
                   {submitting && <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />}
                   <ShieldCheck className="mr-1.5 h-3.5 w-3.5" />
@@ -432,7 +432,7 @@ function EscrowStatusDialog({
             <span className="section-kicker">
               <Shield className="h-3 w-3" /> Escrow
             </span>
-            <DialogTitle className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
+            <DialogTitle className="mt-2 font-display text-2xl font-bold tracking-[-0.035em]">
               {load.origin} → {load.destination}
             </DialogTitle>
             <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
@@ -459,7 +459,7 @@ function EscrowStatusDialog({
             </span>
             <div className="min-w-0 flex-1">
               <div
-                className="font-display text-sm font-extrabold tracking-tight"
+                className="font-display text-sm font-bold tracking-tight"
                 style={{ color: meta.color }}
               >
                 {meta.label}
@@ -602,9 +602,9 @@ function BreakdownRow({
       </span>
       <span
         className={cn(
-          "font-mono-num tabular-nums",
+          "font-mono tabular-nums tabular-nums",
           muted && "text-muted-foreground",
-          bold && "font-display text-base font-extrabold",
+          bold && "font-display text-base font-bold",
           accent === "success" && "text-[color:var(--success)]",
           !accent && !muted && !bold && "text-foreground",
         )}
@@ -618,7 +618,7 @@ function BreakdownRow({
 function Step({ n, children }: { n: number; children: React.ReactNode }) {
   return (
     <li className="flex gap-2.5">
-      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-secondary/15 font-mono text-[10px] font-bold text-secondary">
+      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-muted font-mono text-[10px] font-semibold text-muted-foreground">
         {n}
       </span>
       <span>{children}</span>
@@ -649,7 +649,7 @@ function MethodTile({
       )}
     >
       {icon}
-      <span className="font-display text-xs font-extrabold tracking-tight">{label}</span>
+      <span className="font-display text-xs font-bold tracking-tight">{label}</span>
     </button>
   );
 }

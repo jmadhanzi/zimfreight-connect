@@ -48,7 +48,7 @@ export function PaywallGate({
           </div>
         ) : null}
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/70 p-4 backdrop-blur-md">
-          <div className="relative w-full max-w-sm overflow-hidden rounded-2xl border border-secondary/30 bg-card p-6 text-center shadow-[0_24px_60px_-15px_color-mix(in_oklab,var(--foreground)_30%,transparent)]">
+          <div className="relative w-full max-w-sm overflow-hidden rounded-lg border border-secondary/30 bg-card p-6 text-center shadow-[0_24px_60px_-15px_color-mix(in_oklab,var(--foreground)_30%,transparent)]">
             <span
               aria-hidden
               className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-secondary via-primary to-secondary"
@@ -62,7 +62,7 @@ export function PaywallGate({
                 <Lock className="h-5 w-5" strokeWidth={2.4} />
               </div>
               <span className="section-kicker mx-auto mt-4 justify-center">Locked</span>
-              <h3 className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
+              <h3 className="mt-2 font-display text-2xl font-bold tracking-[-0.035em]">
                 Unlock with <span className="text-secondary">{planLabel}</span>
               </h3>
               <p className="mt-2 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
@@ -80,7 +80,7 @@ export function PaywallGate({
               </ul>
               <Button
                 onClick={() => setOpen(true)}
-                className="mt-5 w-full rounded-full bg-secondary font-bold text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+                className="mt-5 w-full bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/90"
               >
                 Upgrade now <span className="ml-1.5">→</span>
               </Button>

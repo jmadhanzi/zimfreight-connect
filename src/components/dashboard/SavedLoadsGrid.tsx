@@ -24,7 +24,7 @@ const BOARD_SEARCH = {
 export function SavedLoadsGrid({ items }: { items: Load[] }) {
   if (items.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 text-center">
+      <div className="rounded-lg border border-dashed border-border bg-card/50 p-8 text-center">
         <Bookmark className="mx-auto h-5 w-5 text-muted-foreground/60" />
         <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
           No saved loads
@@ -50,9 +50,9 @@ export function SavedLoadsGrid({ items }: { items: Load[] }) {
           key={l.id}
           to="/board"
           search={BOARD_SEARCH}
-          className="hover-lift group flex flex-col rounded-2xl border border-border/70 bg-card p-4 transition-colors hover:border-foreground/15"
+          className=" group flex flex-col rounded-lg border border-border/70 bg-card p-4 transition-colors hover:border-foreground/15"
         >
-          <div className="flex items-center gap-1.5 font-display text-sm font-extrabold tracking-[-0.02em] text-foreground">
+          <div className="flex items-center gap-1.5 font-display text-sm font-bold tracking-[-0.02em] text-foreground">
             <span className="truncate">{l.origin}</span>
             <ArrowRight className="h-3.5 w-3.5 shrink-0 text-secondary" />
             <span className="truncate">{l.destination}</span>
@@ -62,7 +62,7 @@ export function SavedLoadsGrid({ items }: { items: Load[] }) {
             {l.pickup_date ? ` · ${l.pickup_date}` : ""}
           </div>
           <div className="mt-3 flex items-center justify-between">
-            <span className="font-display text-xl font-extrabold tracking-[-0.025em] text-foreground">
+            <span className="font-display text-xl font-bold tracking-[-0.025em] text-foreground">
               ${Number(l.rate_usd).toLocaleString()}
             </span>
             <span className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-secondary group-hover:underline">

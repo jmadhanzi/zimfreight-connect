@@ -44,7 +44,7 @@ export function RateIntelligenceBar({
     <TooltipProvider delayDuration={200}>
       <div
         className={cn(
-          "flex flex-wrap items-center gap-x-6 gap-y-1.5 rounded-2xl border border-border/70 bg-card px-4 py-3 text-xs",
+          "flex flex-wrap items-center gap-x-6 gap-y-1.5 rounded-lg border border-border/70 bg-card px-4 py-3 text-xs",
           className,
         )}
       >
@@ -63,7 +63,7 @@ export function RateIntelligenceBar({
 
         {/* USD rate */}
         <div className="flex items-center gap-2">
-          <span className="font-display text-base font-extrabold tracking-[-0.02em] tabular-nums text-foreground">
+          <span className="font-display text-base font-bold tracking-[-0.02em] tabular-nums text-foreground">
             ${avgRatePerKm.toFixed(2)}
             <span className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
               /km
@@ -99,7 +99,7 @@ export function RateIntelligenceBar({
           <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
             ZWL equiv.
           </span>
-          <span className="font-mono-num font-bold text-foreground">
+          <span className="font-mono tabular-nums font-bold text-foreground">
             ZWL {Number(zwlPerKm).toLocaleString()}
             <span className="font-medium text-muted-foreground">/km</span>
           </span>
@@ -110,9 +110,9 @@ export function RateIntelligenceBar({
 
         {/* Rate guidance */}
         <div className="ml-auto flex items-center gap-1.5">
-          <span className="glass-chip glass-chip-success uppercase">Above market</span>
-          <span className="glass-chip glass-chip-amber uppercase">At market</span>
-          <span className="glass-chip glass-chip-danger uppercase">Below market</span>
+          <span className="inline-flex items-center gap-1 rounded-md border border-[color:var(--success)]/20 bg-[color-mix(in_oklab,var(--success)_10%,transparent)] px-1.5 py-0.5 text-[10px] font-medium text-[color:var(--success)] uppercase">Above market</span>
+          <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground-amber uppercase">At market</span>
+          <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground-danger uppercase">Below market</span>
         </div>
       </div>
     </TooltipProvider>

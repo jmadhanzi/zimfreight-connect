@@ -143,7 +143,7 @@ function Gate({
         {icon}
       </div>
       <span className="section-kicker mx-auto mt-5 justify-center">Restricted</span>
-      <h1 className="mt-3 font-display text-3xl font-black tracking-[-0.035em]">{title}</h1>
+      <h1 className="mt-3 font-display text-3xl font-bold tracking-[-0.035em]">{title}</h1>
       <p className="mt-3 text-sm text-muted-foreground">{body}</p>
       <div className="mt-6">{cta}</div>
     </div>
@@ -163,7 +163,7 @@ function AdminDashboard() {
           <span className="section-kicker">
             <ShieldCheck className="h-3 w-3" /> Admin
           </span>
-          <h1 className="mt-3 font-display text-3xl font-black tracking-[-0.04em] md:text-4xl">
+          <h1 className="mt-3 font-display text-3xl font-bold tracking-[-0.04em] md:text-4xl">
             Operations
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -308,12 +308,12 @@ function Kpi({
   warn?: boolean;
 }) {
   const stripClass = accent
-    ? "bg-gradient-to-r from-secondary via-primary to-secondary"
+    ? "bg-foreground"
     : warn
-      ? "bg-gradient-to-r from-[color:var(--zim-yellow)] via-secondary to-[color:var(--zim-yellow)]"
-      : "bg-gradient-to-r from-border via-foreground/20 to-border";
+      ? "bg-foreground"
+      : "bg-border";
   return (
-    <div className="hover-lift relative overflow-hidden rounded-2xl border border-border/70 bg-card p-5 pt-[18px]">
+    <div className=" relative overflow-hidden rounded-lg border border-border/70 bg-card p-5 pt-[18px]">
       <span aria-hidden className={cn("absolute inset-x-0 top-0 h-[3px]", stripClass)} />
       <div className="flex items-center justify-between">
         <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
@@ -325,7 +325,7 @@ function Kpi({
             accent
               ? "bg-secondary/15 text-secondary"
               : warn
-                ? "bg-[color-mix(in_oklab,var(--zim-yellow)_18%,transparent)] text-[color-mix(in_oklab,var(--zim-yellow)_70%,var(--foreground))]"
+                ? "bg-[color-mix(in_oklab,var(--warning)_18%,transparent)] text-[color-mix(in_oklab,var(--warning)_70%,var(--foreground))]"
                 : "bg-primary/10 text-primary",
           )}
         >
@@ -334,11 +334,11 @@ function Kpi({
       </div>
       <div
         className={cn(
-          "mt-3 font-display text-3xl font-black leading-none tracking-[-0.035em] tabular-nums",
+          "mt-3 font-display text-3xl font-bold leading-none tracking-[-0.035em] tabular-nums",
           accent
             ? "text-secondary"
             : warn
-              ? "text-[color-mix(in_oklab,var(--zim-yellow)_70%,var(--foreground))]"
+              ? "text-[color-mix(in_oklab,var(--warning)_70%,var(--foreground))]"
               : "text-foreground",
         )}
       >
@@ -387,18 +387,18 @@ function DauChart() {
   const delta = today - prev;
 
   return (
-    <div className="rounded-2xl border border-border/70 bg-card p-6">
+    <div className="rounded-lg border border-border/70 bg-card p-6">
       <div className="flex items-end justify-between gap-3">
         <div>
           <span className="section-kicker">
             <Activity className="h-3 w-3" /> DAU
           </span>
-          <h2 className="mt-2 font-display text-base font-extrabold tracking-[-0.02em] text-foreground">
+          <h2 className="mt-2 font-display text-base font-bold tracking-[-0.02em] text-foreground">
             Daily active users{" "}
             <span className="font-normal text-muted-foreground">· last 30 days</span>
           </h2>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="font-display text-4xl font-black leading-none tracking-[-0.04em] tabular-nums text-foreground">
+            <span className="font-display text-4xl font-bold leading-none tracking-[-0.04em] tabular-nums text-foreground">
               {today}
             </span>
             <span
@@ -425,7 +425,7 @@ function DauChart() {
                 className={cn(
                   "w-full rounded-t-md transition-all",
                   i === data.length - 1
-                    ? "bg-gradient-to-t from-secondary/70 to-secondary"
+                    ? "bg-foreground"
                     : "bg-primary/30 group-hover:bg-primary/55",
                 )}
                 style={{ height: `${(d.dau / max) * 100}%`, minHeight: d.dau > 0 ? 2 : 0 }}
@@ -470,9 +470,9 @@ function PlanBreakdown() {
   ];
 
   return (
-    <div className="rounded-2xl border border-border/70 bg-card p-6">
+    <div className="rounded-lg border border-border/70 bg-card p-6">
       <span className="section-kicker">Plans</span>
-      <h2 className="mt-2 font-display text-base font-extrabold tracking-[-0.02em] text-foreground">
+      <h2 className="mt-2 font-display text-base font-bold tracking-[-0.02em] text-foreground">
         Active subscriptions
       </h2>
       {isLoading ? (
@@ -486,7 +486,7 @@ function PlanBreakdown() {
               <div key={tier}>
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-display font-bold tracking-tight">{label}</span>
-                  <span className="font-mono-num font-bold tabular-nums text-foreground">
+                  <span className="font-mono tabular-nums font-bold tabular-nums text-foreground">
                     {n}{" "}
                     <span className="font-medium text-muted-foreground">({pct.toFixed(0)}%)</span>
                   </span>
@@ -638,11 +638,11 @@ function ApprovalQueue() {
   }, [qc]);
 
   return (
-    <div className="mt-6 overflow-hidden rounded-2xl border border-border/70 bg-card">
+    <div className="mt-6 overflow-hidden rounded-lg border border-border/70 bg-card">
       <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
         <div>
           <span className="section-kicker">EcoCash approvals</span>
-          <div className="mt-2 flex items-center gap-2 font-display text-lg font-extrabold tracking-[-0.025em]">
+          <div className="mt-2 flex items-center gap-2 font-display text-lg font-bold tracking-[-0.025em]">
             Pending payments
             {data?.length ? (
               <span className="inline-flex items-center justify-center rounded-full bg-secondary/20 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-secondary">
@@ -661,7 +661,7 @@ function ApprovalQueue() {
         </div>
       ) : !data || data.length === 0 ? (
         <div className="px-5 py-14 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--success)]/15 text-[color:var(--success)]">
+          <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-lg bg-[color-mix(in_oklab,var(--success)_12%,transparent)] text-[color:var(--success)]">
             <Check className="h-5 w-5" strokeWidth={2.5} />
           </div>
           <p className="mt-4 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
@@ -688,10 +688,10 @@ function ApprovalQueue() {
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-display text-base font-extrabold tracking-tight text-foreground">
+                    <span className="font-display text-base font-bold tracking-tight text-foreground">
                       {row.profile?.full_name || "Unknown user"}
                     </span>
-                    <span className="glass-chip glass-chip-amber uppercase">{row.plan}</span>
+                    <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground inline-flex items-center gap-1 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground-amber uppercase">{row.plan}</span>
                     <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                       {age} ago
                     </span>
@@ -707,7 +707,7 @@ function ApprovalQueue() {
                     </span>
                   </div>
                 </div>
-                <div className="font-display text-2xl font-black tracking-[-0.025em] text-foreground">
+                <div className="font-display text-2xl font-bold tracking-[-0.025em] text-foreground">
                   {formatUSD(price)}
                 </div>
                 <div className="flex gap-2">
@@ -805,11 +805,11 @@ function AuditLogTab() {
   };
 
   return (
-    <div className="mt-6 overflow-hidden rounded-2xl border border-border/70 bg-card">
+    <div className="mt-6 overflow-hidden rounded-lg border border-border/70 bg-card">
       <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
         <div>
           <span className="section-kicker">Audit log</span>
-          <div className="mt-2 flex items-center gap-2 font-display text-lg font-extrabold tracking-[-0.025em]">
+          <div className="mt-2 flex items-center gap-2 font-display text-lg font-bold tracking-[-0.025em]">
             Recent admin actions
             {data?.rows.length ? (
               <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
@@ -828,7 +828,7 @@ function AuditLogTab() {
         </div>
       ) : !data || data.rows.length === 0 ? (
         <div className="px-5 py-14 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
+          <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground">
             <ScrollText className="h-5 w-5" />
           </div>
           <p className="mt-4 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
@@ -1018,11 +1018,11 @@ function UsersTab() {
           : "bg-muted text-muted-foreground border-border";
 
   return (
-    <div className="mt-6 overflow-hidden rounded-2xl border border-border/70 bg-card">
+    <div className="mt-6 overflow-hidden rounded-lg border border-border/70 bg-card">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-6 py-4">
         <div>
           <span className="section-kicker">Users</span>
-          <div className="mt-2 flex items-center gap-2 font-display text-lg font-extrabold tracking-[-0.025em]">
+          <div className="mt-2 flex items-center gap-2 font-display text-lg font-bold tracking-[-0.025em]">
             Manage roles
             {data?.length ? (
               <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
@@ -1071,7 +1071,7 @@ function UsersTab() {
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-display text-sm font-extrabold tracking-tight text-foreground">
+                    <span className="font-display text-sm font-bold tracking-tight text-foreground">
                       {u.full_name || "Unnamed"}
                     </span>
                     <span

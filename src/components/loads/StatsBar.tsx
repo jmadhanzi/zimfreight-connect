@@ -39,13 +39,13 @@ export function StatsBar() {
   const beitOrange = beitWait !== null && beitWait > 2;
 
   return (
-    <div className="sticky top-0 z-30 border-b border-border bg-[color:var(--bg-secondary)]/95 backdrop-blur supports-[backdrop-filter]:bg-[color:var(--bg-secondary)]/85">
+    <div className="sticky top-0 z-30 border-b border-border bg-muted/30/95 backdrop-blur supports-[backdrop-filter]:bg-muted/30/85">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-2.5 text-xs md:px-6">
         <Stat
           dot="success"
           label={
             <>
-              <span className="font-display text-[15px] font-extrabold tracking-tight text-foreground">
+              <span className="font-display text-[15px] font-bold tracking-tight text-foreground">
                 {loadCount ?? "—"}
               </span>{" "}
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
@@ -61,7 +61,7 @@ export function StatsBar() {
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                 Avg
               </span>{" "}
-              <span className="font-mono-num text-foreground">
+              <span className="font-mono tabular-nums text-foreground">
                 {avgRate !== null ? `$${avgRate.toFixed(2)}/km` : "—"}
               </span>
             </>
@@ -74,7 +74,7 @@ export function StatsBar() {
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                 ZWL/USD
               </span>{" "}
-              <span className="font-mono-num text-foreground">3,850</span>
+              <span className="font-mono tabular-nums text-foreground">3,850</span>
             </>
           }
         />
@@ -83,8 +83,8 @@ export function StatsBar() {
           label={
             <span
               className={cn(
-                "font-mono-num",
-                beitOrange ? "text-[color:var(--zim-yellow)]" : "text-foreground",
+                "font-mono tabular-nums",
+                beitOrange ? "text-[color:var(--warning)]" : "text-foreground",
               )}
             >
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">

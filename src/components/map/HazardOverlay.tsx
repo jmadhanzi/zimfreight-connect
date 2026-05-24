@@ -38,7 +38,7 @@ export function HazardOverlay() {
     <>
       <div className="pointer-events-auto absolute bottom-6 right-3 z-[1000] flex flex-col items-end gap-2">
         {!collapsed && hazards.length > 0 && (
-          <div className="max-h-[40vh] w-72 overflow-hidden rounded-2xl border border-border/70 bg-card/95 shadow-[0_20px_50px_-15px_color-mix(in_oklab,var(--foreground)_25%,transparent)] backdrop-blur-xl">
+          <div className="max-h-[40vh] w-72 overflow-hidden rounded-lg border border-border/70 bg-card/95 shadow-[0_20px_50px_-15px_color-mix(in_oklab,var(--foreground)_25%,transparent)] backdrop-blur-xl">
             <span
               aria-hidden
               className="block h-1 w-full bg-gradient-to-r from-destructive via-secondary to-destructive"
@@ -48,7 +48,7 @@ export function HazardOverlay() {
                 <span className="flex h-6 w-6 items-center justify-center rounded-md bg-destructive/15 text-destructive">
                   <AlertTriangle className="h-3.5 w-3.5" strokeWidth={2.4} />
                 </span>
-                <span className="font-display text-sm font-extrabold tracking-tight">
+                <span className="font-display text-sm font-bold tracking-tight">
                   Road alerts
                 </span>
                 <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
@@ -200,7 +200,7 @@ function ReportHazardDialog({
             <span className="section-kicker">
               <AlertTriangle className="h-3 w-3" /> Hazard
             </span>
-            <DialogTitle className="mt-2 font-display text-2xl font-black tracking-[-0.035em]">
+            <DialogTitle className="mt-2 font-display text-2xl font-bold tracking-[-0.035em]">
               Report a road alert
             </DialogTitle>
             <p className="mt-1 text-xs text-muted-foreground">
@@ -267,7 +267,7 @@ function ReportHazardDialog({
                 {coords ? (
                   <>
                     <span className="text-[color:var(--success)]">●</span>
-                    <span className="ml-2 font-mono-num text-xs">
+                    <span className="ml-2 font-mono tabular-nums text-xs">
                       {coords.lat.toFixed(4)}°, {coords.lng.toFixed(4)}°
                     </span>
                   </>

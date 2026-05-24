@@ -34,7 +34,7 @@ export function StickyLandingCta() {
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 md:px-6">
         <span className="dot-live hidden md:inline-block" />
         <p className="flex-1 text-sm font-medium text-foreground">
-          <span className="font-display text-base font-extrabold tracking-tight text-secondary">
+          <span className="font-display text-base font-bold tracking-tight text-secondary">
             847 loads
           </span>{" "}
           <span className="text-muted-foreground">live right now &mdash;</span>{" "}
@@ -43,7 +43,7 @@ export function StickyLandingCta() {
         <Button
           asChild
           size="sm"
-          className="rounded-full bg-secondary font-bold tracking-wide text-secondary-foreground btn-amber-glow hover:bg-secondary/90"
+          className="rounded-full bg-secondary font-bold tracking-wide text-secondary-foreground hover:bg-secondary/90"
         >
           <Link
             to="/board"

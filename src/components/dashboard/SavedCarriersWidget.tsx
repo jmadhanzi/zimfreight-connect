@@ -34,13 +34,13 @@ export function SavedCarriersWidget() {
   const ratings = useMemo(() => getRatings(), []);
 
   return (
-    <div className="rounded-2xl border border-border/70 bg-card p-5">
+    <div className="rounded-lg border border-border/70 bg-card p-5">
       <div className="flex items-start justify-between gap-3">
         <div>
           <span className="section-kicker">
             <Heart className="h-3 w-3" /> Network
           </span>
-          <h2 className="mt-2 font-display text-lg font-extrabold tracking-[-0.025em]">
+          <h2 className="mt-2 font-display text-lg font-bold tracking-[-0.025em]">
             Preferred carriers
           </h2>
           <p className="mt-1 text-xs text-muted-foreground">
@@ -98,7 +98,7 @@ export function SavedCarriersWidget() {
                     .toUpperCase()}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <div className="truncate font-display text-sm font-extrabold tracking-tight text-foreground">
+                  <div className="truncate font-display text-sm font-bold tracking-tight text-foreground">
                     {c.name}
                   </div>
                   <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
